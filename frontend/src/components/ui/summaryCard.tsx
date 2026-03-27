@@ -16,7 +16,7 @@ export default function SummaryCard({ item }: { item: SummaryItem }) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-3xl font-semibold tracking-tight text-slate-900">
+        <p className="text-2xl font-semibold tracking-tight text-slate-900">
           {item.value}
         </p>
       </CardContent>
