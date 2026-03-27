@@ -142,7 +142,7 @@ const seats: Record<string, Seat> = {
 export default function LabMap() {
   return (
     <div className="w-full overflow-x-auto pb-2">
-      <section className="min-w-[980px] overflow-hidden rounded-[28px] border border-slate-300 bg-white">
+      <section className="min-w-[950px] overflow-hidden rounded-[28px] border border-slate-300 bg-white">
         <div className="grid grid-cols-12">
           <div className="col-span-4 grid grid-cols-3">
             <SeatTile seat={seats.A1} />
