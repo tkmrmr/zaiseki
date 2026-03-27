@@ -27,8 +27,11 @@ function SeatTile({ seat }: { seat: Seat }) {
   return (
     <button
       type="button"
-      onClick={() => onClickSeat(seat)}
-      className={`h-full rounded-none border border-slate-900/20 p-3 ${SEAT_STYLE[seat.status]}`}
+      onClick={!isVacant ? () => onClickSeat(seat) : undefined}
+      disabled={isVacant}
+      className={`h-full rounded-none border border-slate-900/20 p-3 ${SEAT_STYLE[seat.status]} ${
+        isVacant ? "cursor-default" : "cursor-pointer"
+      }`}
     >
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold tracking-wide text-slate-500">
