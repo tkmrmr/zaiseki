@@ -1,13 +1,4 @@
 import React from "react";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "./components/ui/button";
 import SummaryPanel from "@/components/summaryPanel";
 import type { Status } from "@/lib/type";
@@ -166,7 +157,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.2),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(253,224,71,0.18),_transparent_32%),linear-gradient(180deg,#f6f2e9_0%,#edf4f7_100%)] text-slate-800">
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-4 sm:px-6 lg:px-8 lg:py-8">
-        <header className="sticky top-4 z-10 rounded-[30px] border border-white/70 bg-white/75 px-5 py-4 shadow-[0_18px_40px_rgba(36,57,69,0.08)] backdrop-blur md:px-6">
+        <header className="sticky top-4 z-10 rounded-4xl border border-white/70 bg-white/75 px-5 py-4 shadow-[0_18px_40px_rgba(36,57,69,0.08)] backdrop-blur md:px-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">
@@ -185,7 +176,7 @@ export default function App() {
             </Button>
           </div>
         </header>
-        <div className="my-8 h-px bg-slate-200">
+        <div className="my-8 h-px">
           <SummaryPanel
             items={[
               {
