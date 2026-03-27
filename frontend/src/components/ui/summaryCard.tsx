@@ -6,8 +6,8 @@ export default function SummaryCard({ item }: { item: SummaryItem }) {
     <Card
       className={
         item.tone === "highlight"
-          ? "ring-emerald-200 bg-emerald-50/90 rounded-4xl"
-          : "ring-white/79 bg-white/80 rounded-4xl"
+          ? "ring-emerald-200 bg-emerald-50/90 rounded-4xl p-3 md:p-4"
+          : "ring-white/79 bg-white/80 rounded-4xl p-3 md:p-4"
       }
     >
       <CardHeader>

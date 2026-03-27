@@ -1,7 +1,9 @@
 import React from "react";
-import { Button } from "./components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SummaryPanel from "@/components/summaryPanel";
 import type { Status } from "@/lib/type";
+import LabMap from "@/components/LabMap";
 
 // type Seat = {
 //   id: string;
@@ -156,7 +158,7 @@ import type { Status } from "@/lib/type";
 export default function App() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.2),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(253,224,71,0.18),_transparent_32%),linear-gradient(180deg,#f6f2e9_0%,#edf4f7_100%)] text-slate-800">
-      <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-4 sm:px-6 lg:px-8 lg:py-8">
+      <div className="mx-auto flex min-h-screen max-w-7xl flex-col p-4 sm:px-6 lg:px-8 lg:py-8">
         <header className="sticky top-4 z-10 rounded-4xl border border-white/70 bg-white/75 px-5 py-4 shadow-[0_18px_40px_rgba(36,57,69,0.08)] backdrop-blur md:px-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
@@ -176,7 +178,7 @@ export default function App() {
             </Button>
           </div>
         </header>
-        <div className="my-8 h-px">
+        <main className="mt-8 space-y-8">
           <SummaryPanel
             items={[
               {
@@ -192,7 +194,15 @@ export default function App() {
               { label: "空席", value: `8 席` },
             ]}
           />
-        </div>
+          <Card className="rounded-4xl px-3 py-5 md:px-4 md:py-6">
+            <CardHeader>
+              <CardTitle className="font-bold text-xl ">研究室マップ</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <LabMap />
+            </CardContent>
+          </Card>
+        </main>
       </div>
     </div>
   );
