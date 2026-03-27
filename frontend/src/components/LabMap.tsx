@@ -5,7 +5,7 @@ type SeatStatus = "present" | "absent" | "vacant";
 type Seat = {
   code: string;
   familyName?: string;
-  grade?: "B4" | "M1" | "M2";
+  grade?: "B4" | "M1" | "M2" | "D1" | "D2" | "D3";
   status: SeatStatus;
 };
 
@@ -22,121 +22,137 @@ const SEAT_STYLE: Record<SeatStatus, string> = {
 };
 
 function SeatTile({ seat }: { seat: Seat }) {
+  const isVacant = seat.status === "vacant";
+
   return (
-    <div
-      className={`h-full rounded-none border border-slate-900/20 p-4 ${SEAT_STYLE[seat.status]} p-3`}
+    <button
+      type="button"
+      onClick={() => onClickSeat(seat)}
+      className={`h-full rounded-none border border-slate-900/20 p-3 ${SEAT_STYLE[seat.status]}`}
     >
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold tracking-wide text-slate-500">
           {seat.code}
         </p>
-        {seat.status !== "vacant" && (
+        {!isVacant ? (
           <Badge className="bg-white/80 text-slate-800" variant="outline">
             {STATUS_LABEL[seat.status]}
           </Badge>
+        ) : (
+          <span aria-hidden className="h-6 w-12" />
         )}
       </div>
-      <p className="mt-4 text-xl font-bold tracking-tight text-slate-900">
-        {seat.familyName}
+      <p
+        className={`mt-4 text-xl font-bold tracking-tight text-slate-900 ${isVacant ? "invisible" : ""}`}
+      >
+        {seat.familyName ?? "空席"}
       </p>
-      <p className="mt-1 text-sm text-slate-600">{seat.grade}</p>
-    </div>
+      <p
+        className={`mt-1 text-sm text-slate-600 ${isVacant ? "invisible" : ""}`}
+      >
+        {seat.grade ?? "D3"}
+      </p>
+    </button>
   );
 }
 
 const seats: Record<string, Seat> = {
   A1: {
-    code: "A 1",
+    code: "A1",
     familyName: "青木",
     grade: "M1",
     status: "absent",
   },
   A2: {
-    code: "A 2",
+    code: "A2",
     familyName: "石田",
     grade: "B4",
     status: "absent",
   },
   A3: {
-    code: "A 3",
+    code: "A3",
     familyName: "上村",
     grade: "M2",
     status: "absent",
   },
 
   B1: {
-    code: "B 1",
+    code: "B1",
     familyName: "大西",
     grade: "M1",
     status: "present",
   },
   B2: {
-    code: "B 2",
+    code: "B2",
     familyName: "岡本",
     grade: "M2",
     status: "present",
   },
   B3: {
-    code: "B 3",
+    code: "B3",
     familyName: "川村",
     grade: "B4",
     status: "absent",
   },
 
   C1: {
-    code: "C 1",
+    code: "C1",
     familyName: "木村",
     grade: "M1",
     status: "absent",
   },
   C2: {
-    code: "C 2",
+    code: "C2",
     familyName: "小林",
     grade: "M2",
     status: "absent",
   },
   C3: {
-    code: "C 3",
+    code: "C3",
     familyName: "佐々木",
     grade: "M1",
     status: "absent",
   },
 
   D1: {
-    code: "D 1",
+    code: "D1",
     familyName: "田中",
     grade: "M1",
     status: "absent",
   },
   D2: {
-    code: "D 2",
+    code: "D2",
     familyName: "中村",
     grade: "M1",
     status: "absent",
   },
   D3: {
-    code: "D 3",
+    code: "D3",
     familyName: "橋本",
     grade: "M1",
     status: "absent",
   },
 
   E1: {
-    code: "E 1",
+    code: "E1",
     familyName: "福田",
     grade: "M1",
     status: "present",
   },
   E2: {
-    code: "E 2",
+    code: "E2",
     familyName: "松本",
     grade: "M2",
     status: "present",
   },
   E3: {
-    code: "E 3",
+    code: "E3",
     status: "vacant",
   },
+};
+
+const onClickSeat = (seat: Seat) => {
+  alert(`${seat.code} - ${STATUS_LABEL[seat.status]}`);
 };
 
 export default function LabMap() {
@@ -194,7 +210,7 @@ export default function LabMap() {
             <div className="flex items-center justify-center border border-slate-300 bg-gradient-to-b from-[rgba(250,248,241,0.95)] to-[rgba(245,240,229,0.98)] text-xl font-bold text-slate-900">
               入口
             </div>
-            <div className="flex items-center justify-center border border-slate-300 bg-gradient-to-b from-[rgba(252,237,192,0.92)] to-[rgba(249,229,170,0.95)] text-xl font-bold text-slate-900">
+            <div className="flex text-center items-center justify-center border border-slate-300 bg-gradient-to-b from-[rgba(252,237,192,0.92)] to-[rgba(249,229,170,0.95)] text-xl font-bold text-slate-900">
               冷蔵庫
               <br />
               電子レンジ
