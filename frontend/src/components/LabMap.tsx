@@ -16,8 +16,10 @@ const STATUS_LABEL: Record<SeatStatus, string> = {
 };
 
 const SEAT_STYLE: Record<SeatStatus, string> = {
-  present: "bg-gradient-to-b from-green-100/85 to-green-200/90",
-  absent: "bg-gradient-to-b from-slate-100/85 to-slate-200/90",
+  present:
+    "bg-gradient-to-b from-green-100/85 to-green-200/90 active:from-green-200/90 active:to-green-300/95",
+  absent:
+    "bg-gradient-to-b from-slate-100/85 to-slate-200/90 active:from-slate-200/90 active:to-slate-300/95",
   vacant: "bg-gradient-to-b from-white-200/85 to-gray-300/90",
 };
 
@@ -155,7 +157,8 @@ const seats: Record<string, Seat> = {
 };
 
 const onClickSeat = (seat: Seat) => {
-  alert(`${seat.code} - ${STATUS_LABEL[seat.status]}`);
+  //   alert(`${seat.code} - ${STATUS_LABEL[seat.status]}`);
+  seat.status = seat.status === "present" ? "absent" : "present";
 };
 
 export default function LabMap() {
