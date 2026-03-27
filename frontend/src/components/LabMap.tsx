@@ -1,21 +1,20 @@
 import { Badge } from "@/components/ui/badge";
-
-type SeatStatus = "present" | "absent" | "vacant";
+import type { Status } from "@/lib/type";
 
 type Seat = {
   code: string;
   familyName?: string;
   grade?: "B4" | "M1" | "M2" | "D1" | "D2" | "D3";
-  status: SeatStatus;
+  status: Status;
 };
 
-const STATUS_LABEL: Record<SeatStatus, string> = {
+const STATUS_LABEL: Record<Status, string> = {
   present: "在室",
   absent: "不在",
   vacant: "",
 };
 
-const SEAT_STYLE: Record<SeatStatus, string> = {
+const SEAT_STYLE: Record<Status, string> = {
   present:
     "bg-gradient-to-b from-green-100/85 to-green-200/90 active:from-green-200/90 active:to-green-300/95",
   absent:
