@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import {
+  REFRESH_REQUESTED_EVENT,
+  SEAT_STATUS_UPDATED_EVENT,
+} from "@/lib/events";
 
 type SummaryNum = {
   present_count: number;
@@ -28,13 +32,15 @@ export default function useSummary() {
 
     fetchSummary();
 
-    const onSeatStatusUpdated = () => {
+    const onRefresh = () => {
       fetchSummary();
     };
 
-    window.addEventListener("seat-status-updated", onSeatStatusUpdated);
+    window.addEventListener(SEAT_STATUS_UPDATED_EVENT, onRefresh);
+    window.addEventListener(REFRESH_REQUESTED_EVENT, onRefresh);
     return () => {
-      window.removeEventListener("seat-status-updated", onSeatStatusUpdated);
+      window.removeEventListener(SEAT_STATUS_UPDATED_EVENT, onRefresh);
+      window.removeEventListener(REFRESH_REQUESTED_EVENT, onRefresh);
     };
   }, []);
 

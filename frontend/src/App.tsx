@@ -3,6 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SummaryPanel from "@/components/summaryPanel";
 import LabMap from "@/components/LabMap";
 import useSummary from "@/lib/useSummary";
+import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
+
+const onClickUpdate = () => {
+  window.dispatchEvent(new Event(REFRESH_REQUESTED_EVENT));
+};
 
 export default function App() {
   const [summary, updatedAt] = useSummary();
@@ -39,6 +44,7 @@ export default function App() {
               variant="default"
               size="lg"
               className="rounded-full px-4 py-2 transition"
+              onClick={onClickUpdate}
             >
               更新
             </Button>
