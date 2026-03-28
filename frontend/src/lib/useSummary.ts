@@ -18,7 +18,7 @@ export default function useSummary() {
         .then((data) => {
           if (data.ok) {
             setSummary(data.summary);
-            setUpdatedAt(new Date());
+            setUpdatedAt(new Date(data.updated_at));
           } else {
             console.error(data.error);
           }
