@@ -17,10 +17,13 @@ try:
     data = json.loads(body)
 
     seat_id = data.get("seat_id")
-    status = data.get("status").strip()
+    raw_status = data.get("status")
 
-    if not seat_id or not status:
-        raise ValueError("seat_id/status is required")
+    if not seat_id or not isinstance(raw_status, str) or not raw_status.strip():
+        print(json.dumps({"ok": False, "error": "seat_id/status is required"}, ensure_ascii=False))
+        sys.exit(0)
+
+    status = raw_status.strip()
 
     conn = mysql.connector.connect(
         host=os.getenv("DB_HOST", "db"),
