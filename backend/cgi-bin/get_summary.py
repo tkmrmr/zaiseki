@@ -22,15 +22,13 @@ try:
 
     query = """
     SELECT
-        SUM(status = 'present') AS present_count,
-        SUM(status = 'absent') AS absent_count,
-        SUM(status IS NULL) AS null_count,
+        COALESCE(SUM(status = 'present'), 0) AS present_count,
+        COALESCE(SUM(status = 'absent'), 0) AS absent_count,
+        COALESCE(SUM(status IS NULL), 0) AS null_count,
         COUNT(seats.seat_id) AS total_seats
     FROM seats
     LEFT JOIN presence_status
         ON presence_status.seat_id = seats.seat_id
-    LEFT JOIN students
-        ON students.student_id = presence_status.student_id
     ;
     """
 
