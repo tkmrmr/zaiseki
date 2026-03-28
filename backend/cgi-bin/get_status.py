@@ -59,6 +59,10 @@ except mysql.connector.Error as e:
     print(e, file=sys.stderr)
     print(json.dumps({"ok": False, "error": "Database error"}, ensure_ascii=False))
 
+except Exception as e:
+    print(e, file=sys.stderr)
+    print(json.dumps({"ok": False, "error": "Internal error"}, ensure_ascii=False))
+
 finally:
     if conn is not None:
         conn.close()
