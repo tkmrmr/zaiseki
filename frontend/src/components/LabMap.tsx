@@ -89,8 +89,22 @@ async function updateStatus(seat: Seat, newStatus: Status): Promise<void> {
       status: newStatus,
     }),
   });
+
+  if (!res.ok) {
+    let message = `Server error: ${res.status}`;
+    try {
+      const data = await res.json();
+      if (data.error) message = data.error;
+    } catch {
+      // non-JSON body; keep the status-code message
+    }
+    throw new Error(message);
+  }
+
   const data = await res.json();
-  console.log(data);
+  if (!data.ok) {
+    throw new Error(data.error ?? "Unknown error");
+  }
 }
 
 export default function LabMap() {
@@ -98,14 +112,20 @@ export default function LabMap() {
 
   const onClickSeat = async (seat: Seat) => {
     const newStatus = seat.status === "present" ? "absent" : "present";
-    await updateStatus(seat, newStatus);
     setSeats((prev) => ({
       ...prev,
-      [seat.code]: {
-        ...prev[seat.code],
-        status: newStatus,
-      },
+      [seat.code]: { ...prev[seat.code], status: newStatus },
     }));
+    try {
+      await updateStatus(seat, newStatus);
+    } catch (err) {
+      console.error(err);
+      // Roll back optimistic update on failure
+      setSeats((prev) => ({
+        ...prev,
+        [seat.code]: { ...prev[seat.code], status: seat.status },
+      }));
+    }
   };
 
   useEffect(() => {
