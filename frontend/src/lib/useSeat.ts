@@ -79,5 +79,8 @@ export default function useSeat() {
       })
       .catch((err) => console.error(err));
   }, []);
-  return [seats, onClickSeat] as [Record<string, Seat>, (seat: Seat) => void];
+  return [seats, onClickSeat] as [
+    Record<string, Seat>,
+    (seat: Seat) => Promise<void>,
+  ];
 }
