@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import json
+import sys
 
 import mysql.connector
 
 print("Content-Type: application/json; charset=utf-8")
 print()
 
+conn = None
 try:
     conn = mysql.connector.connect(
         host="db", user="root", password="rootpass", database="lab"
@@ -48,7 +50,9 @@ try:
     print(json.dumps({"ok": True, "seats": seats}, ensure_ascii=False))
 
 except mysql.connector.Error as e:
-    print(json.dumps({"ok": False, "error": str(e)}, ensure_ascii=False))
+    print(e, file=sys.stderr)
+    print(json.dumps({"ok": False, "error": "Database error"}, ensure_ascii=False))
 
 finally:
-    conn.close()
+    if conn is not None:
+        conn.close()
