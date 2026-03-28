@@ -19,7 +19,7 @@ const SEAT_STYLE: Record<Status, string> = {
     "bg-gradient-to-b from-green-100/85 to-green-200/90 active:from-green-200/90 active:to-green-300/95",
   absent:
     "bg-gradient-to-b from-slate-100/85 to-slate-200/90 active:from-slate-200/90 active:to-slate-300/95",
-  vacant: "bg-gradient-to-b from-white-200/85 to-gray-300/90",
+  vacant: "bg-gradient-to-b from-white/85 to-gray-300/90",
 };
 
 function SeatTile({ seat }: { seat: Seat }) {
