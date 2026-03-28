@@ -16,7 +16,7 @@ try:
         host=os.getenv("DB_HOST", "db"),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
-        database=os.getenv("DB_NAME", "lab"),
+        database=os.getenv("DB_NAME"),
     )
     cur = conn.cursor()
 

@@ -21,6 +21,11 @@ services:
       - "80:80"
     volumes:
       - ./backend/cgi-bin:/usr/local/apache2/cgi-bin
+    environment:
+      DB_HOST: db
+      DB_USER: ${MARIADB_USER}
+      DB_PASSWORD: ${MARIADB_PASSWORD}
+      DB_NAME: ${MARIADB_DATABASE}
 
   adminer:
     image: adminer
