@@ -22,9 +22,9 @@ services:
     volumes:
       - ./backend/cgi-bin:/usr/local/apache2/cgi-bin
     environment:
-      DB_HOST: db
-      DB_USER: ${MARIADB_USER}
-      DB_PASSWORD: ${MARIADB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${MARIADB_ROOT}
+      DB_PASSWORD: ${MARIADB_ROOT_PASSWORD}
       DB_NAME: ${MARIADB_DATABASE}
 
   adminer:

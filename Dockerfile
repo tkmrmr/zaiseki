@@ -1,9 +1,12 @@
-FROM httpd:2.4
+FROM httpd:2.4-bookworm
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-    python3 \
+    ca-certificates git \
+    python3.11 \
+    python3.11-dev \
+    python3.11-venv \
     python3-pip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install mysql-connector-python
+RUN python3.11 -m pip install --no-cache-dir --break-system-packages mysql-connector-python
