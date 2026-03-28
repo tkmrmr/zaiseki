@@ -1,0 +1,37 @@
+services:
+  db:
+    image: mariadb:10.11
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  apache:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend/cgi-bin:/usr/local/apache2/cgi-bin
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_USER: ${MARIADB_ROOT}
+      DB_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      DB_NAME: ${MARIADB_DATABASE}
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  db-data:
