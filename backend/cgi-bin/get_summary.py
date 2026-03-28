@@ -4,6 +4,7 @@
 import json
 import os
 import sys
+from datetime import datetime, timezone
 
 import mysql.connector
 
@@ -19,6 +20,8 @@ try:
         database=os.getenv("DB_NAME"),
     )
     cur = conn.cursor(dictionary=True)
+
+    updated_at = datetime.now(timezone.utc).isoformat()
 
     query = """
     SELECT
@@ -42,7 +45,7 @@ try:
         "total_seats": int(row["total_seats"]),
     }
 
-    print(json.dumps({"ok": True, "summary": summary}, ensure_ascii=False))
+    print(json.dumps({"ok": True, "summary": summary, "updated_at": updated_at}, ensure_ascii=False))
 
 except mysql.connector.Error as e:
     print(e, file=sys.stderr)

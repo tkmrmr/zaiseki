@@ -5,7 +5,7 @@ import LabMap from "@/components/LabMap";
 import useSummary from "@/lib/useSummary";
 
 export default function App() {
-  const summary = useSummary();
+  const [summary, updatedAt] = useSummary();
   const presentCount = summary?.present_count ?? 0;
   const absentCount = summary?.absent_count ?? 0;
   const nullCount = summary?.null_count ?? 0;
@@ -21,7 +21,18 @@ export default function App() {
                 研究室 在室管理アプリ
               </p>
               <p className="text-sm font-semibold tracking-[0.10m] text-slate-500">
-                最終更新：2026年3月28日(木) 14:30
+                最終更新：
+                {updatedAt
+                  ? updatedAt.toLocaleString("ja-JP", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      timeZone: "Asia/Tokyo",
+                      hour12: false,
+                    })
+                  : "取得中"}
               </p>
             </div>
             <Button
