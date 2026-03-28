@@ -3,10 +3,10 @@ services:
     image: mariadb:10.11
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: rootpass
-      MARIADB_DATABASE: testdb
-      MARIADB_USER: testuser
-      MARIADB_PASSWORD: testpass
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
