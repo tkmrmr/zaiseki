@@ -41,6 +41,11 @@ export default function useSeat() {
     }));
     try {
       await updateStatus(seat, newStatus);
+      window.dispatchEvent(
+        new CustomEvent("seat-status-updated", {
+          detail: { seatId: seat.id, status: newStatus },
+        }),
+      );
     } catch (err) {
       console.error(err);
       // Roll back optimistic update on failure

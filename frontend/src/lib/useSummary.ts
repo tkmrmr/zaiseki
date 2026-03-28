@@ -10,7 +10,7 @@ type SummaryItem = {
 export default function useSummary() {
   const [summary, setSummary] = useState<SummaryItem | null>(null);
 
-  useEffect(() => {
+  const fetchSummary = () => {
     fetch("/cgi-bin/get_summary.py")
       .then((res) => res.json())
       .then((data) => {
@@ -21,6 +21,20 @@ export default function useSummary() {
         }
       })
       .catch((err) => console.error(err));
+  };
+
+  useEffect(() => {
+    fetchSummary();
+
+    const onSeatStatusUpdated = () => {
+      fetchSummary();
+    };
+
+    window.addEventListener("seat-status-updated", onSeatStatusUpdated);
+    return () => {
+      window.removeEventListener("seat-status-updated", onSeatStatusUpdated);
+    };
   }, []);
+
   return summary;
 }
