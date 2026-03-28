@@ -1,0 +1,30 @@
+services:
+  db:
+    image: mariadb:10.11
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpass
+      MARIADB_DATABASE: testdb
+      MARIADB_USER: testuser
+      MARIADB_PASSWORD: testpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  apache:
+    image: httpd:2.4
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend/cgi-bin:/usr/local/apache2/cgi-bin
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  db-data:
