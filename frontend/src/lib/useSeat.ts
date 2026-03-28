@@ -1,8 +1,37 @@
 import { useEffect, useState } from "react";
 import type { Seat, Status } from "@/lib/type";
+import {
+  REFRESH_REQUESTED_EVENT,
+  SEAT_STATUS_UPDATED_EVENT,
+} from "@/lib/events";
 
 export default function useSeat() {
   const [seats, setSeats] = useState<Record<string, Seat>>({});
+
+  const fetchSeats = async () => {
+    try {
+      const res = await fetch("/cgi-bin/get_status.py");
+      const data = await res.json();
+
+      if (data.ok) {
+        const tempSeats: Record<string, Seat> = {};
+        data.seats.forEach((seat: Seat) => {
+          tempSeats[seat.code] = {
+            id: seat.id,
+            code: seat.code,
+            familyName: seat.familyName,
+            grade: seat.grade,
+            status: seat.status,
+          };
+        });
+        setSeats(tempSeats);
+      } else {
+        console.error(data.error);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const updateStatus = async (seat: Seat, newStatus: Status): Promise<void> => {
     const res = await fetch("/cgi-bin/update_status.py", {
@@ -42,7 +71,7 @@ export default function useSeat() {
     try {
       await updateStatus(seat, newStatus);
       window.dispatchEvent(
-        new CustomEvent("seat-status-updated", {
+        new CustomEvent(SEAT_STATUS_UPDATED_EVENT, {
           detail: { seatId: seat.id, status: newStatus },
         }),
       );
@@ -57,27 +86,18 @@ export default function useSeat() {
   };
 
   useEffect(() => {
-    fetch("/cgi-bin/get_status.py")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.ok) {
-          const tempSeats: Record<string, Seat> = {};
-          data.seats.forEach((seat: Seat) => {
-            tempSeats[seat.code] = {
-              id: seat.id,
-              code: seat.code,
-              familyName: seat.familyName,
-              grade: seat.grade,
-              status: seat.status,
-            };
-          });
-          setSeats(tempSeats);
-          console.log("座席情報を取得しました:", tempSeats);
-        } else {
-          console.error(data.error);
-        }
-      })
-      .catch((err) => console.error(err));
+    queueMicrotask(() => {
+      void fetchSeats();
+    });
+
+    const onRefreshRequested = () => {
+      fetchSeats();
+    };
+
+    window.addEventListener(REFRESH_REQUESTED_EVENT, onRefreshRequested);
+    return () => {
+      window.removeEventListener(REFRESH_REQUESTED_EVENT, onRefreshRequested);
+    };
   }, []);
   return [seats, onClickSeat] as [
     Record<string, Seat>,

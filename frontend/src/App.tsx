@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SummaryPanel from "@/components/summaryPanel";
 import LabMap from "@/components/LabMap";
 import useSummary from "@/lib/useSummary";
+import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
 
 const onClickUpdate = () => {
-  window.dispatchEvent(new Event("seat-status-updated"));
+  window.dispatchEvent(new Event(REFRESH_REQUESTED_EVENT));
 };
 
 export default function App() {
