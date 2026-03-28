@@ -45,10 +45,10 @@ try:
                 "updated_at": updated_at.isoformat() if updated_at else None,
             }
         )
-
-    conn.close()
-
     print(json.dumps({"ok": True, "seats": seats}, ensure_ascii=False))
 
 except mysql.connector.Error as e:
     print(json.dumps({"ok": False, "error": str(e)}, ensure_ascii=False))
+
+finally:
+    conn.close()
