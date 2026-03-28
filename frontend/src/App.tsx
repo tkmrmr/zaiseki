@@ -2,8 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SummaryPanel from "@/components/summaryPanel";
 import LabMap from "@/components/LabMap";
+import useSummary from "@/lib/useSummary";
 
 export default function App() {
+  const summary = useSummary();
+
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.2),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(253,224,71,0.18),_transparent_32%),linear-gradient(180deg,#f6f2e9_0%,#edf4f7_100%)] text-slate-800">
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col p-4 sm:px-6 lg:px-8 lg:py-8">
@@ -30,16 +33,16 @@ export default function App() {
           <SummaryPanel
             items={[
               {
-                label: "在室人数",
-                value: `6 名`,
+                label: "在室",
+                value: `${summary?.present_count} 名`,
                 tone: "highlight",
               },
-              { label: "不在", value: `2 名` },
+              { label: "不在", value: `${summary?.absent_count} 名` },
               {
-                label: "使用中の席",
-                value: `4 / 12`,
+                label: "空席",
+                value: `${summary?.null_count} 席`,
               },
-              { label: "空席", value: `8 席` },
+              { label: "総席数", value: `${summary?.total_seats} 席` },
             ]}
           />
           <Card className="rounded-4xl px-3 py-5 md:px-4 md:py-6">

@@ -18,42 +18,33 @@ try:
         password=os.getenv("DB_PASSWORD"),
         database=os.getenv("DB_NAME"),
     )
-    cur = conn.cursor()
+    cur = conn.cursor(dictionary=True)
 
     query = """
     SELECT
-        seats.seat_id, 
-        seats.seat_number, 
-        students.name, 
-        students.grade, 
-        presence_status.status, 
-        presence_status.updated_at
+        SUM(status = 'present') AS present_count,
+        SUM(status = 'absent') AS absent_count,
+        SUM(status IS NULL) AS null_count,
+        COUNT(seats.seat_id) AS total_seats
     FROM seats
     LEFT JOIN presence_status
         ON presence_status.seat_id = seats.seat_id
     LEFT JOIN students
         ON students.student_id = presence_status.student_id
-    ORDER BY seats.seat_id
     ;
     """
 
     cur.execute(query)
+    row = cur.fetchone()
 
-    seats = []
-    for seat_id, seat_number, name, grade, status, updated_at in cur:
-        if status is None:
-            status = "vacant"
-        seats.append(
-            {
-                "id": seat_id,
-                "code": seat_number,
-                "familyName": name,
-                "grade": grade,
-                "status": status,
-                # "updated_at": updated_at.isoformat() if updated_at else None,
-            }
-        )
-    print(json.dumps({"ok": True, "seats": seats}, ensure_ascii=False))
+    summary = {
+        "present_count": int(row["present_count"]),
+        "absent_count": int(row["absent_count"]),
+        "null_count": int(row["null_count"]),
+        "total_seats": int(row["total_seats"]),
+    }
+
+    print(json.dumps({"ok": True, "summary": summary}, ensure_ascii=False))
 
 except mysql.connector.Error as e:
     print(e, file=sys.stderr)
