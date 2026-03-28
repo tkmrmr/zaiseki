@@ -10,20 +10,20 @@ type SummaryNum = {
 export default function useSummary() {
   const [summary, setSummary] = useState<SummaryNum | null>(null);
 
-  const fetchSummary = () => {
-    fetch("/cgi-bin/get_summary.py")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.ok) {
-          setSummary(data.summary);
-        } else {
-          console.error(data.error);
-        }
-      })
-      .catch((err) => console.error(err));
-  };
-
   useEffect(() => {
+    const fetchSummary = () => {
+      fetch("/cgi-bin/get_summary.py")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.ok) {
+            setSummary(data.summary);
+          } else {
+            console.error(data.error);
+          }
+        })
+        .catch((err) => console.error(err));
+    };
+
     fetchSummary();
 
     const onSeatStatusUpdated = () => {
