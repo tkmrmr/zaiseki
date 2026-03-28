@@ -113,9 +113,9 @@ export default function LabMap() {
       .then((res) => res.json())
       .then((data) => {
         if (data.ok) {
-          const hoge: Record<string, Seat> = {};
+          const tempSeats: Record<string, Seat> = {};
           data.seats.forEach((seat: Seat) => {
-            hoge[seat.code] = {
+            tempSeats[seat.code] = {
               id: seat.id,
               code: seat.code,
               familyName: seat.familyName,
@@ -123,8 +123,8 @@ export default function LabMap() {
               status: seat.status,
             };
           });
-          setSeats(hoge);
-          console.log("座席情報を取得しました:", hoge);
+          setSeats(tempSeats);
+          console.log("座席情報を取得しました:", tempSeats);
         } else {
           console.error(data.error);
         }
