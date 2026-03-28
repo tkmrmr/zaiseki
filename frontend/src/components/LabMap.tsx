@@ -96,9 +96,9 @@ async function updateStatus(seat: Seat, newStatus: Status): Promise<void> {
 export default function LabMap() {
   const [seats, setSeats] = useState<Record<string, Seat>>({});
 
-  const onClickSeat = (seat: Seat) => {
+  const onClickSeat = async (seat: Seat) => {
     const newStatus = seat.status === "present" ? "absent" : "present";
-    updateStatus(seat, newStatus);
+    await updateStatus(seat, newStatus);
     setSeats((prev) => ({
       ...prev,
       [seat.code]: {
