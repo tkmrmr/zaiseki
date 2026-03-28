@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import sys
 
 import mysql.connector
 
@@ -49,7 +50,8 @@ try:
     print(json.dumps({"ok": True, "seats": seats}, ensure_ascii=False))
 
 except mysql.connector.Error as e:
-    print(json.dumps({"ok": False, "error": str(e)}, ensure_ascii=False))
+    print(e, file=sys.stderr)
+    print(json.dumps({"ok": False, "error": "Database error"}, ensure_ascii=False))
 
 finally:
     if conn is not None:
