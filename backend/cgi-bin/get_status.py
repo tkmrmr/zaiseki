@@ -8,6 +8,7 @@ import mysql.connector
 print("Content-Type: application/json; charset=utf-8")
 print()
 
+conn = None
 try:
     conn = mysql.connector.connect(
         host="localhost", user="root", password="rootpass", database="lab"
@@ -51,4 +52,5 @@ except mysql.connector.Error as e:
     print(json.dumps({"ok": False, "error": str(e)}, ensure_ascii=False))
 
 finally:
-    conn.close()
+    if conn is not None:
+        conn.close()
