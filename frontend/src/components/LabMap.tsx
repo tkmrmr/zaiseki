@@ -11,7 +11,7 @@ type Seat = {
 const STATUS_LABEL: Record<Status, string> = {
   present: "在室",
   absent: "不在",
-  vacant: "",
+  vacant: "空席",
 };
 
 const SEAT_STYLE: Record<Status, string> = {
