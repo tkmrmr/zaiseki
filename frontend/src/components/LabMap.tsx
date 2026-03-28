@@ -1,7 +1,10 @@
+import { useEffect, useState } from "react";
+
 import { Badge } from "@/components/ui/badge";
 import type { Status } from "@/lib/type";
 
 type Seat = {
+  id: number;
   code: string;
   familyName?: string;
   grade?: "B4" | "M1" | "M2" | "D1" | "D2" | "D3";
@@ -22,7 +25,16 @@ const SEAT_STYLE: Record<Status, string> = {
   vacant: "bg-gradient-to-b from-white/85 to-gray-300/90",
 };
 
-function SeatTile({ seat }: { seat: Seat }) {
+function SeatTile({
+  seat,
+  onClickSeat,
+}: {
+  seat?: Seat;
+  onClickSeat: (seat: Seat) => void;
+}) {
+  if (!seat) {
+    return <div className="h-full border border-slate-300 bg-slate-100/70" />;
+  }
   const isVacant = seat.status === "vacant";
 
   return (
@@ -43,7 +55,13 @@ function SeatTile({ seat }: { seat: Seat }) {
             {STATUS_LABEL[seat.status]}
           </Badge>
         ) : (
-          <span aria-hidden className="h-6 w-12" />
+          <Badge
+            aria-hidden
+            className="invisible bg-white/80 text-slate-800"
+            variant="outline"
+          >
+            空席
+          </Badge>
         )}
       </div>
       <p
@@ -60,133 +78,106 @@ function SeatTile({ seat }: { seat: Seat }) {
   );
 }
 
-const seats: Record<string, Seat> = {
-  A1: {
-    code: "A1",
-    familyName: "青木",
-    grade: "M1",
-    status: "absent",
-  },
-  A2: {
-    code: "A2",
-    familyName: "石田",
-    grade: "B4",
-    status: "absent",
-  },
-  A3: {
-    code: "A3",
-    familyName: "上村",
-    grade: "M2",
-    status: "absent",
-  },
+async function updateStatus(seat: Seat, newStatus: Status): Promise<void> {
+  const res = await fetch("/cgi-bin/update_status.py", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      seat_id: seat.id,
+      status: newStatus,
+    }),
+  });
 
-  B1: {
-    code: "B1",
-    familyName: "大西",
-    grade: "M1",
-    status: "present",
-  },
-  B2: {
-    code: "B2",
-    familyName: "岡本",
-    grade: "M2",
-    status: "present",
-  },
-  B3: {
-    code: "B3",
-    familyName: "川村",
-    grade: "B4",
-    status: "absent",
-  },
+  if (!res.ok) {
+    let message = `Server error: ${res.status}`;
+    try {
+      const data = await res.json();
+      if (data.error) message = data.error;
+    } catch {
+      // non-JSON body; keep the status-code message
+    }
+    throw new Error(message);
+  }
 
-  C1: {
-    code: "C1",
-    familyName: "木村",
-    grade: "M1",
-    status: "absent",
-  },
-  C2: {
-    code: "C2",
-    familyName: "小林",
-    grade: "M2",
-    status: "absent",
-  },
-  C3: {
-    code: "C3",
-    familyName: "佐々木",
-    grade: "M1",
-    status: "absent",
-  },
-
-  D1: {
-    code: "D1",
-    familyName: "田中",
-    grade: "M1",
-    status: "absent",
-  },
-  D2: {
-    code: "D2",
-    familyName: "中村",
-    grade: "M1",
-    status: "absent",
-  },
-  D3: {
-    code: "D3",
-    familyName: "橋本",
-    grade: "M1",
-    status: "absent",
-  },
-
-  E1: {
-    code: "E1",
-    familyName: "福田",
-    grade: "M1",
-    status: "present",
-  },
-  E2: {
-    code: "E2",
-    familyName: "松本",
-    grade: "M2",
-    status: "present",
-  },
-  E3: {
-    code: "E3",
-    status: "vacant",
-  },
-};
-
-const onClickSeat = (seat: Seat) => {
-  //   alert(`${seat.code} - ${STATUS_LABEL[seat.status]}`);
-  seat.status = seat.status === "present" ? "absent" : "present";
-};
+  const data = await res.json();
+  if (!data.ok) {
+    throw new Error(data.error ?? "Unknown error");
+  }
+}
 
 export default function LabMap() {
+  const [seats, setSeats] = useState<Record<string, Seat>>({});
+
+  const onClickSeat = async (seat: Seat) => {
+    const newStatus = seat.status === "present" ? "absent" : "present";
+    setSeats((prev) => ({
+      ...prev,
+      [seat.code]: { ...prev[seat.code], status: newStatus },
+    }));
+    try {
+      await updateStatus(seat, newStatus);
+    } catch (err) {
+      console.error(err);
+      // Roll back optimistic update on failure
+      setSeats((prev) => ({
+        ...prev,
+        [seat.code]: { ...prev[seat.code], status: seat.status },
+      }));
+    }
+  };
+
+  useEffect(() => {
+    fetch("/cgi-bin/get_status.py")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok) {
+          const tempSeats: Record<string, Seat> = {};
+          data.seats.forEach((seat: Seat) => {
+            tempSeats[seat.code] = {
+              id: seat.id,
+              code: seat.code,
+              familyName: seat.familyName,
+              grade: seat.grade,
+              status: seat.status,
+            };
+          });
+          setSeats(tempSeats);
+          console.log("座席情報を取得しました:", tempSeats);
+        } else {
+          console.error(data.error);
+        }
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     <div className="w-full overflow-x-auto pb-2">
       <section className="min-w-[950px] overflow-hidden rounded-[28px] border border-slate-300 bg-white">
         <div className="grid grid-cols-12">
           <div className="col-span-4 grid grid-cols-3">
-            <SeatTile seat={seats.A1} />
+            <SeatTile seat={seats.A1} onClickSeat={onClickSeat} />
             <div className="row-span-3 flex items-center justify-center border border-slate-300 bg-gradient-to-b from-[rgba(250,248,241,0.95)] to-[rgba(245,240,229,0.98)] text-xl font-semibold text-slate-800">
               通路
             </div>
-            <SeatTile seat={seats.B1} />
-            <SeatTile seat={seats.A2} />
-            <SeatTile seat={seats.B2} />
-            <SeatTile seat={seats.A3} />
-            <SeatTile seat={seats.B3} />
+            <SeatTile seat={seats.B1} onClickSeat={onClickSeat} />
+            <SeatTile seat={seats.A2} onClickSeat={onClickSeat} />
+            <SeatTile seat={seats.B2} onClickSeat={onClickSeat} />
+            <SeatTile seat={seats.A3} onClickSeat={onClickSeat} />
+            <SeatTile seat={seats.B3} onClickSeat={onClickSeat} />
           </div>
 
           <div className="col-span-4 grid grid-cols-3">
-            <SeatTile seat={seats.C1} />
+            <SeatTile seat={seats.C1} onClickSeat={onClickSeat} />
             <div className="row-span-3 flex items-center justify-center border border-slate-300 bg-gradient-to-b from-[rgba(250,248,241,0.95)] to-[rgba(245,240,229,0.98)] text-xl font-semibold text-slate-800">
               通路
             </div>
-            <SeatTile seat={seats.D1} />
-            <SeatTile seat={seats.C2} />
-            <SeatTile seat={seats.D2} />
-            <SeatTile seat={seats.C3} />
-            <SeatTile seat={seats.D3} />
+            <SeatTile seat={seats.D1} onClickSeat={onClickSeat} />
+            <SeatTile seat={seats.C2} onClickSeat={onClickSeat} />
+            <SeatTile seat={seats.D2} onClickSeat={onClickSeat} />
+            <SeatTile seat={seats.C3} onClickSeat={onClickSeat} />
+            <SeatTile seat={seats.D3} onClickSeat={onClickSeat} />
           </div>
 
           <div className="col-span-4 border border-slate-300 bg-gradient-to-b from-[rgba(250,219,210,0.9)] to-[rgba(247,208,202,0.95)]">
@@ -203,9 +194,9 @@ export default function LabMap() {
           </div>
 
           <div className="col-span-4 grid grid-cols-3">
-            <SeatTile seat={seats.E1} />
-            <SeatTile seat={seats.E2} />
-            <SeatTile seat={seats.E3} />
+            <SeatTile seat={seats.E1} onClickSeat={onClickSeat} />
+            <SeatTile seat={seats.E2} onClickSeat={onClickSeat} />
+            <SeatTile seat={seats.E3} onClickSeat={onClickSeat} />
           </div>
 
           <div className="col-span-8 grid grid-cols-4">

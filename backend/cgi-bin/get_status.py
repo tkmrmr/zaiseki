@@ -41,11 +41,13 @@ try:
 
     seats = []
     for seat_id, seat_number, name, grade, status, updated_at in cur:
+        if status is None:
+            status = "vacant"
         seats.append(
             {
                 "id": seat_id,
-                "seat_number": seat_number,
-                "name": name,
+                "code": seat_number,
+                "familyName": name,
                 "grade": grade,
                 "status": status,
                 "updated_at": updated_at.isoformat() if updated_at else None,
@@ -56,6 +58,10 @@ try:
 except mysql.connector.Error as e:
     print(e, file=sys.stderr)
     print(json.dumps({"ok": False, "error": "Database error"}, ensure_ascii=False))
+
+except Exception as e:
+    print(e, file=sys.stderr)
+    print(json.dumps({"ok": False, "error": "Internal error"}, ensure_ascii=False))
 
 finally:
     if conn is not None:
