@@ -9,6 +9,7 @@ type SummaryNum = {
 
 export default function useSummary() {
   const [summary, setSummary] = useState<SummaryNum | null>(null);
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
 
   useEffect(() => {
     const fetchSummary = () => {
@@ -17,6 +18,7 @@ export default function useSummary() {
         .then((data) => {
           if (data.ok) {
             setSummary(data.summary);
+            setUpdatedAt(new Date());
           } else {
             console.error(data.error);
           }
@@ -36,5 +38,5 @@ export default function useSummary() {
     };
   }, []);
 
-  return summary;
+  return [summary, updatedAt] as [SummaryNum | null, Date | null];
 }
