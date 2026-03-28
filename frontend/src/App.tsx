@@ -6,6 +6,10 @@ import useSummary from "@/lib/useSummary";
 
 export default function App() {
   const summary = useSummary();
+  const presentCount = summary?.present_count ?? 0;
+  const absentCount = summary?.absent_count ?? 0;
+  const nullCount = summary?.null_count ?? 0;
+  const totalSeats = summary?.total_seats ?? 0;
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.2),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(253,224,71,0.18),_transparent_32%),linear-gradient(180deg,#f6f2e9_0%,#edf4f7_100%)] text-slate-800">
@@ -34,15 +38,15 @@ export default function App() {
             items={[
               {
                 label: "在室",
-                value: `${summary?.present_count} 名`,
+                value: `${presentCount} 名`,
                 tone: "highlight",
               },
-              { label: "不在", value: `${summary?.absent_count} 名` },
+              { label: "不在", value: `${absentCount} 名` },
               {
                 label: "空席",
-                value: `${summary?.null_count} 席`,
+                value: `${nullCount} 席`,
               },
-              { label: "総席数", value: `${summary?.total_seats} 席` },
+              { label: "総席数", value: `${totalSeats} 席` },
             ]}
           />
           <Card className="rounded-4xl px-3 py-5 md:px-4 md:py-6">
