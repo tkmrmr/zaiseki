@@ -10,7 +10,7 @@ print()
 
 try:
     conn = mysql.connector.connect(
-        host="localhost", user="root", password="rootpass", database="lab"
+        host="db", user="root", password="rootpass", database="lab"
     )
     cur = conn.cursor()
 
