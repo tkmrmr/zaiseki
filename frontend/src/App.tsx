@@ -29,6 +29,8 @@ export default function App() {
                       day: "2-digit",
                       hour: "2-digit",
                       minute: "2-digit",
+                      timeZone: "Asia/Tokyo",
+                      hour12: false,
                     })
                   : "取得中"}
               </p>
