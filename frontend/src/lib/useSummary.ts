@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-type SummaryItem = {
+type SummaryNum = {
   present_count: number;
   absent_count: number;
   null_count: number;
@@ -8,7 +8,7 @@ type SummaryItem = {
 };
 
 export default function useSummary() {
-  const [summary, setSummary] = useState<SummaryItem | null>(null);
+  const [summary, setSummary] = useState<SummaryNum | null>(null);
 
   const fetchSummary = () => {
     fetch("/cgi-bin/get_summary.py")
