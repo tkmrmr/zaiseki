@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import os
 import sys
 
 import mysql.connector
@@ -12,7 +13,10 @@ print()
 conn = None
 try:
     conn = mysql.connector.connect(
-        host="db", user="root", password="rootpass", database="lab"
+        host=os.getenv("DB_HOST", "db"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME", "lab"),
     )
     cur = conn.cursor()
 
