@@ -55,7 +55,13 @@ function SeatTile({
             {STATUS_LABEL[seat.status]}
           </Badge>
         ) : (
-          <span aria-hidden className="h-6 w-12" />
+          <Badge
+            aria-hidden
+            className="invisible bg-white/80 text-slate-800"
+            variant="outline"
+          >
+            空席
+          </Badge>
         )}
       </div>
       <p
