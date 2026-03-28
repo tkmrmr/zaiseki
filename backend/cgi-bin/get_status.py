@@ -41,11 +41,13 @@ try:
 
     seats = []
     for seat_id, seat_number, name, grade, status, updated_at in cur:
+        if status is None:
+            status = "vacant"
         seats.append(
             {
                 "id": seat_id,
-                "seat_number": seat_number,
-                "name": name,
+                "code": seat_number,
+                "familyName": name,
                 "grade": grade,
                 "status": status,
                 "updated_at": updated_at.isoformat() if updated_at else None,
