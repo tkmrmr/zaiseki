@@ -4,6 +4,10 @@ import SummaryPanel from "@/components/summaryPanel";
 import LabMap from "@/components/LabMap";
 import useSummary from "@/lib/useSummary";
 
+const onClickUpdate = () => {
+  window.dispatchEvent(new Event("seat-status-updated"));
+};
+
 export default function App() {
   const [summary, updatedAt] = useSummary();
   const presentCount = summary?.present_count ?? 0;
@@ -39,6 +43,7 @@ export default function App() {
               variant="default"
               size="lg"
               className="rounded-full px-4 py-2 transition"
+              onClick={onClickUpdate}
             >
               更新
             </Button>
