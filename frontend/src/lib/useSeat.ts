@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Seat, Status } from "@/lib/type";
 import {
   REFRESH_REQUESTED_EVENT,
@@ -10,7 +10,7 @@ export default function useSeat({
 }: { isViewOnly?: boolean } = {}) {
   const [seats, setSeats] = useState<Record<string, Seat>>({});
 
-  const fetchSeats = async () => {
+  const fetchSeats = useCallback(async () => {
     try {
       const res = isViewOnly
         ? await fetch("/cgi-bin/get_status.py")
@@ -41,7 +41,7 @@ export default function useSeat({
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [isViewOnly]);
 
   const updateStatus = async (seat: Seat, newStatus: Status): Promise<void> => {
     const res = await fetch("/cgi-bin/update_status.py", {
@@ -108,7 +108,7 @@ export default function useSeat({
     return () => {
       window.removeEventListener(REFRESH_REQUESTED_EVENT, onRefreshRequested);
     };
-  }, []);
+  }, [fetchSeats]);
   return [seats, onClickSeat] as [
     Record<string, Seat>,
     (seat: Seat) => Promise<void>,
