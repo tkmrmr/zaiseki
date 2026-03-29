@@ -6,9 +6,11 @@ import type { Seat } from "@/lib/type";
 export default function SeatTile({
   seat,
   onClickSeat,
+  showName,
 }: {
   seat?: Seat;
   onClickSeat: (seat: Seat) => void;
+  showName: boolean;
 }) {
   if (!seat) {
     return <div className="h-full border border-slate-300 bg-slate-100/70" />;
@@ -43,7 +45,7 @@ export default function SeatTile({
       <p
         className={cn(
           "mt-4 text-xl font-bold tracking-tight text-slate-900",
-          isVacant && "invisible",
+          (isVacant || !showName) && "invisible",
         )}
       >
         {seat.familyName ?? "空席"}

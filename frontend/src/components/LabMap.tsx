@@ -18,7 +18,7 @@ const Lounge = () => {
   );
 };
 
-export default function LabMap() {
+export default function LabMap({ showName = true }: { showName?: boolean }) {
   const [seats, onClickSeat] = useSeat();
 
   return (
@@ -26,23 +26,71 @@ export default function LabMap() {
       <section className="min-w-[950px] overflow-hidden rounded-[28px] border border-slate-300 bg-white">
         <div className="grid grid-cols-12">
           <div className="col-span-4 grid grid-cols-3">
-            <SeatTile seat={seats.A1} onClickSeat={onClickSeat} />
+            <SeatTile
+              seat={seats.A1}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
             <div className={`row-span-3 ${AISLE_CLASS}`}>通路</div>
-            <SeatTile seat={seats.B1} onClickSeat={onClickSeat} />
-            <SeatTile seat={seats.A2} onClickSeat={onClickSeat} />
-            <SeatTile seat={seats.B2} onClickSeat={onClickSeat} />
-            <SeatTile seat={seats.A3} onClickSeat={onClickSeat} />
-            <SeatTile seat={seats.B3} onClickSeat={onClickSeat} />
+            <SeatTile
+              seat={seats.B1}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
+            <SeatTile
+              seat={seats.A2}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
+            <SeatTile
+              seat={seats.B2}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
+            <SeatTile
+              seat={seats.A3}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
+            <SeatTile
+              seat={seats.B3}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
           </div>
 
           <div className="col-span-4 grid grid-cols-3">
-            <SeatTile seat={seats.C1} onClickSeat={onClickSeat} />
+            <SeatTile
+              seat={seats.C1}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
             <div className={`row-span-3 ${AISLE_CLASS}`}>通路</div>
-            <SeatTile seat={seats.D1} onClickSeat={onClickSeat} />
-            <SeatTile seat={seats.C2} onClickSeat={onClickSeat} />
-            <SeatTile seat={seats.D2} onClickSeat={onClickSeat} />
-            <SeatTile seat={seats.C3} onClickSeat={onClickSeat} />
-            <SeatTile seat={seats.D3} onClickSeat={onClickSeat} />
+            <SeatTile
+              seat={seats.D1}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
+            <SeatTile
+              seat={seats.C2}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
+            <SeatTile
+              seat={seats.D2}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
+            <SeatTile
+              seat={seats.C3}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
+            <SeatTile
+              seat={seats.D3}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
           </div>
 
           <Lounge />
@@ -50,9 +98,21 @@ export default function LabMap() {
           <div className={`col-span-12 h-28 ${AISLE_CLASS}`}>メイン通路</div>
 
           <div className="col-span-4 grid grid-cols-3">
-            <SeatTile seat={seats.E1} onClickSeat={onClickSeat} />
-            <SeatTile seat={seats.E2} onClickSeat={onClickSeat} />
-            <SeatTile seat={seats.E3} onClickSeat={onClickSeat} />
+            <SeatTile
+              seat={seats.E1}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
+            <SeatTile
+              seat={seats.E2}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
+            <SeatTile
+              seat={seats.E3}
+              onClickSeat={onClickSeat}
+              showName={showName}
+            />
           </div>
 
           <div className="col-span-8 grid grid-cols-4">
