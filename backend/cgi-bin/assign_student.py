@@ -25,17 +25,24 @@ try:
         print_json({"ok": False, "error": "Invalid seat_id"})
         sys.exit(0)
 
-    try:
-        student_id = int(data.get("student_id"))
-        if student_id <= 0:
-            raise ValueError
-    except (TypeError, ValueError):
-        print_json({"ok": False, "error": "Invalid student_id"})
+    student_name = (
+        data.get("student_name", "").strip()
+        if isinstance(data.get("student_name"), str)
+        else ""
+    )
+    if not student_name:
+        print_json({"ok": False, "error": "Invalid Student Name"})
         sys.exit(0)
 
     with get_db_connection() as conn:
         with conn.cursor() as cur:
             cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
+            cur.execute("SELECT id FROM students WHERE name = %s", (student_name,))
+            result = cur.fetchone()
+            if not result:
+                print_json({"ok": False, "error": "Student not found"})
+                sys.exit(0)
+            student_id = result[0]
             cur.execute(
                 "DELETE FROM presence_status WHERE student_id = %s", (student_id,)
             )

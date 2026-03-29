@@ -17,13 +17,39 @@ import type { Seat } from "@/lib/type";
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  seat: Seat | null;
+  seat: Seat;
+};
+
+const assignStudent = async (data: FormData, seat: Seat): Promise<void> => {
+  e.preventDefault();
+
+  const res = await fetch("/cgi-bin/assign_student.py", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      seat_id: seat.id,
+      student_name: data.get("username"),
+    }),
+  });
+
+  if (!res.ok) {
+    let message = `Server error: ${res.status}`;
+    try {
+      const data = await res.json();
+      if (data.error) message = data.error;
+    } catch {
+      // non-JSON body; keep the status-code message
+    }
+    throw new Error(message);
+  }
 };
 
 export default function SeatDialog({ open, onOpenChange, seat }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <form className="contents">
+      <form className="contents" onSubmit={(e) => assignStudent(e, seat)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader className="pr-8">
             <DialogTitle className="text-lg">座席設定</DialogTitle>
@@ -49,18 +75,14 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
             <Field>
               <Card className="gap-2">
                 <CardHeader className="pb-0">
-                  <Label htmlFor="username-1">名前</Label>
+                  <Label htmlFor="name-1">名前</Label>
                 </CardHeader>
                 {/* TODO: リストから選ぶ方式にする */}
                 <CardContent className="space-y-2">
                   <DialogDescription className="text-xs">
                     名字のみを入力してください
                   </DialogDescription>
-                  <Input
-                    id="username-1"
-                    name="username"
-                    placeholder="例: 宮本"
-                  />
+                  <Input id="name-1" name="name" placeholder="例: 宮本" />
                 </CardContent>
               </Card>
             </Field>
