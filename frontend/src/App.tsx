@@ -14,7 +14,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.2),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(253,224,71,0.18),_transparent_32%),linear-gradient(180deg,#f6f2e9_0%,#edf4f7_100%)] text-slate-800">
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col p-4 sm:px-6 lg:px-8 lg:py-8">
-        <Header app_name="研究室 在室管理アプリ" updatedAt={updatedAt} />
+        <Header appName="研究室 在室管理アプリ" updatedAt={updatedAt} />
         <main className="mt-8 space-y-8">
           <SummaryPanel
             items={[
