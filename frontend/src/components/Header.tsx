@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import useSummary from "@/lib/useSummary";
 import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
 
 const onClickUpdate = () => {
@@ -20,7 +19,7 @@ export default function Header({
           <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">
             {appName || "研究室 在室管理アプリ"}
           </p>
-          <p className="text-sm font-semibold tracking-[0.10m] text-slate-500">
+          <p className="text-sm font-semibold tracking-[0.10em] text-slate-500">
             最終更新：
             {updatedAt
               ? updatedAt.toLocaleString("ja-JP", {
