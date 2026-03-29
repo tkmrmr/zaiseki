@@ -1,15 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
-import type { Seat, Status } from "@/lib/type";
+import type { Seat, Status, pageType } from "@/lib/type";
 import {
   REFRESH_REQUESTED_EVENT,
   SEAT_STATUS_UPDATED_EVENT,
 } from "@/lib/events";
 
-export default function useSeat({
-  isViewOnly = false,
-}: { isViewOnly?: boolean } = {}) {
+export default function useSeat({ pageType }: { pageType: pageType }) {
   const [seats, setSeats] = useState<Record<string, Seat>>({});
-
+  const isViewOnly = pageType === "view" ? true : false;
   const fetchSeats = useCallback(async () => {
     try {
       const res = isViewOnly

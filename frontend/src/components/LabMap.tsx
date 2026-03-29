@@ -5,6 +5,7 @@ import {
   getLoungeTitleClass,
 } from "@/lib/styleVariants";
 import useSeat from "@/lib/useSeat";
+import type { pageType } from "@/lib/type";
 
 const FACILITY_CLASS = getLabZoneClass("facility");
 const AISLE_CLASS = getLabZoneClass("aisle");
@@ -18,12 +19,9 @@ const Lounge = () => {
   );
 };
 
-export default function LabMap({
-  isViewOnly = false,
-}: {
-  isViewOnly?: boolean;
-}) {
-  const [seats, onClickSeat] = useSeat({ isViewOnly });
+export default function LabMap({ pageType }: { pageType: pageType }) {
+  const isViewOnly = pageType === "view" ? true : false;
+  const [seats, onClickSeat] = useSeat({ pageType });
 
   return (
     <div className="w-full overflow-x-auto pb-2">
