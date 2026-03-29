@@ -42,17 +42,25 @@ export default function SeatTile({
           </Badge>
         )}
       </div>
-      <p
-        className={cn(
-          "mt-4 text-xl font-bold tracking-tight text-slate-900",
-          (isVacant || !showName) && "invisible",
-        )}
-      >
-        {seat.familyName ?? "空席"}
-      </p>
-      <p className={cn("mt-1 text-sm text-slate-600", isVacant && "invisible")}>
-        {seat.grade ?? "D3"}
-      </p>
+      {showName && !isVacant ? (
+        <p className="mt-4 text-xl font-bold tracking-tight text-slate-900">
+          {seat.familyName}
+        </p>
+      ) : (
+        <p
+          aria-hidden="true"
+          className="mt-4 h-[28px] text-xl font-bold tracking-tight text-slate-900"
+        />
+      )}
+
+      {showName && !isVacant ? (
+        <p className="mt-1 text-sm text-slate-600">{seat.grade}</p>
+      ) : (
+        <p
+          aria-hidden="true"
+          className="mt-1 h-[20px] text-sm text-slate-600"
+        />
+      )}
     </button>
   );
 }
