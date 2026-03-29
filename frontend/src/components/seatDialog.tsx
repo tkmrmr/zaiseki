@@ -45,15 +45,22 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
       }),
     });
 
+    let body: { ok?: boolean; error?: string } | null = null;
+    try {
+      body = await res.json();
+    } catch {
+      body = null;
+    }
+
     if (!res.ok) {
       let message = `Server error: ${res.status}`;
-      try {
-        const errorData = await res.json();
-        if (errorData.error) message = errorData.error;
-      } catch {
-        // non-JSON body; keep the status-code message
-      }
+      if (body?.error) message = body.error;
       setSubmitError(message);
+      return;
+    }
+
+    if (!body?.ok) {
+      setSubmitError(body?.error ?? "保存に失敗しました");
       return;
     }
 

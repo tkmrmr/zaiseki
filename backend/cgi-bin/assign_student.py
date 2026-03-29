@@ -36,13 +36,16 @@ try:
 
     with get_db_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
-            cur.execute("SELECT id FROM students WHERE name = %s", (student_name,))
+            cur.execute(
+                "SELECT student_id FROM students WHERE name = %s", (student_name,)
+            )
             result = cur.fetchone()
             if not result:
                 print_json({"ok": False, "error": "Student not found"})
                 sys.exit(0)
             student_id = result[0]
+
+            cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
             cur.execute(
                 "DELETE FROM presence_status WHERE student_id = %s", (student_id,)
             )
