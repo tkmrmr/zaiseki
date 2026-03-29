@@ -17,6 +17,12 @@ const SEAT_TILE_STATUS_CLASS: Record<Status, string> = {
   vacant: "bg-gradient-to-b from-white/85 to-gray-300/90",
 };
 
+const SEAT_TILE_STATUS_CLASS_WITHOUT_ACTIVE: Record<Status, string> = {
+  present: "bg-gradient-to-b from-green-100/85 to-green-200/90",
+  absent: "bg-gradient-to-b from-slate-100/85 to-slate-200/90",
+  vacant: "bg-gradient-to-b from-white/85 to-gray-300/90",
+};
+
 const LAB_ZONE_BASE_CLASS =
   "border border-slate-300 flex items-center justify-center";
 
@@ -35,11 +41,15 @@ export function getSeatStatusLabel(status: Status): string {
   return STATUS_LABEL[status];
 }
 
-export function getSeatTileClass(status: Status): string {
+export function getSeatTileClass(status: Status, isViewOnly: boolean): string {
+  const statusClass = isViewOnly
+    ? SEAT_TILE_STATUS_CLASS_WITHOUT_ACTIVE[status]
+    : SEAT_TILE_STATUS_CLASS[status];
+
   return cn(
     "h-full rounded-none border border-slate-900/20 p-3",
-    SEAT_TILE_STATUS_CLASS[status],
-    status === "vacant" ? "cursor-default" : "cursor-pointer",
+    statusClass,
+    status === "vacant" || isViewOnly ? "cursor-default" : "cursor-pointer",
   );
 }
 

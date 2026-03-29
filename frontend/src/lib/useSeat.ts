@@ -1,28 +1,38 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Seat, Status } from "@/lib/type";
 import {
   REFRESH_REQUESTED_EVENT,
   SEAT_STATUS_UPDATED_EVENT,
 } from "@/lib/events";
 
-export default function useSeat() {
+export default function useSeat({
+  isViewOnly = false,
+}: { isViewOnly?: boolean } = {}) {
   const [seats, setSeats] = useState<Record<string, Seat>>({});
 
-  const fetchSeats = async () => {
+  const fetchSeats = useCallback(async () => {
     try {
-      const res = await fetch("/cgi-bin/get_status.py");
+      const res = isViewOnly
+        ? await fetch("/cgi-bin/get_status.py")
+        : await fetch("/cgi-bin/get_full_status.py");
       const data = await res.json();
 
       if (data.ok) {
         const tempSeats: Record<string, Seat> = {};
         data.seats.forEach((seat: Seat) => {
-          tempSeats[seat.code] = {
-            id: seat.id,
-            code: seat.code,
-            familyName: seat.familyName,
-            grade: seat.grade,
-            status: seat.status,
-          };
+          tempSeats[seat.code] = isViewOnly
+            ? {
+                id: seat.id,
+                code: seat.code,
+                status: seat.status,
+              }
+            : {
+                id: seat.id,
+                code: seat.code,
+                familyName: seat.familyName,
+                grade: seat.grade,
+                status: seat.status,
+              };
         });
         setSeats(tempSeats);
       } else {
@@ -31,7 +41,7 @@ export default function useSeat() {
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [isViewOnly]);
 
   const updateStatus = async (seat: Seat, newStatus: Status): Promise<void> => {
     const res = await fetch("/cgi-bin/update_status.py", {
@@ -98,7 +108,7 @@ export default function useSeat() {
     return () => {
       window.removeEventListener(REFRESH_REQUESTED_EVENT, onRefreshRequested);
     };
-  }, []);
+  }, [fetchSeats]);
   return [seats, onClickSeat] as [
     Record<string, Seat>,
     (seat: Seat) => Promise<void>,

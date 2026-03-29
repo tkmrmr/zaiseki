@@ -1,14 +1,15 @@
 import { Badge } from "@/components/ui/badge";
 import { getSeatStatusLabel, getSeatTileClass } from "@/lib/styleVariants";
-import { cn } from "@/lib/utils";
 import type { Seat } from "@/lib/type";
 
 export default function SeatTile({
   seat,
   onClickSeat,
+  isViewOnly,
 }: {
   seat?: Seat;
   onClickSeat: (seat: Seat) => void;
+  isViewOnly: boolean;
 }) {
   if (!seat) {
     return <div className="h-full border border-slate-300 bg-slate-100/70" />;
@@ -18,9 +19,9 @@ export default function SeatTile({
   return (
     <button
       type="button"
-      onClick={!isVacant ? () => onClickSeat(seat) : undefined}
-      disabled={isVacant}
-      className={getSeatTileClass(seat.status)}
+      onClick={!isVacant && !isViewOnly ? () => onClickSeat(seat) : undefined}
+      disabled={isVacant || isViewOnly}
+      className={getSeatTileClass(seat.status, isViewOnly)}
     >
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold tracking-wide text-slate-500">
@@ -40,17 +41,25 @@ export default function SeatTile({
           </Badge>
         )}
       </div>
-      <p
-        className={cn(
-          "mt-4 text-xl font-bold tracking-tight text-slate-900",
-          isVacant && "invisible",
-        )}
-      >
-        {seat.familyName ?? "空席"}
-      </p>
-      <p className={cn("mt-1 text-sm text-slate-600", isVacant && "invisible")}>
-        {seat.grade ?? "D3"}
-      </p>
+      {!isViewOnly && !isVacant ? (
+        <p className="mt-4 text-xl font-bold tracking-tight text-slate-900">
+          {seat.familyName}
+        </p>
+      ) : (
+        <p
+          aria-hidden="true"
+          className="mt-4 h-[28px] text-xl font-bold tracking-tight text-slate-900"
+        />
+      )}
+
+      {!isViewOnly && !isVacant ? (
+        <p className="mt-1 text-sm text-slate-600">{seat.grade}</p>
+      ) : (
+        <p
+          aria-hidden="true"
+          className="mt-1 h-[20px] text-sm text-slate-600"
+        />
+      )}
     </button>
   );
 }
