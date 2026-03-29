@@ -3,13 +3,7 @@ import {
   REFRESH_REQUESTED_EVENT,
   SEAT_STATUS_UPDATED_EVENT,
 } from "@/lib/events";
-
-type SummaryNum = {
-  present_count: number;
-  absent_count: number;
-  null_count: number;
-  total_seats: number;
-};
+import type { SummaryNum } from "@/lib/type";
 
 export default function useSummary() {
   const [summary, setSummary] = useState<SummaryNum | null>(null);
