@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import sys
+
+import mysql.connector
+from common.get_db_connection import get_db_connection
+from common.print_json import print_json
+
+print("Content-Type: application/json; charset=utf-8")
+print()
+
+QUERY = """
+    SELECT
+        students.student_id,
+        students.name,
+        students.grade
+    FROM students
+    ORDER BY students.student_id
+    ;
+"""
+
+try:
+    with get_db_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(QUERY)
+
+            students = []
+            for student_id, name, grade in cur:
+                students.append(
+                    {
+                        "id": student_id,
+                        "student_name": name,
+                        "grade": grade,
+                    }
+                )
+
+    print_json({"ok": True, "students": students})
+
+except mysql.connector.Error as e:
+    print(e, file=sys.stderr)
+    print_json({"ok": False, "error": "Database error"})
+
+except Exception as e:
+    print(e, file=sys.stderr)
+    print_json({"ok": False, "error": "Internal error"})
