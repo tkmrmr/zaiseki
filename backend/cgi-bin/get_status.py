@@ -19,8 +19,6 @@ QUERY = """
     FROM seats
     LEFT JOIN presence_status
         ON presence_status.seat_id = seats.seat_id
-    LEFT JOIN students
-        ON students.student_id = presence_status.student_id
     ORDER BY seats.seat_id
     ;
 """
