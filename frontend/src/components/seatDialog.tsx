@@ -1,3 +1,5 @@
+import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
@@ -12,6 +14,7 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
 import type { Seat } from "@/lib/type";
 
 type Props = {
@@ -20,37 +23,53 @@ type Props = {
   seat: Seat;
 };
 
-const assignStudent = async (data: FormData, seat: Seat): Promise<void> => {
-  e.preventDefault();
-
-  const res = await fetch("/cgi-bin/assign_student.py", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      seat_id: seat.id,
-      student_name: data.get("username"),
-    }),
-  });
-
-  if (!res.ok) {
-    let message = `Server error: ${res.status}`;
-    try {
-      const data = await res.json();
-      if (data.error) message = data.error;
-    } catch {
-      // non-JSON body; keep the status-code message
-    }
-    throw new Error(message);
-  }
+type FormValues = {
+  name: string;
 };
 
 export default function SeatDialog({ open, onOpenChange, seat }: Props) {
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const { register, handleSubmit, reset, formState } = useForm<FormValues>();
+
+  const onSubmit = async (data: FormValues): Promise<void> => {
+    setSubmitError(null);
+
+    const res = await fetch("/cgi-bin/assign_student.py", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        seat_id: seat.id,
+        student_name: data.name,
+      }),
+    });
+
+    if (!res.ok) {
+      let message = `Server error: ${res.status}`;
+      try {
+        const errorData = await res.json();
+        if (errorData.error) message = errorData.error;
+      } catch {
+        // non-JSON body; keep the status-code message
+      }
+      setSubmitError(message);
+      return;
+    }
+
+    window.dispatchEvent(new Event(REFRESH_REQUESTED_EVENT));
+    reset({ name: "" });
+    onOpenChange(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <form className="contents" onSubmit={(e) => assignStudent(e, seat)}>
-        <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md">
+        <form
+          className="contents"
+          onSubmit={handleSubmit(onSubmit)}
+          method="POST"
+        >
           <DialogHeader className="pr-8">
             <DialogTitle className="text-lg">座席設定</DialogTitle>
             <DialogDescription>選択中の座席: {seat?.code}</DialogDescription>
@@ -75,14 +94,21 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
             <Field>
               <Card className="gap-2">
                 <CardHeader className="pb-0">
-                  <Label htmlFor="name-1">名前</Label>
+                  <Label htmlFor="name">名前</Label>
                 </CardHeader>
                 {/* TODO: リストから選ぶ方式にする */}
                 <CardContent className="space-y-2">
                   <DialogDescription className="text-xs">
                     名字のみを入力してください
                   </DialogDescription>
-                  <Input id="name-1" name="name" placeholder="例: 宮本" />
+                  <Input
+                    id="name"
+                    {...register("name", { required: true })}
+                    placeholder="例: 宮本"
+                  />
+                  {submitError && (
+                    <p className="text-sm text-red-600">{submitError}</p>
+                  )}
                 </CardContent>
               </Card>
             </Field>
@@ -92,10 +118,12 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
             <DialogClose asChild>
               <Button variant="outline">キャンセル</Button>
             </DialogClose>
-            <Button type="submit">保存</Button>
+            <Button type="submit" disabled={formState.isSubmitting}>
+              {formState.isSubmitting ? "保存中..." : "保存"}
+            </Button>
           </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+      </DialogContent>
     </Dialog>
   );
 }

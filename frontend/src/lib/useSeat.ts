@@ -10,8 +10,8 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
   const fetchSeats = useCallback(async () => {
     try {
       const res = isViewOnly
-        ? await fetch("/cgi-bin/get_status.py")
-        : await fetch("/cgi-bin/get_full_status.py");
+        ? await fetch("/cgi-bin/get_status.py", { cache: "no-store" })
+        : await fetch("/cgi-bin/get_full_status.py", { cache: "no-store" });
       const data = await res.json();
 
       if (data.ok) {
