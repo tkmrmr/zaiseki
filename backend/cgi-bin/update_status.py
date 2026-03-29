@@ -17,7 +17,7 @@ try:
     body = sys.stdin.read(length) if length > 0 else ""
     data = json.loads(body)
 
-    seat_id = data.get("seat_id")
+    seat_id = int(data.get("seat_id"))
     raw_status = data.get("status")
 
     if not seat_id or not isinstance(raw_status, str) or not raw_status.strip():
