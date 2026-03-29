@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom"; // TODO: 可能であればBrowserRouterに変更
 import View from "@/pages/View";
 import Kiosk from "@/pages/Kiosk";
 
