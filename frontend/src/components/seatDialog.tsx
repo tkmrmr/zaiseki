@@ -66,7 +66,7 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
                 </CardHeader>
                 <CardContent>
                   <p className="text-base font-medium">
-                    {seat?.familyName || "電通太郎"}
+                    {seat?.familyName || "なし"}
                   </p>
                 </CardContent>
               </Field>
