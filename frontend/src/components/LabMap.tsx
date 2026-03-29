@@ -1,29 +1,18 @@
 import SeatTile from "@/components/ui/seatTile";
+import {
+  getLabZoneClass,
+  getLoungeClass,
+  getLoungeTitleClass,
+} from "@/lib/styleVariants";
 import useSeat from "@/lib/useSeat";
 
-const ZONE_BASE_CLASS =
-  "border border-slate-300 flex items-center justify-center";
-
-const ZONE_TEXT_CLASS = " text-xl font-bold text-slate-800";
-
-const ZONE_STYLE_CLASSES = {
-  facility:
-    "bg-gradient-to-b from-[rgba(252,237,192,0.92)] to-[rgba(249,229,170,0.95)]",
-  aisle:
-    "bg-gradient-to-b from-[rgba(250,248,241,0.95)] to-[rgba(245,240,229,0.98)]",
-  lounge:
-    "bg-gradient-to-b from-[rgba(250,219,210,0.9)] to-[rgba(247,208,202,0.95)]",
-} as const;
-
-const ZONE_COMMON_CLASS = `${ZONE_BASE_CLASS} ${ZONE_TEXT_CLASS}`;
-const FACILITY_CLASS = `${ZONE_STYLE_CLASSES.facility} ${ZONE_COMMON_CLASS}`;
-const AISLE_CLASS = `${ZONE_STYLE_CLASSES.aisle} ${ZONE_COMMON_CLASS}`;
-const LOUNGE_CLASS = `col-span-4 h-full min-h-[300px] flex flex-col ${ZONE_BASE_CLASS} ${ZONE_STYLE_CLASSES.lounge}`;
+const FACILITY_CLASS = getLabZoneClass("facility");
+const AISLE_CLASS = getLabZoneClass("aisle");
 
 const Lounge = () => {
   return (
-    <div className={LOUNGE_CLASS}>
-      <p className={`${ZONE_TEXT_CLASS} tracking-tight`}>談話スペース</p>
+    <div className={getLoungeClass()}>
+      <p className={getLoungeTitleClass()}>談話スペース</p>
       <p className="mt-3 text-md text-slate-600">打ち合わせ・雑談</p>
     </div>
   );
