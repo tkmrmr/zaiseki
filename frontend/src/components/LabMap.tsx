@@ -25,13 +25,24 @@ export default function LabMap({ pageType }: { pageType: pageType }) {
   const isViewOnly = pageType === "view" ? true : false;
   const [seats, updateStatus] = useSeat({ isViewOnly });
   const [isSeatDialogOpen, setIsSeatDialogOpen] = useState(false);
+  const [selectedSeat, setSelectedSeat] = useState<
+    Parameters<typeof updateStatus>[0] | null
+  >(null);
 
   const onClickSeat = (...args: Parameters<typeof updateStatus>) => {
     if (pageType === "admin") {
+      setSelectedSeat(args[0] ?? null);
       setIsSeatDialogOpen(true);
       return;
     }
     return updateStatus(...args);
+  };
+
+  const onOpenChangeSeatDialog = (open: boolean) => {
+    setIsSeatDialogOpen(open);
+    if (!open) {
+      setSelectedSeat(null);
+    }
   };
 
   return (
@@ -141,7 +152,11 @@ export default function LabMap({ pageType }: { pageType: pageType }) {
         </div>
       </section>
 
-      <SeatDialog open={isSeatDialogOpen} onOpenChange={setIsSeatDialogOpen} />
+      <SeatDialog
+        open={isSeatDialogOpen}
+        onOpenChange={onOpenChangeSeatDialog}
+        seat={selectedSeat}
+      />
     </div>
   );
 }
