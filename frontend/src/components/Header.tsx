@@ -7,10 +7,10 @@ const onClickUpdate = () => {
 };
 
 export default function Header({
-  app_name,
+  appName,
   updatedAt,
 }: {
-  app_name?: string;
+  appName?: string;
   updatedAt: Date | null;
 }) {
   return (
@@ -18,7 +18,7 @@ export default function Header({
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">
-            {app_name || "研究室 在室管理アプリ"}
+            {appName || "研究室 在室管理アプリ"}
           </p>
           <p className="text-sm font-semibold tracking-[0.10m] text-slate-500">
             最終更新：
