@@ -152,11 +152,13 @@ export default function LabMap({ pageType }: { pageType: pageType }) {
         </div>
       </section>
 
-      <SeatDialog
-        open={isSeatDialogOpen}
-        onOpenChange={onOpenChangeSeatDialog}
-        seat={selectedSeat}
-      />
+      {selectedSeat && (
+        <SeatDialog
+          open={isSeatDialogOpen}
+          onOpenChange={onOpenChangeSeatDialog}
+          seat={selectedSeat}
+        />
+      )}
     </div>
   );
 }
