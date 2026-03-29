@@ -41,7 +41,11 @@ export function getSeatStatusLabel(status: Status): string {
   return STATUS_LABEL[status];
 }
 
-export function getSeatTileClass(status: Status, isViewOnly: boolean): string {
+export function getSeatTileClass(
+  status: Status,
+  isViewOnly: boolean,
+  pageType: pageType,
+): string {
   const statusClass = isViewOnly
     ? SEAT_TILE_STATUS_CLASS_WITHOUT_ACTIVE[status]
     : SEAT_TILE_STATUS_CLASS[status];
@@ -49,7 +53,9 @@ export function getSeatTileClass(status: Status, isViewOnly: boolean): string {
   return cn(
     "h-full rounded-none border border-slate-900/20 p-3",
     statusClass,
-    status === "vacant" || isViewOnly ? "cursor-default" : "cursor-pointer",
+    (status === "vacant" || isViewOnly) && pageType !== "admin"
+      ? "cursor-default"
+      : "cursor-pointer",
   );
 }
 

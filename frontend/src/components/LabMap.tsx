@@ -53,33 +53,33 @@ export default function LabMap({ pageType }: { pageType: pageType }) {
             <SeatTile
               seat={seats.A1}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <div className={`row-span-3 ${AISLE_CLASS}`}>通路</div>
             <SeatTile
               seat={seats.B1}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.A2}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.B2}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.A3}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.B3}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
           </div>
 
@@ -87,33 +87,33 @@ export default function LabMap({ pageType }: { pageType: pageType }) {
             <SeatTile
               seat={seats.C1}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <div className={`row-span-3 ${AISLE_CLASS}`}>通路</div>
             <SeatTile
               seat={seats.D1}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.C2}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.D2}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.C3}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.D3}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
           </div>
 
@@ -125,17 +125,17 @@ export default function LabMap({ pageType }: { pageType: pageType }) {
             <SeatTile
               seat={seats.E1}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.E2}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.E3}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
           </div>
 
