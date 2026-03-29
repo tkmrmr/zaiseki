@@ -5,24 +5,34 @@ import {
   SEAT_STATUS_UPDATED_EVENT,
 } from "@/lib/events";
 
-export default function useSeat() {
+export default function useSeat({
+  isViewOnly = false,
+}: { isViewOnly?: boolean } = {}) {
   const [seats, setSeats] = useState<Record<string, Seat>>({});
 
   const fetchSeats = async () => {
     try {
-      const res = await fetch("/cgi-bin/get_status.py");
+      const res = isViewOnly
+        ? await fetch("/cgi-bin/get_status.py")
+        : await fetch("/cgi-bin/get_full_status.py");
       const data = await res.json();
 
       if (data.ok) {
         const tempSeats: Record<string, Seat> = {};
         data.seats.forEach((seat: Seat) => {
-          tempSeats[seat.code] = {
-            id: seat.id,
-            code: seat.code,
-            familyName: seat.familyName,
-            grade: seat.grade,
-            status: seat.status,
-          };
+          tempSeats[seat.code] = isViewOnly
+            ? {
+                id: seat.id,
+                code: seat.code,
+                status: seat.status,
+              }
+            : {
+                id: seat.id,
+                code: seat.code,
+                familyName: seat.familyName,
+                grade: seat.grade,
+                status: seat.status,
+              };
         });
         setSeats(tempSeats);
       } else {

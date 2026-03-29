@@ -23,7 +23,7 @@ export default function LabMap({
 }: {
   isViewOnly?: boolean;
 }) {
-  const [seats, onClickSeat] = useSeat();
+  const [seats, onClickSeat] = useSeat({ isViewOnly });
 
   return (
     <div className="w-full overflow-x-auto pb-2">

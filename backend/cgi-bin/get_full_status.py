@@ -14,6 +14,8 @@ QUERY = """
     SELECT
         seats.seat_id, 
         seats.seat_number, 
+        students.name, 
+        students.grade, 
         presence_status.status, 
         presence_status.updated_at
     FROM seats
@@ -31,13 +33,15 @@ try:
             cur.execute(QUERY)
 
             seats = []
-            for seat_id, seat_number, status, updated_at in cur:
+            for seat_id, seat_number, name, grade, status, updated_at in cur:
                 if status is None:
                     status = "vacant"
                 seats.append(
                     {
                         "id": seat_id,
                         "code": seat_number,
+                        "familyName": name,
+                        "grade": grade,
                         "status": status,
                         # "updated_at": updated_at.isoformat() if updated_at else None,
                     }
