@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import json
 import sys
 
 import mysql.connector
 from common.get_db_connection import get_db_connection
+from common.print_json import print_json
 
 print("Content-Type: application/json; charset=utf-8")
 print()
@@ -47,12 +47,12 @@ try:
                     }
                 )
 
-    print(json.dumps({"ok": True, "seats": seats}, ensure_ascii=False))
+    print_json({"ok": True, "seats": seats})
 
 except mysql.connector.Error as e:
     print(e, file=sys.stderr)
-    print(json.dumps({"ok": False, "error": "Database error"}, ensure_ascii=False))
+    print_json({"ok": False, "error": "Database error"})
 
 except Exception as e:
     print(e, file=sys.stderr)
-    print(json.dumps({"ok": False, "error": "Internal error"}, ensure_ascii=False))
+    print_json({"ok": False, "error": "Internal error"})

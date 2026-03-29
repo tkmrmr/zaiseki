@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import json
 import sys
 from datetime import datetime, timezone
 
 import mysql.connector
 from common.get_db_connection import get_db_connection
+from common.print_json import print_json
 
 print("Content-Type: application/json; charset=utf-8")
 print()
@@ -37,17 +37,12 @@ try:
         "total_seats": int(row["total_seats"]),
     }
 
-    print(
-        json.dumps(
-            {"ok": True, "summary": summary, "updated_at": updated_at},
-            ensure_ascii=False,
-        )
-    )
+    print_json({"ok": True, "summary": summary, "updated_at": updated_at})
 
 except mysql.connector.Error as e:
     print(e, file=sys.stderr)
-    print(json.dumps({"ok": False, "error": "Database error"}, ensure_ascii=False))
+    print_json({"ok": False, "error": "Database error"})
 
 except Exception as e:
     print(e, file=sys.stderr)
-    print(json.dumps({"ok": False, "error": "Internal error"}, ensure_ascii=False))
+    print_json({"ok": False, "error": "Internal error"})
