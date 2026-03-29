@@ -36,6 +36,9 @@ try:
 
     print_json({"ok": True})
 
+except json.JSONDecodeError:
+    print_json({"ok": False, "error": "Invalid JSON"})
+
 except mysql.connector.Error as e:
     print(e, file=sys.stderr)
     print_json({"ok": False, "error": "Database error"})
