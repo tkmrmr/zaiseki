@@ -1,3 +1,5 @@
+import { useState } from "react";
+import SeatDialog from "@/components/seatDialog";
 import SeatTile from "@/components/ui/seatTile";
 import {
   getLabZoneClass,
@@ -21,7 +23,16 @@ const Lounge = () => {
 
 export default function LabMap({ pageType }: { pageType: pageType }) {
   const isViewOnly = pageType === "view" ? true : false;
-  const [seats, onClickSeat] = useSeat({ pageType });
+  const [seats, updateStatus] = useSeat({ isViewOnly });
+  const [isSeatDialogOpen, setIsSeatDialogOpen] = useState(false);
+
+  const onClickSeat = (...args: Parameters<typeof updateStatus>) => {
+    if (pageType === "admin") {
+      setIsSeatDialogOpen(true);
+      return;
+    }
+    return updateStatus(...args);
+  };
 
   return (
     <div className="w-full overflow-x-auto pb-2">
@@ -129,6 +140,8 @@ export default function LabMap({ pageType }: { pageType: pageType }) {
           </div>
         </div>
       </section>
+
+      <SeatDialog open={isSeatDialogOpen} onOpenChange={setIsSeatDialogOpen} />
     </div>
   );
 }
