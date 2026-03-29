@@ -6,9 +6,13 @@ const onClickUpdate = () => {
   window.dispatchEvent(new Event(REFRESH_REQUESTED_EVENT));
 };
 
-export default function Header({ app_name }: { app_name?: string }) {
-  const [, updatedAt] = useSummary();
-
+export default function Header({
+  app_name,
+  updatedAt,
+}: {
+  app_name?: string;
+  updatedAt: Date | null;
+}) {
   return (
     <header className="sticky top-4 z-10 rounded-4xl border border-white/70 bg-white/75 px-5 py-4 shadow-[0_18px_40px_rgba(36,57,69,0.08)] backdrop-blur md:px-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
