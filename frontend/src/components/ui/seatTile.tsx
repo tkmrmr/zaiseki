@@ -1,16 +1,15 @@
 import { Badge } from "@/components/ui/badge";
 import { getSeatStatusLabel, getSeatTileClass } from "@/lib/styleVariants";
-import { cn } from "@/lib/utils";
 import type { Seat } from "@/lib/type";
 
 export default function SeatTile({
   seat,
   onClickSeat,
-  showName,
+  isViewOnly,
 }: {
   seat?: Seat;
   onClickSeat: (seat: Seat) => void;
-  showName: boolean;
+  isViewOnly: boolean;
 }) {
   if (!seat) {
     return <div className="h-full border border-slate-300 bg-slate-100/70" />;
@@ -20,9 +19,9 @@ export default function SeatTile({
   return (
     <button
       type="button"
-      onClick={!isVacant ? () => onClickSeat(seat) : undefined}
-      disabled={isVacant}
-      className={getSeatTileClass(seat.status)}
+      onClick={!isVacant && !isViewOnly ? () => onClickSeat(seat) : undefined}
+      disabled={isVacant || isViewOnly}
+      className={getSeatTileClass(seat.status, isViewOnly)}
     >
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold tracking-wide text-slate-500">
@@ -42,7 +41,7 @@ export default function SeatTile({
           </Badge>
         )}
       </div>
-      {showName && !isVacant ? (
+      {!isViewOnly && !isVacant ? (
         <p className="mt-4 text-xl font-bold tracking-tight text-slate-900">
           {seat.familyName}
         </p>
@@ -53,7 +52,7 @@ export default function SeatTile({
         />
       )}
 
-      {showName && !isVacant ? (
+      {!isViewOnly && !isVacant ? (
         <p className="mt-1 text-sm text-slate-600">{seat.grade}</p>
       ) : (
         <p

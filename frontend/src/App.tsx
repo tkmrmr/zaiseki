@@ -36,7 +36,7 @@ export default function App() {
               <CardTitle className="font-bold text-xl ">研究室マップ</CardTitle>
             </CardHeader>
             <CardContent>
-              <LabMap showName={false} />
+              <LabMap isViewOnly={true} />
             </CardContent>
           </Card>
         </main>

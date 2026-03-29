@@ -18,7 +18,11 @@ const Lounge = () => {
   );
 };
 
-export default function LabMap({ showName = true }: { showName?: boolean }) {
+export default function LabMap({
+  isViewOnly = false,
+}: {
+  isViewOnly?: boolean;
+}) {
   const [seats, onClickSeat] = useSeat();
 
   return (
@@ -29,33 +33,33 @@ export default function LabMap({ showName = true }: { showName?: boolean }) {
             <SeatTile
               seat={seats.A1}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
             <div className={`row-span-3 ${AISLE_CLASS}`}>通路</div>
             <SeatTile
               seat={seats.B1}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
             <SeatTile
               seat={seats.A2}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
             <SeatTile
               seat={seats.B2}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
             <SeatTile
               seat={seats.A3}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
             <SeatTile
               seat={seats.B3}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
           </div>
 
@@ -63,33 +67,33 @@ export default function LabMap({ showName = true }: { showName?: boolean }) {
             <SeatTile
               seat={seats.C1}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
             <div className={`row-span-3 ${AISLE_CLASS}`}>通路</div>
             <SeatTile
               seat={seats.D1}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
             <SeatTile
               seat={seats.C2}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
             <SeatTile
               seat={seats.D2}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
             <SeatTile
               seat={seats.C3}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
             <SeatTile
               seat={seats.D3}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
           </div>
 
@@ -101,17 +105,17 @@ export default function LabMap({ showName = true }: { showName?: boolean }) {
             <SeatTile
               seat={seats.E1}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
             <SeatTile
               seat={seats.E2}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
             <SeatTile
               seat={seats.E3}
               onClickSeat={onClickSeat}
-              showName={showName}
+              isViewOnly={isViewOnly}
             />
           </div>
 
