@@ -12,19 +12,25 @@ from common.print_json import print_json
 print("Content-Type: application/json; charset=utf-8")
 print()
 
+ALLOWED_STATUS = {"present", "absent"}
+
 try:
     length = int(os.environ.get("CONTENT_LENGTH", 0))
     body = sys.stdin.read(length) if length > 0 else ""
     data = json.loads(body)
 
-    seat_id = int(data.get("seat_id"))
-    raw_status = data.get("status")
-
-    if not seat_id or not isinstance(raw_status, str) or not raw_status.strip():
-        print_json({"ok": False, "error": "seat_id/status is required"})
+    try:
+        seat_id = int(data.get("seat_id"))
+        if seat_id <= 0:
+            raise ValueError
+    except (TypeError, ValueError):
+        print_json({"ok": False, "error": "Invalid seat_id"})
         sys.exit(0)
 
-    status = raw_status.strip()
+    status = data.get("status", "").strip() if isinstance(data.get("status"), str) else ""
+    if not status or status not in ALLOWED_STATUS:
+        print_json({"ok": False, "error": "Invalid status"})
+        sys.exit(0)
 
     with get_db_connection() as conn:
         with conn.cursor() as cur:
