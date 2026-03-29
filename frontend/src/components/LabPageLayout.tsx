@@ -33,7 +33,7 @@ export default function LabPageLayout({ isViewOnly }: { isViewOnly: boolean }) {
           />
           <Card className="rounded-4xl px-3 py-5 md:px-4 md:py-6">
             <CardHeader>
-              <CardTitle className="font-bold text-xl ">研究室マップ</CardTitle>
+              <CardTitle className="font-bold text-xl">研究室マップ</CardTitle>
             </CardHeader>
             <CardContent>
               <LabMap isViewOnly={isViewOnly} />
