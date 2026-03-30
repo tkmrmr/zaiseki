@@ -1,9 +1,7 @@
+import { useState } from "react";
+import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
-
-const onClickUpdate = () => {
-  window.dispatchEvent(new Event(REFRESH_REQUESTED_EVENT));
-};
 
 export default function Header({
   appName,
@@ -12,6 +10,18 @@ export default function Header({
   appName?: string;
   updatedAt: Date | null;
 }) {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const onClickUpdate = () => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    window.dispatchEvent(new Event(REFRESH_REQUESTED_EVENT));
+    // TODO: 更新完了で判定するようにする
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
+  };
+
   return (
     <header className="sticky top-4 z-10 rounded-4xl border border-white/70 bg-white/75 px-5 py-4 shadow-[0_18px_40px_rgba(36,57,69,0.08)] backdrop-blur md:px-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -37,10 +47,12 @@ export default function Header({
         <Button
           variant="default"
           size="lg"
-          className="rounded-full px-4 py-2 transition"
+          className="h-11 rounded-full px-6 text-base transition"
           onClick={onClickUpdate}
+          disabled={isRefreshing}
         >
-          更新
+          <RefreshCw className="size-5" />
+          <span>{isRefreshing ? "更新中..." : "更新"}</span>
         </Button>
       </div>
     </header>
