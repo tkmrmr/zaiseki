@@ -7,11 +7,10 @@ export type SummaryItem = {
 };
 
 export type SummaryNum = {
-  // TODO: あとでキャメルケースに修正
-  present_count: number;
-  absent_count: number;
-  null_count: number;
-  total_seats: number;
+  presentCount: number;
+  absentCount: number;
+  nullCount: number;
+  totalSeats: number;
 };
 
 export type Seat = {

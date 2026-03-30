@@ -11,10 +11,10 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
   const [seats, onClickSeat, getUpdatedAt, isRefreshing] = useSeat({
     isViewOnly: pageType === "view",
   });
-  const presentCount = summary?.present_count ?? 0;
-  const absentCount = summary?.absent_count ?? 0;
-  const nullCount = summary?.null_count ?? 0;
-  const totalSeats = summary?.total_seats ?? 0;
+  const presentCount = summary?.presentCount ?? 0;
+  const absentCount = summary?.absentCount ?? 0;
+  const nullCount = summary?.nullCount ?? 0;
+  const totalSeats = summary?.totalSeats ?? 0;
   const updatedAt = getUpdatedAt();
 
   return (
