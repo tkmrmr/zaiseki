@@ -25,8 +25,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Field, FieldError, FieldGroup } from "@/components/ui/field";
-import { Label } from "@/components/ui/label";
+import {
+  Field,
+  FieldContent,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
 import type { Seat } from "@/lib/type";
 import useStudent from "@/lib/useStudent";
@@ -230,55 +235,61 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
               </CardContent>
             </Card>
 
-            <Field>
-              <Card className="gap-2">
-                <CardHeader className="pb-0">
-                  <CardTitle>
-                    {hasAssignedStudent ? "別の学生を登録" : "学生を登録"}
-                  </CardTitle>
-                  <CardDescription>
-                    {hasAssignedStudent
-                      ? "学生を選んで保存すると、この座席の登録を置き換えます。"
-                      : "学生を選んでこの座席に登録します。"}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <Label htmlFor="studentId">登録する学生</Label>
-                  <Controller
-                    name="studentId"
-                    control={control}
-                    rules={{ required: "学生を選択してください" }}
-                    render={({ field }) => (
-                      <Select
-                        value={field.value}
-                        onValueChange={(value) => {
-                          field.onChange(value);
-                          setSubmitError(null);
-                          setShowUnassignConfirm(false);
-                        }}
-                      >
-                        <SelectTrigger id="studentId">
-                          <SelectValue placeholder="学生を選択" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            {students.map((student) => (
-                              <SelectItem
-                                key={student.id}
-                                value={String(student.id)}
-                              >
-                                {student.name} ({student.grade})
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    )}
-                  />
-                  <FieldError errors={[formState.errors.studentId]} />
-                </CardContent>
-              </Card>
-            </Field>
+            <Card className="gap-2">
+              <CardHeader className="pb-0">
+                <CardTitle>
+                  {hasAssignedStudent ? "別の学生を登録" : "学生を登録"}
+                </CardTitle>
+                <CardDescription>
+                  {hasAssignedStudent
+                    ? "学生を選んで保存すると、この座席の登録を置き換えます。"
+                    : "学生を選んでこの座席に登録します。"}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Controller
+                  name="studentId"
+                  control={control}
+                  rules={{ required: "学生を選択してください" }}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="studentId">登録する学生</FieldLabel>
+                      <FieldContent>
+                        <Select
+                          value={field.value}
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            setSubmitError(null);
+                            setShowUnassignConfirm(false);
+                          }}
+                        >
+                          <SelectTrigger
+                            id="studentId"
+                            className="w-full"
+                            aria-invalid={fieldState.invalid}
+                          >
+                            <SelectValue placeholder="学生を選択" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              {students.map((student) => (
+                                <SelectItem
+                                  key={student.id}
+                                  value={String(student.id)}
+                                >
+                                  {student.name} ({student.grade})
+                                </SelectItem>
+                              ))}
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+                        <FieldError errors={[fieldState.error]} />
+                      </FieldContent>
+                    </Field>
+                  )}
+                />
+              </CardContent>
+            </Card>
 
             {submitError && <FieldError>{submitError}</FieldError>}
           </FieldGroup>
