@@ -45,7 +45,9 @@ export default function Header({
           onClick={onClickUpdate}
           disabled={isRefreshing}
         >
-          <RefreshCw className="size-5" /> {/* TODO: 更新中クルクル回す */}
+          <RefreshCw
+            className={`size-5 ${isRefreshing ? "animate-spin" : ""}`}
+          />{" "}
           <span>{isRefreshing ? "更新中..." : "更新"}</span>
         </Button>
       </div>
