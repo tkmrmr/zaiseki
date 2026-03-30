@@ -24,6 +24,7 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
           appName="研究室 在室管理アプリ"
           updatedAt={updatedAt}
           isRefreshing={isRefreshing}
+          pageType={pageType}
         />
         <main className="mt-8 space-y-8">
           <SummaryPanel
