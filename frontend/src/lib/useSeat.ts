@@ -20,46 +20,53 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
   const [seats, setSeats] = useState<Record<string, Seat>>({});
   const [isRefreshing, setIsRefreshing] = useState(false);
   const refreshInFlightRef = useRef(false);
+  const pendingRefreshRef = useRef(false);
 
   const refreshSeats = useCallback(async () => {
-    if (refreshInFlightRef.current) return;
-    refreshInFlightRef.current = true;
-    setIsRefreshing(true);
-    try {
-      const res = isViewOnly
-        ? await fetch("/cgi-bin/get_status.py", { cache: "no-store" })
-        : await fetch("/cgi-bin/get_full_status.py", { cache: "no-store" });
-      const data = await res.json();
-
-      if (data.ok) {
-        const tempSeats: Record<string, Seat> = {};
-        data.seats.forEach((seat: ApiSeat) => {
-          tempSeats[seat.code] = isViewOnly
-            ? {
-                id: seat.id,
-                code: seat.code,
-                status: seat.status,
-                updatedAt: seat.updated_at,
-              }
-            : {
-                id: seat.id,
-                code: seat.code,
-                familyName: seat.family_name,
-                grade: seat.grade,
-                status: seat.status,
-                updatedAt: seat.updated_at,
-              };
-        });
-        setSeats(tempSeats);
-      } else {
-        console.error(data.error);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      refreshInFlightRef.current = false;
-      setIsRefreshing(false);
+    if (refreshInFlightRef.current) {
+      pendingRefreshRef.current = true;
+      return;
     }
+    setIsRefreshing(true);
+    do {
+      pendingRefreshRef.current = false;
+      refreshInFlightRef.current = true;
+      try {
+        const res = isViewOnly
+          ? await fetch("/cgi-bin/get_status.py", { cache: "no-store" })
+          : await fetch("/cgi-bin/get_full_status.py", { cache: "no-store" });
+        const data = await res.json();
+
+        if (data.ok) {
+          const tempSeats: Record<string, Seat> = {};
+          data.seats.forEach((seat: ApiSeat) => {
+            tempSeats[seat.code] = isViewOnly
+              ? {
+                  id: seat.id,
+                  code: seat.code,
+                  status: seat.status,
+                  updatedAt: seat.updated_at,
+                }
+              : {
+                  id: seat.id,
+                  code: seat.code,
+                  familyName: seat.family_name,
+                  grade: seat.grade,
+                  status: seat.status,
+                  updatedAt: seat.updated_at,
+                };
+          });
+          setSeats(tempSeats);
+        } else {
+          console.error(data.error);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        refreshInFlightRef.current = false;
+      }
+    } while (pendingRefreshRef.current);
+    setIsRefreshing(false);
   }, [isViewOnly]);
 
   const updateStatus = async (seat: Seat, newStatus: Status): Promise<void> => {
