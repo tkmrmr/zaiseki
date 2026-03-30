@@ -8,7 +8,9 @@ import type { PageType } from "@/lib/type";
 
 export default function LabPageLayout({ pageType }: { pageType: PageType }) {
   const summary = useSummary();
-  const [seats, , getUpdatedAt] = useSeat({ isViewOnly: pageType === "view" });
+  const [seats, updateStatus, getUpdatedAt] = useSeat({
+    isViewOnly: pageType === "view",
+  });
   const presentCount = summary?.present_count ?? 0;
   const absentCount = summary?.absent_count ?? 0;
   const nullCount = summary?.null_count ?? 0;
@@ -40,7 +42,11 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
               <CardTitle className="font-bold text-xl">研究室マップ</CardTitle>
             </CardHeader>
             <CardContent>
-              <LabMap pageType={pageType} />
+              <LabMap
+                pageType={pageType}
+                seats={seats}
+                updateStatus={updateStatus}
+              />
             </CardContent>
           </Card>
         </main>

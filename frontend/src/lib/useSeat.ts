@@ -88,6 +88,7 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
     }));
     try {
       await updateStatus(seat, newStatus);
+      await fetchSeats();
       window.dispatchEvent(
         new CustomEvent(SEAT_STATUS_UPDATED_EVENT, {
           detail: { seatId: seat.id, status: newStatus },
