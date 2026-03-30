@@ -1,7 +1,13 @@
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogClose,
@@ -19,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Field, FieldGroup } from "@/components/ui/field";
+import { Field, FieldError, FieldGroup } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
 import type { Seat } from "@/lib/type";
@@ -35,15 +41,38 @@ type FormValues = {
   studentId: string;
 };
 
+type ApiResponse = {
+  ok?: boolean;
+  error?: string;
+};
+
 export default function SeatDialog({ open, onOpenChange, seat }: Props) {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isUnassigning, setIsUnassigning] = useState(false);
+  const [showUnassignConfirm, setShowUnassignConfirm] = useState(false);
   const { control, handleSubmit, reset, formState } = useForm<FormValues>({
     defaultValues: { studentId: "" },
   });
   const students = useStudent();
+  const hasAssignedStudent = Boolean(seat.familyName);
+  const isBusy = formState.isSubmitting || isUnassigning;
+  const submitLabel = hasAssignedStudent ? "変更を保存" : "登録する";
+
+  const parseResponseBody = async (
+    res: Response,
+  ): Promise<ApiResponse | null> => {
+    try {
+      return await res.json();
+    } catch {
+      return null;
+    }
+  };
 
   const onClickUnassign = async () => {
+    if (!hasAssignedStudent) {
+      return;
+    }
+
     setSubmitError(null);
     setIsUnassigning(true);
 
@@ -58,27 +87,22 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
         }),
       });
 
+      const body = await parseResponseBody(res);
       if (!res.ok) {
-        let message = `Server error: ${res.status}`;
-        try {
-          const data = await res.json();
-          if (data.error) message = data.error;
-        } catch {
-          // non-JSON body; keep the status-code message
-        }
-        setSubmitError(message);
+        setSubmitError(body?.error ?? `Server error: ${res.status}`);
         return;
       }
 
-      const data = await res.json();
-      if (!data.ok) {
-        setSubmitError(data.error ?? "解除に失敗しました");
+      if (!body?.ok) {
+        setSubmitError(body?.error ?? "解除に失敗しました");
         return;
       }
 
       window.dispatchEvent(new Event(REFRESH_REQUESTED_EVENT));
       reset({ studentId: "" });
       onOpenChange(false);
+    } catch {
+      setSubmitError("通信に失敗しました");
     } finally {
       setIsUnassigning(false);
     }
@@ -86,40 +110,38 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
 
   const onSubmit = async (data: FormValues): Promise<void> => {
     setSubmitError(null);
+    setShowUnassignConfirm(false);
 
-    const res = await fetch("/cgi-bin/assign_student.py", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        seat_id: seat.id,
-        student_id: Number(data.studentId),
-      }),
-    });
-
-    let body: { ok?: boolean; error?: string } | null = null;
     try {
-      body = await res.json();
+      const res = await fetch("/cgi-bin/assign_student.py", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          seat_id: seat.id,
+          student_id: Number(data.studentId),
+        }),
+      });
+
+      const body = await parseResponseBody(res);
+
+      if (!res.ok) {
+        setSubmitError(body?.error ?? `Server error: ${res.status}`);
+        return;
+      }
+
+      if (!body?.ok) {
+        setSubmitError(body?.error ?? "保存に失敗しました");
+        return;
+      }
+
+      window.dispatchEvent(new Event(REFRESH_REQUESTED_EVENT));
+      reset({ studentId: "" });
+      onOpenChange(false);
     } catch {
-      body = null;
+      setSubmitError("通信に失敗しました");
     }
-
-    if (!res.ok) {
-      let message = `Server error: ${res.status}`;
-      if (body?.error) message = body.error;
-      setSubmitError(message);
-      return;
-    }
-
-    if (!body?.ok) {
-      setSubmitError(body?.error ?? "保存に失敗しました");
-      return;
-    }
-
-    window.dispatchEvent(new Event(REFRESH_REQUESTED_EVENT));
-    reset({ studentId: "" });
-    onOpenChange(false);
   };
 
   return (
@@ -136,27 +158,92 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
           </DialogHeader>
 
           <FieldGroup className="gap-3">
-            <Card className="gap-2">
-              <Field>
-                <CardHeader className="pb-0">
-                  <p className="text-sm font-medium text-muted-foreground">
-                    現在登録されている学生
-                  </p>
-                </CardHeader>
-                <CardContent>
+            <Card className="gap-3">
+              <CardHeader className="pb-0">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1">
+                    <CardTitle>現在の登録</CardTitle>
+                    <CardDescription>
+                      {hasAssignedStudent
+                        ? "現在、以下の学生が登録されています。"
+                        : "現在は学生が登録されていません。"}
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="rounded-lg border bg-muted/30 px-3 py-2.5">
                   <p className="text-base font-medium">
-                    {seat?.familyName || "なし"}
+                    {seat.familyName ?? "未登録"}
                   </p>
-                </CardContent>
-              </Field>
+                  {hasAssignedStudent && (
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      学年: {seat.grade ?? "不明"}
+                    </p>
+                  )}
+                </div>
+
+                {hasAssignedStudent &&
+                  (showUnassignConfirm ? (
+                    <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3">
+                      <p className="text-sm font-medium text-destructive">
+                        この座席の登録を解除しますか？
+                      </p>
+                      <div className="mt-3 flex justify-end gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setShowUnassignConfirm(false)}
+                          disabled={isBusy}
+                        >
+                          やめる
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          onClick={onClickUnassign}
+                          disabled={isBusy}
+                        >
+                          {isUnassigning ? "解除中..." : "解除する"}
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between gap-3 rounded-lg border border-dashed border-destructive/30 bg-destructive/5 px-3 py-2.5">
+                      <p className="text-sm font-medium">登録を外したい場合</p>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => {
+                          setSubmitError(null);
+                          setShowUnassignConfirm(true);
+                        }}
+                        disabled={isBusy}
+                      >
+                        解除する
+                      </Button>
+                    </div>
+                  ))}
+              </CardContent>
             </Card>
 
             <Field>
               <Card className="gap-2">
                 <CardHeader className="pb-0">
-                  <Label htmlFor="studentId">登録する学生</Label>
+                  <CardTitle>
+                    {hasAssignedStudent ? "別の学生を登録" : "学生を登録"}
+                  </CardTitle>
+                  <CardDescription>
+                    {hasAssignedStudent
+                      ? "学生を選んで保存すると、この座席の登録を置き換えます。"
+                      : "学生を選んでこの座席に登録します。"}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
+                  <Label htmlFor="studentId">登録する学生</Label>
                   <Controller
                     name="studentId"
                     control={control}
@@ -167,6 +254,7 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
                         onValueChange={(value) => {
                           field.onChange(value);
                           setSubmitError(null);
+                          setShowUnassignConfirm(false);
                         }}
                       >
                         <SelectTrigger id="studentId">
@@ -187,42 +275,22 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
                       </Select>
                     )}
                   />
-                  {formState.errors.studentId && (
-                    <p className="text-sm text-red-600">
-                      {formState.errors.studentId.message}
-                    </p>
-                  )}
-                  {submitError && (
-                    <p className="text-sm text-red-600">{submitError}</p>
-                  )}
+                  <FieldError errors={[formState.errors.studentId]} />
                 </CardContent>
               </Card>
             </Field>
+
+            {submitError && <FieldError>{submitError}</FieldError>}
           </FieldGroup>
 
           <DialogFooter className="mt-1">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClickUnassign}
-              disabled={formState.isSubmitting || isUnassigning}
-            >
-              {isUnassigning ? "解除中..." : "解除"}
-            </Button>
             <DialogClose asChild>
-              <Button
-                type="button"
-                variant="outline"
-                disabled={formState.isSubmitting || isUnassigning}
-              >
+              <Button type="button" variant="outline" disabled={isBusy}>
                 キャンセル
               </Button>
             </DialogClose>
-            <Button
-              type="submit"
-              disabled={formState.isSubmitting || isUnassigning}
-            >
-              {formState.isSubmitting ? "保存中..." : "保存"}
+            <Button type="submit" disabled={isBusy}>
+              {formState.isSubmitting ? "保存中..." : submitLabel}
             </Button>
           </DialogFooter>
         </form>
