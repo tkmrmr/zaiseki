@@ -1,6 +1,6 @@
 import { useState } from "react";
-import SeatDialog from "@/components/seatDialog";
-import SeatTile from "@/components/ui/seatTile";
+import SeatDialog from "@/components/layout/SeatDialog";
+import { SeatTile } from "@/components/ui/SeatTile";
 import {
   getLabZoneClass,
   getLoungeClass,

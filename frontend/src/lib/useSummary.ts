@@ -5,7 +5,7 @@ import {
 } from "@/lib/events";
 import type { SummaryNum } from "@/lib/type";
 
-export default function useSummary() {
+export function useSummary() {
   const [summary, setSummary] = useState<SummaryNum | null>(null);
 
   useEffect(() => {
@@ -14,7 +14,12 @@ export default function useSummary() {
         .then((res) => res.json())
         .then((data) => {
           if (data.ok) {
-            setSummary(data.summary);
+            setSummary({
+              presentCount: data.summary.present_count,
+              absentCount: data.summary.absent_count,
+              nullCount: data.summary.null_count,
+              totalSeats: data.summary.total_seats,
+            });
           } else {
             console.error(data.error);
           }

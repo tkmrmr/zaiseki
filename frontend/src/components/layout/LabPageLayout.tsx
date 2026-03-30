@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Header from "@/components/Header";
-import SummaryPanel from "@/components/SummaryPanel";
-import LabMap from "@/components/LabMap";
-import useSummary from "@/lib/useSummary";
-import useSeat from "@/lib/useSeat";
+import Header from "@/components/layout/Header";
+import SummaryPanel from "@/components/layout/SummaryPanel";
+import LabMap from "@/components/layout/LabMap";
+import { useSummary } from "@/lib/useSummary";
+import { useSeat } from "@/lib/useSeat";
 import type { PageType } from "@/lib/type";
 
 export default function LabPageLayout({ pageType }: { pageType: PageType }) {
@@ -11,10 +11,10 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
   const [seats, onClickSeat, getUpdatedAt, isRefreshing] = useSeat({
     isViewOnly: pageType === "view",
   });
-  const presentCount = summary?.present_count ?? 0;
-  const absentCount = summary?.absent_count ?? 0;
-  const nullCount = summary?.null_count ?? 0;
-  const totalSeats = summary?.total_seats ?? 0;
+  const presentCount = summary?.presentCount ?? 0;
+  const absentCount = summary?.absentCount ?? 0;
+  const nullCount = summary?.nullCount ?? 0;
+  const totalSeats = summary?.totalSeats ?? 0;
   const updatedAt = getUpdatedAt();
 
   return (

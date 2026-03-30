@@ -1,4 +1,4 @@
-import LabPageLayout from "@/components/LabPageLayout";
+import LabPageLayout from "@/components/layout/LabPageLayout";
 
 export default function View() {
   return <LabPageLayout pageType="view" />;

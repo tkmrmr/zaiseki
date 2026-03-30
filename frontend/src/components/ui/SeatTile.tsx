@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { getSeatStatusLabel, getSeatTileClass } from "@/lib/styleVariants";
 import type { Seat, PageType } from "@/lib/type";
 
-export default function SeatTile({
+export function SeatTile({
   seat,
   onClickSeat,
   pageType,
