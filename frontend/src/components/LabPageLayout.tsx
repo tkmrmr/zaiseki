@@ -3,8 +3,9 @@ import Header from "@/components/Header";
 import SummaryPanel from "@/components/SummaryPanel";
 import LabMap from "@/components/LabMap";
 import useSummary from "@/lib/useSummary";
+import type { PageType } from "@/lib/type";
 
-export default function LabPageLayout({ isViewOnly }: { isViewOnly: boolean }) {
+export default function LabPageLayout({ pageType }: { pageType: PageType }) {
   const [summary, updatedAt] = useSummary();
   const presentCount = summary?.present_count ?? 0;
   const absentCount = summary?.absent_count ?? 0;
@@ -36,7 +37,7 @@ export default function LabPageLayout({ isViewOnly }: { isViewOnly: boolean }) {
               <CardTitle className="font-bold text-xl">研究室マップ</CardTitle>
             </CardHeader>
             <CardContent>
-              <LabMap isViewOnly={isViewOnly} />
+              <LabMap pageType={pageType} />
             </CardContent>
           </Card>
         </main>

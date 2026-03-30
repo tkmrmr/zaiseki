@@ -12,8 +12,6 @@ from common.print_json import print_json
 print("Content-Type: application/json; charset=utf-8")
 print()
 
-ALLOWED_STATUS = {"present", "absent"}
-
 try:
     length = int(os.environ.get("CONTENT_LENGTH", 0))
     body = sys.stdin.read(length) if length > 0 else ""
@@ -27,16 +25,31 @@ try:
         print_json({"ok": False, "error": "Invalid seat_id"})
         sys.exit(0)
 
-    status = data.get("status", "").strip() if isinstance(data.get("status"), str) else ""
-    if not status or status not in ALLOWED_STATUS:
-        print_json({"ok": False, "error": "Invalid status"})
+    try:
+        student_id = int(data.get("student_id"))
+        if student_id <= 0:
+            raise ValueError
+    except (TypeError, ValueError):
+        print_json({"ok": False, "error": "Invalid student_id"})
         sys.exit(0)
 
     with get_db_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
-                "UPDATE presence_status SET status = %s WHERE seat_id = %s",
-                (status, seat_id),
+                "SELECT student_id FROM students WHERE student_id = %s", (student_id,)
+            )
+            result = cur.fetchone()
+            if not result:
+                print_json({"ok": False, "error": "Student not found"})
+                sys.exit(0)
+
+            cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
+            cur.execute(
+                "DELETE FROM presence_status WHERE student_id = %s", (student_id,)
+            )
+            cur.execute(
+                "INSERT INTO presence_status (student_id, seat_id, status) VALUES (%s, %s, 'absent')",
+                (student_id, seat_id),
             )
             conn.commit()
 

@@ -1,27 +1,32 @@
 import { Badge } from "@/components/ui/badge";
 import { getSeatStatusLabel, getSeatTileClass } from "@/lib/styleVariants";
-import type { Seat } from "@/lib/type";
+import type { Seat, PageType } from "@/lib/type";
 
 export default function SeatTile({
   seat,
   onClickSeat,
-  isViewOnly,
+  pageType,
 }: {
   seat?: Seat;
   onClickSeat: (seat: Seat) => void;
-  isViewOnly: boolean;
+  pageType: PageType;
 }) {
   if (!seat) {
     return <div className="h-full border border-slate-300 bg-slate-100/70" />;
   }
   const isVacant = seat.status === "vacant";
+  const isViewOnly = pageType === "view" ? true : false;
 
   return (
     <button
       type="button"
-      onClick={!isVacant && !isViewOnly ? () => onClickSeat(seat) : undefined}
-      disabled={isVacant || isViewOnly}
-      className={getSeatTileClass(seat.status, isViewOnly)}
+      onClick={
+        (!isVacant && !isViewOnly) || pageType === "admin"
+          ? () => onClickSeat(seat)
+          : undefined
+      }
+      disabled={(isVacant || isViewOnly) && pageType !== "admin"}
+      className={getSeatTileClass(seat.status, isViewOnly, pageType)}
     >
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold tracking-wide text-slate-500">

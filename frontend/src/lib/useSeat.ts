@@ -5,16 +5,13 @@ import {
   SEAT_STATUS_UPDATED_EVENT,
 } from "@/lib/events";
 
-export default function useSeat({
-  isViewOnly = false,
-}: { isViewOnly?: boolean } = {}) {
+export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
   const [seats, setSeats] = useState<Record<string, Seat>>({});
-
   const fetchSeats = useCallback(async () => {
     try {
       const res = isViewOnly
-        ? await fetch("/cgi-bin/get_status.py")
-        : await fetch("/cgi-bin/get_full_status.py");
+        ? await fetch("/cgi-bin/get_status.py", { cache: "no-store" })
+        : await fetch("/cgi-bin/get_full_status.py", { cache: "no-store" });
       const data = await res.json();
 
       if (data.ok) {

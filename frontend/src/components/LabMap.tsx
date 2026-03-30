@@ -1,3 +1,5 @@
+import { useState } from "react";
+import SeatDialog from "@/components/seatDialog";
 import SeatTile from "@/components/ui/seatTile";
 import {
   getLabZoneClass,
@@ -5,6 +7,7 @@ import {
   getLoungeTitleClass,
 } from "@/lib/styleVariants";
 import useSeat from "@/lib/useSeat";
+import type { PageType } from "@/lib/type";
 
 const FACILITY_CLASS = getLabZoneClass("facility");
 const AISLE_CLASS = getLabZoneClass("aisle");
@@ -18,12 +21,29 @@ const Lounge = () => {
   );
 };
 
-export default function LabMap({
-  isViewOnly = false,
-}: {
-  isViewOnly?: boolean;
-}) {
-  const [seats, onClickSeat] = useSeat({ isViewOnly });
+export default function LabMap({ pageType }: { pageType: PageType }) {
+  const isViewOnly = pageType === "view" ? true : false;
+  const [seats, updateStatus] = useSeat({ isViewOnly });
+  const [isSeatDialogOpen, setIsSeatDialogOpen] = useState(false);
+  const [selectedSeat, setSelectedSeat] = useState<
+    Parameters<typeof updateStatus>[0] | null
+  >(null);
+
+  const onClickSeat = (...args: Parameters<typeof updateStatus>) => {
+    if (pageType === "admin") {
+      setSelectedSeat(args[0] ?? null);
+      setIsSeatDialogOpen(true);
+      return;
+    }
+    return updateStatus(...args);
+  };
+
+  const onOpenChangeSeatDialog = (open: boolean) => {
+    setIsSeatDialogOpen(open);
+    if (!open) {
+      setSelectedSeat(null);
+    }
+  };
 
   return (
     <div className="w-full overflow-x-auto pb-2">
@@ -33,33 +53,33 @@ export default function LabMap({
             <SeatTile
               seat={seats.A1}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <div className={`row-span-3 ${AISLE_CLASS}`}>通路</div>
             <SeatTile
               seat={seats.B1}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.A2}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.B2}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.A3}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.B3}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
           </div>
 
@@ -67,33 +87,33 @@ export default function LabMap({
             <SeatTile
               seat={seats.C1}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <div className={`row-span-3 ${AISLE_CLASS}`}>通路</div>
             <SeatTile
               seat={seats.D1}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.C2}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.D2}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.C3}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.D3}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
           </div>
 
@@ -105,17 +125,17 @@ export default function LabMap({
             <SeatTile
               seat={seats.E1}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.E2}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
             <SeatTile
               seat={seats.E3}
               onClickSeat={onClickSeat}
-              isViewOnly={isViewOnly}
+              pageType={pageType}
             />
           </div>
 
@@ -131,6 +151,14 @@ export default function LabMap({
           </div>
         </div>
       </section>
+
+      {selectedSeat && (
+        <SeatDialog
+          open={isSeatDialogOpen}
+          onOpenChange={onOpenChangeSeatDialog}
+          seat={selectedSeat}
+        />
+      )}
     </div>
   );
 }

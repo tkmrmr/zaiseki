@@ -1,5 +1,6 @@
 import type { Status, SummaryItem } from "@/lib/type";
 import { cn } from "@/lib/utils";
+import type { PageType } from "@/lib/type";
 
 type LabZoneType = "facility" | "aisle" | "lounge";
 
@@ -41,7 +42,11 @@ export function getSeatStatusLabel(status: Status): string {
   return STATUS_LABEL[status];
 }
 
-export function getSeatTileClass(status: Status, isViewOnly: boolean): string {
+export function getSeatTileClass(
+  status: Status,
+  isViewOnly: boolean,
+  pageType: PageType,
+): string {
   const statusClass = isViewOnly
     ? SEAT_TILE_STATUS_CLASS_WITHOUT_ACTIVE[status]
     : SEAT_TILE_STATUS_CLASS[status];
@@ -49,7 +54,9 @@ export function getSeatTileClass(status: Status, isViewOnly: boolean): string {
   return cn(
     "h-full rounded-none border border-slate-900/20 p-3",
     statusClass,
-    status === "vacant" || isViewOnly ? "cursor-default" : "cursor-pointer",
+    (status === "vacant" || isViewOnly) && pageType !== "admin"
+      ? "cursor-default"
+      : "cursor-pointer",
   );
 }
 
