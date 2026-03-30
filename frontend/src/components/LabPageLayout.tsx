@@ -15,7 +15,7 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
   const absentCount = summary?.absent_count ?? 0;
   const nullCount = summary?.null_count ?? 0;
   const totalSeats = summary?.total_seats ?? 0;
-  const updatedAt = getUpdatedAt(seats);
+  const updatedAt = getUpdatedAt();
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.2),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(253,224,71,0.18),_transparent_32%),linear-gradient(180deg,#f6f2e9_0%,#edf4f7_100%)] text-slate-800">

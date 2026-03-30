@@ -104,7 +104,7 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
     }
   };
 
-  const getUpdatedAt = (seats: Record<string, Seat>): Date | null => {
+  const getUpdatedAt = (): Date | null => {
     const times = Object.values(seats)
       .map((s) => Date.parse(s.updatedAt ?? ""))
       .filter(Number.isFinite);
@@ -129,6 +129,6 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
   return [seats, onClickSeat, getUpdatedAt] as [
     Record<string, Seat>,
     (seat: Seat) => Promise<void>,
-    (seats: Record<string, Seat>) => Date | null,
+    () => Date | null,
   ];
 }

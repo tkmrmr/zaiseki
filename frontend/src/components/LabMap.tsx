@@ -6,7 +6,6 @@ import {
   getLoungeClass,
   getLoungeTitleClass,
 } from "@/lib/styleVariants";
-import useSeat from "@/lib/useSeat";
 import type { PageType, Seat } from "@/lib/type";
 
 const FACILITY_CLASS = getLabZoneClass("facility");
