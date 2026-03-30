@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSummaryCardClass } from "@/lib/styleVariants";
 import type { SummaryItem } from "@/lib/type";
 
-export default function SummaryCard({ item }: { item: SummaryItem }) {
+export function SummaryCard({ item }: { item: SummaryItem }) {
   return (
     <Card className={getSummaryCardClass(item.tone)}>
       <CardHeader>

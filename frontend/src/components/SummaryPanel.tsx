@@ -1,4 +1,4 @@
-import SummaryCard from "@/components/ui/summaryCard";
+import { SummaryCard } from "@/components/ui/summaryCard";
 import type { SummaryItem } from "@/lib/type";
 
 export default function SummaryPanel({ items }: { items: SummaryItem[] }) {
