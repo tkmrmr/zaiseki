@@ -32,16 +32,15 @@ type Props = {
 };
 
 type FormValues = {
-  name: string;
+  studentId: string;
 };
 
 export default function SeatDialog({ open, onOpenChange, seat }: Props) {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const { control, handleSubmit, reset, formState } = useForm<FormValues>({
-    defaultValues: { name: "" },
+    defaultValues: { studentId: "" },
   });
   const students = useStudent();
-  const studentNames = students.map((student) => student.name);
 
   const onSubmit = async (data: FormValues): Promise<void> => {
     setSubmitError(null);
@@ -53,7 +52,7 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
       },
       body: JSON.stringify({
         seat_id: seat.id,
-        student_name: data.name,
+        student_id: Number(data.studentId),
       }),
     });
 
@@ -77,7 +76,7 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
     }
 
     window.dispatchEvent(new Event(REFRESH_REQUESTED_EVENT));
-    reset({ name: "" });
+    reset({ studentId: "" });
     onOpenChange(false);
   };
 
@@ -113,11 +112,11 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
             <Field>
               <Card className="gap-2">
                 <CardHeader className="pb-0">
-                  <Label htmlFor="name">登録する学生</Label>
+                  <Label htmlFor="studentId">登録する学生</Label>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <Controller
-                    name="name"
+                    name="studentId"
                     control={control}
                     rules={{ required: "学生を選択してください" }}
                     render={({ field }) => (
@@ -128,14 +127,17 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
                           setSubmitError(null);
                         }}
                       >
-                        <SelectTrigger id="name">
+                        <SelectTrigger id="studentId">
                           <SelectValue placeholder="学生を選択" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            {studentNames.map((name, index) => (
-                              <SelectItem key={index} value={name}>
-                                {name}
+                            {students.map((student) => (
+                              <SelectItem
+                                key={student.id}
+                                value={String(student.id)}
+                              >
+                                {student.name} ({student.grade})
                               </SelectItem>
                             ))}
                           </SelectGroup>
@@ -143,9 +145,9 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
                       </Select>
                     )}
                   />
-                  {formState.errors.name && (
+                  {formState.errors.studentId && (
                     <p className="text-sm text-red-600">
-                      {formState.errors.name.message}
+                      {formState.errors.studentId.message}
                     </p>
                   )}
                   {submitError && (
