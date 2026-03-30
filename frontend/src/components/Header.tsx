@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
@@ -6,20 +5,15 @@ import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
 export default function Header({
   appName,
   updatedAt,
+  isRefreshing,
 }: {
   appName?: string;
   updatedAt: Date | null;
+  isRefreshing: boolean;
 }) {
-  const [isRefreshing, setIsRefreshing] = useState(false);
-
   const onClickUpdate = () => {
     if (isRefreshing) return;
-    setIsRefreshing(true);
     window.dispatchEvent(new Event(REFRESH_REQUESTED_EVENT));
-    // TODO: 更新完了で判定するようにする
-    setTimeout(() => {
-      setIsRefreshing(false);
-    }, 1000);
   };
 
   return (

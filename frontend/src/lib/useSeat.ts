@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import type { Seat, Status } from "@/lib/type";
 import {
   REFRESH_REQUESTED_EVENT,
@@ -18,7 +18,13 @@ type ApiSeat = {
 
 export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
   const [seats, setSeats] = useState<Record<string, Seat>>({});
-  const fetchSeats = useCallback(async () => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const refreshInFlightRef = useRef(false);
+
+  const refreshSeats = useCallback(async () => {
+    if (refreshInFlightRef.current) return;
+    refreshInFlightRef.current = true;
+    setIsRefreshing(true);
     try {
       const res = isViewOnly
         ? await fetch("/cgi-bin/get_status.py", { cache: "no-store" })
@@ -50,8 +56,10 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      refreshInFlightRef.current = false;
+      setIsRefreshing(false);
     }
-    console.log("fetchSeats", new Date().toISOString());
   }, [isViewOnly]);
 
   const updateStatus = async (seat: Seat, newStatus: Status): Promise<void> => {
@@ -91,7 +99,7 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
     }));
     try {
       await updateStatus(seat, newStatus);
-      await fetchSeats();
+      await refreshSeats();
       window.dispatchEvent(
         new CustomEvent(SEAT_STATUS_UPDATED_EVENT, {
           detail: { seatId: seat.id, status: newStatus },
@@ -125,15 +133,15 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
 
   useEffect(() => {
     queueMicrotask(() => {
-      void fetchSeats();
+      void refreshSeats();
     });
 
     const intervalId = window.setInterval(() => {
-      void fetchSeats();
+      void refreshSeats();
     }, AUTO_REFRESH_INTERVAL_MS);
 
     const onRefreshRequested = () => {
-      void fetchSeats();
+      void refreshSeats();
     };
 
     window.addEventListener(REFRESH_REQUESTED_EVENT, onRefreshRequested);
@@ -141,10 +149,11 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
       window.clearInterval(intervalId);
       window.removeEventListener(REFRESH_REQUESTED_EVENT, onRefreshRequested);
     };
-  }, [fetchSeats]);
-  return [seats, onClickSeat, getUpdatedAt] as [
+  }, [refreshSeats]);
+  return [seats, onClickSeat, getUpdatedAt, isRefreshing] as [
     Record<string, Seat>,
     (seat: Seat) => Promise<void>,
     () => Date | null,
+    boolean,
   ];
 }
