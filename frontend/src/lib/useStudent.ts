@@ -16,7 +16,7 @@ type StudentResponse = {
   error?: string;
 };
 
-export default function useStudent() {
+export function useStudent() {
   const [students, setStudents] = useState<Student[]>([]);
 
   useEffect(() => {

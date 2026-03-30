@@ -16,7 +16,7 @@ type ApiSeat = {
   updated_at?: string;
 };
 
-export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
+export function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
   const [seats, setSeats] = useState<Record<string, Seat>>({});
   const [isRefreshing, setIsRefreshing] = useState(false);
   const refreshInFlightRef = useRef(false);

@@ -5,7 +5,7 @@ import {
 } from "@/lib/events";
 import type { SummaryNum } from "@/lib/type";
 
-export default function useSummary() {
+export function useSummary() {
   const [summary, setSummary] = useState<SummaryNum | null>(null);
 
   useEffect(() => {

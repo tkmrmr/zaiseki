@@ -2,8 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/Header";
 import SummaryPanel from "@/components/SummaryPanel";
 import LabMap from "@/components/LabMap";
-import useSummary from "@/lib/useSummary";
-import useSeat from "@/lib/useSeat";
+import { useSummary } from "@/lib/useSummary";
+import { useSeat } from "@/lib/useSeat";
 import type { PageType } from "@/lib/type";
 
 export default function LabPageLayout({ pageType }: { pageType: PageType }) {

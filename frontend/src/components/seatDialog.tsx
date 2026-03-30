@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/field";
 import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
 import type { Seat } from "@/lib/type";
-import useStudent from "@/lib/useStudent";
+import { useStudent } from "@/lib/useStudent";
 
 type Props = {
   open: boolean;
