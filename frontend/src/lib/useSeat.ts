@@ -5,6 +5,8 @@ import {
   SEAT_STATUS_UPDATED_EVENT,
 } from "@/lib/events";
 
+const AUTO_REFRESH_INTERVAL_MS = 30_000;
+
 type ApiSeat = {
   id: number;
   code: string;
@@ -49,6 +51,7 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
     } catch (err) {
       console.error(err);
     }
+    console.log("fetchSeats", new Date().toISOString());
   }, [isViewOnly]);
 
   const updateStatus = async (seat: Seat, newStatus: Status): Promise<void> => {
@@ -125,12 +128,17 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
       void fetchSeats();
     });
 
+    const intervalId = window.setInterval(() => {
+      void fetchSeats();
+    }, AUTO_REFRESH_INTERVAL_MS);
+
     const onRefreshRequested = () => {
-      fetchSeats();
+      void fetchSeats();
     };
 
     window.addEventListener(REFRESH_REQUESTED_EVENT, onRefreshRequested);
     return () => {
+      window.clearInterval(intervalId);
       window.removeEventListener(REFRESH_REQUESTED_EVENT, onRefreshRequested);
     };
   }, [fetchSeats]);
