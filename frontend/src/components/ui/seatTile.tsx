@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { getSeatStatusLabel, getSeatTileClass } from "@/lib/styleVariants";
-import type { Seat, pageType } from "@/lib/type";
+import type { Seat, PageType } from "@/lib/type";
 
 export default function SeatTile({
   seat,
@@ -9,7 +9,7 @@ export default function SeatTile({
 }: {
   seat?: Seat;
   onClickSeat: (seat: Seat) => void;
-  pageType: pageType;
+  pageType: PageType;
 }) {
   if (!seat) {
     return <div className="h-full border border-slate-300 bg-slate-100/70" />;

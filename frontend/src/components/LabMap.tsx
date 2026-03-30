@@ -7,7 +7,7 @@ import {
   getLoungeTitleClass,
 } from "@/lib/styleVariants";
 import useSeat from "@/lib/useSeat";
-import type { pageType } from "@/lib/type";
+import type { PageType } from "@/lib/type";
 
 const FACILITY_CLASS = getLabZoneClass("facility");
 const AISLE_CLASS = getLabZoneClass("aisle");
@@ -21,7 +21,7 @@ const Lounge = () => {
   );
 };
 
-export default function LabMap({ pageType }: { pageType: pageType }) {
+export default function LabMap({ pageType }: { pageType: PageType }) {
   const isViewOnly = pageType === "view" ? true : false;
   const [seats, updateStatus] = useSeat({ isViewOnly });
   const [isSeatDialogOpen, setIsSeatDialogOpen] = useState(false);

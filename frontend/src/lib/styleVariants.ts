@@ -1,5 +1,6 @@
 import type { Status, SummaryItem } from "@/lib/type";
 import { cn } from "@/lib/utils";
+import type { PageType } from "@/lib/type";
 
 type LabZoneType = "facility" | "aisle" | "lounge";
 
@@ -44,7 +45,7 @@ export function getSeatStatusLabel(status: Status): string {
 export function getSeatTileClass(
   status: Status,
   isViewOnly: boolean,
-  pageType: pageType,
+  pageType: PageType,
 ): string {
   const statusClass = isViewOnly
     ? SEAT_TILE_STATUS_CLASS_WITHOUT_ACTIVE[status]

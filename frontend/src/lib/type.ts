@@ -21,4 +21,4 @@ export type Seat = {
   status: Status;
 };
 
-export type pageType = "view" | "kiosk" | "admin";
+export type PageType = "view" | "kiosk" | "admin";
