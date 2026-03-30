@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -11,11 +11,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Field, FieldGroup } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
 import type { Seat } from "@/lib/type";
+import useStudent from "@/lib/useStudent";
 
 type Props = {
   open: boolean;
@@ -29,7 +37,11 @@ type FormValues = {
 
 export default function SeatDialog({ open, onOpenChange, seat }: Props) {
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const { register, handleSubmit, reset, formState } = useForm<FormValues>();
+  const { control, handleSubmit, reset, formState } = useForm<FormValues>({
+    defaultValues: { name: "" },
+  });
+  const students = useStudent();
+  const studentNames = students.map((student) => student.name);
 
   const onSubmit = async (data: FormValues): Promise<void> => {
     setSubmitError(null);
@@ -101,18 +113,41 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
             <Field>
               <Card className="gap-2">
                 <CardHeader className="pb-0">
-                  <Label htmlFor="name">名前</Label>
+                  <Label htmlFor="name">登録する学生</Label>
                 </CardHeader>
-                {/* TODO: リストから選ぶ方式にする */}
                 <CardContent className="space-y-2">
-                  <DialogDescription className="text-xs">
-                    名字のみを入力してください
-                  </DialogDescription>
-                  <Input
-                    id="name"
-                    {...register("name", { required: true })}
-                    placeholder="例: 宮本"
+                  <Controller
+                    name="name"
+                    control={control}
+                    rules={{ required: "学生を選択してください" }}
+                    render={({ field }) => (
+                      <Select
+                        value={field.value}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setSubmitError(null);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="学生を選択" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            {studentNames.map((name) => (
+                              <SelectItem key={name} value={name}>
+                                {name}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    )}
                   />
+                  {formState.errors.name && (
+                    <p className="text-sm text-red-600">
+                      {formState.errors.name.message}
+                    </p>
+                  )}
                   {submitError && (
                     <p className="text-sm text-red-600">{submitError}</p>
                   )}
@@ -123,7 +158,9 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
 
           <DialogFooter className="mt-1">
             <DialogClose asChild>
-              <Button variant="outline">キャンセル</Button>
+              <Button type="button" variant="outline">
+                キャンセル
+              </Button>
             </DialogClose>
             <Button type="submit" disabled={formState.isSubmitting}>
               {formState.isSubmitting ? "保存中..." : "保存"}
