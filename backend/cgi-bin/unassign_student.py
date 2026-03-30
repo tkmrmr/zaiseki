@@ -28,7 +28,7 @@ try:
     with get_db_connection() as conn:
         with conn.cursor() as cur:
             cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
-        conn.commit()
+            conn.commit()
 
     print_json({"ok": True})
 

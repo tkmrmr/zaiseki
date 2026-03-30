@@ -37,10 +37,52 @@ type FormValues = {
 
 export default function SeatDialog({ open, onOpenChange, seat }: Props) {
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isUnassigning, setIsUnassigning] = useState(false);
   const { control, handleSubmit, reset, formState } = useForm<FormValues>({
     defaultValues: { studentId: "" },
   });
   const students = useStudent();
+
+  const onClickUnassign = async () => {
+    setSubmitError(null);
+    setIsUnassigning(true);
+
+    try {
+      const res = await fetch("/cgi-bin/unassign_student.py", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          seat_id: seat.id,
+        }),
+      });
+
+      if (!res.ok) {
+        let message = `Server error: ${res.status}`;
+        try {
+          const data = await res.json();
+          if (data.error) message = data.error;
+        } catch {
+          // non-JSON body; keep the status-code message
+        }
+        setSubmitError(message);
+        return;
+      }
+
+      const data = await res.json();
+      if (!data.ok) {
+        setSubmitError(data.error ?? "解除に失敗しました");
+        return;
+      }
+
+      window.dispatchEvent(new Event(REFRESH_REQUESTED_EVENT));
+      reset({ studentId: "" });
+      onOpenChange(false);
+    } finally {
+      setIsUnassigning(false);
+    }
+  };
 
   const onSubmit = async (data: FormValues): Promise<void> => {
     setSubmitError(null);
@@ -159,12 +201,27 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
           </FieldGroup>
 
           <DialogFooter className="mt-1">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClickUnassign}
+              disabled={formState.isSubmitting || isUnassigning}
+            >
+              {isUnassigning ? "解除中..." : "解除"}
+            </Button>
             <DialogClose asChild>
-              <Button type="button" variant="outline">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={formState.isSubmitting || isUnassigning}
+              >
                 キャンセル
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={formState.isSubmitting}>
+            <Button
+              type="submit"
+              disabled={formState.isSubmitting || isUnassigning}
+            >
               {formState.isSubmitting ? "保存中..." : "保存"}
             </Button>
           </DialogFooter>
