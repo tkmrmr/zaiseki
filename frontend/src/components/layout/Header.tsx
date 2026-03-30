@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
@@ -14,6 +15,8 @@ export default function Header({
   isRefreshing: boolean;
   pageType: PageType;
 }) {
+  const navigate = useNavigate();
+
   const onClickUpdate = () => {
     if (isRefreshing) return;
     window.dispatchEvent(new Event(REFRESH_REQUESTED_EVENT));
@@ -21,9 +24,9 @@ export default function Header({
 
   const onClickNavigate = () => {
     if (pageType === "kiosk") {
-      window.location.href = "/#/admin";
+      navigate("/admin");
     } else {
-      window.location.href = "/#/kiosk";
+      navigate("/kiosk");
     }
   };
 
