@@ -8,7 +8,7 @@ import type { PageType } from "@/lib/type";
 
 export default function LabPageLayout({ pageType }: { pageType: PageType }) {
   const summary = useSummary();
-  const [seats, updateStatus, getUpdatedAt] = useSeat({
+  const [seats, onClickSeat, getUpdatedAt] = useSeat({
     isViewOnly: pageType === "view",
   });
   const presentCount = summary?.present_count ?? 0;
@@ -45,7 +45,7 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
               <LabMap
                 pageType={pageType}
                 seats={seats}
-                updateStatus={updateStatus}
+                onClickSeat={onClickSeat}
               />
             </CardContent>
           </Card>
