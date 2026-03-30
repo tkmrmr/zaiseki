@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Header from "@/components/Header";
-import SummaryPanel from "@/components/SummaryPanel";
-import LabMap from "@/components/LabMap";
+import Header from "@/components/layout/Header";
+import SummaryPanel from "@/components/layout/SummaryPanel";
+import LabMap from "@/components/layout/LabMap";
 import { useSummary } from "@/lib/useSummary";
 import { useSeat } from "@/lib/useSeat";
 import type { PageType } from "@/lib/type";
