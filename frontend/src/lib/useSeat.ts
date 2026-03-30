@@ -109,7 +109,15 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
       .map((s) => Date.parse(s.updatedAt ?? ""))
       .filter(Number.isFinite);
 
-    return times.length ? new Date(Math.max(...times)) : null;
+    let updatedAt: Date | null = null;
+    if (times.length) {
+      const updatedAtUTC = new Date(Math.max(...times));
+      const timezoneOffset =
+        new Date().getTimezoneOffset() + 9 * 60 * 60 * 1000;
+      updatedAt = new Date(updatedAtUTC.getTime() + timezoneOffset);
+    }
+
+    return updatedAt;
   };
 
   useEffect(() => {
