@@ -133,8 +133,8 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            {studentNames.map((name) => (
-                              <SelectItem key={name} value={name}>
+                            {studentNames.map((name, index) => (
+                              <SelectItem key={index} value={name}>
                                 {name}
                               </SelectItem>
                             ))}
