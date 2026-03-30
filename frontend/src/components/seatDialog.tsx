@@ -128,7 +128,7 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
                           setSubmitError(null);
                         }}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger id="name">
                           <SelectValue placeholder="学生を選択" />
                         </SelectTrigger>
                         <SelectContent>
