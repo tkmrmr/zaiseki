@@ -31,7 +31,7 @@ try:
         else ""
     )
     if not student_name:
-        print_json({"ok": False, "error": "Invalid Student Name"})
+        print_json({"ok": False, "error": "Invalid student_name"})
         sys.exit(0)
 
     with get_db_connection() as conn:
