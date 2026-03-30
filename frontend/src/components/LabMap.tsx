@@ -6,8 +6,7 @@ import {
   getLoungeClass,
   getLoungeTitleClass,
 } from "@/lib/styleVariants";
-import useSeat from "@/lib/useSeat";
-import type { PageType } from "@/lib/type";
+import type { PageType, Seat } from "@/lib/type";
 
 const FACILITY_CLASS = getLabZoneClass("facility");
 const AISLE_CLASS = getLabZoneClass("aisle");
@@ -21,21 +20,25 @@ const Lounge = () => {
   );
 };
 
-export default function LabMap({ pageType }: { pageType: PageType }) {
-  const isViewOnly = pageType === "view" ? true : false;
-  const [seats, updateStatus] = useSeat({ isViewOnly });
+export default function LabMap({
+  pageType,
+  seats,
+  onClickSeat,
+}: {
+  pageType: PageType;
+  seats: Record<string, Seat>;
+  onClickSeat: (seat: Seat) => Promise<void>;
+}) {
   const [isSeatDialogOpen, setIsSeatDialogOpen] = useState(false);
-  const [selectedSeat, setSelectedSeat] = useState<
-    Parameters<typeof updateStatus>[0] | null
-  >(null);
+  const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
 
-  const onClickSeat = (...args: Parameters<typeof updateStatus>) => {
+  const handleTileClick = (seat: Seat) => {
     if (pageType === "admin") {
-      setSelectedSeat(args[0] ?? null);
+      setSelectedSeat(seat);
       setIsSeatDialogOpen(true);
       return;
     }
-    return updateStatus(...args);
+    return onClickSeat(seat);
   };
 
   const onOpenChangeSeatDialog = (open: boolean) => {
@@ -52,33 +55,33 @@ export default function LabMap({ pageType }: { pageType: PageType }) {
           <div className="col-span-4 grid grid-cols-3">
             <SeatTile
               seat={seats.A1}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
             <div className={`row-span-3 ${AISLE_CLASS}`}>通路</div>
             <SeatTile
               seat={seats.B1}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
             <SeatTile
               seat={seats.A2}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
             <SeatTile
               seat={seats.B2}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
             <SeatTile
               seat={seats.A3}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
             <SeatTile
               seat={seats.B3}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
           </div>
@@ -86,33 +89,33 @@ export default function LabMap({ pageType }: { pageType: PageType }) {
           <div className="col-span-4 grid grid-cols-3">
             <SeatTile
               seat={seats.C1}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
             <div className={`row-span-3 ${AISLE_CLASS}`}>通路</div>
             <SeatTile
               seat={seats.D1}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
             <SeatTile
               seat={seats.C2}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
             <SeatTile
               seat={seats.D2}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
             <SeatTile
               seat={seats.C3}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
             <SeatTile
               seat={seats.D3}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
           </div>
@@ -124,17 +127,17 @@ export default function LabMap({ pageType }: { pageType: PageType }) {
           <div className="col-span-4 grid grid-cols-3">
             <SeatTile
               seat={seats.E1}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
             <SeatTile
               seat={seats.E2}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
             <SeatTile
               seat={seats.E3}
-              onClickSeat={onClickSeat}
+              onClickSeat={handleTileClick}
               pageType={pageType}
             />
           </div>

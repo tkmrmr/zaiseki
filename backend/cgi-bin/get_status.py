@@ -37,7 +37,7 @@ try:
                         "id": seat_id,
                         "code": seat_number,
                         "status": status,
-                        # "updated_at": updated_at.isoformat() if updated_at else None,
+                        "updated_at": updated_at.isoformat() if updated_at else None,
                     }
                 )
 
