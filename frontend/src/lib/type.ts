@@ -7,6 +7,7 @@ export type SummaryItem = {
 };
 
 export type SummaryNum = {
+  // TODO: あとでキャメルケースに修正
   present_count: number;
   absent_count: number;
   null_count: number;
@@ -19,6 +20,7 @@ export type Seat = {
   familyName?: string;
   grade?: "B4" | "M1" | "M2" | "D1" | "D2" | "D3";
   status: Status;
+  updatedAt?: string;
 };
 
 export type PageType = "view" | "kiosk" | "admin";

@@ -5,6 +5,15 @@ import {
   SEAT_STATUS_UPDATED_EVENT,
 } from "@/lib/events";
 
+type ApiSeat = {
+  id: number;
+  code: string;
+  family_name?: string;
+  grade?: "B4" | "M1" | "M2" | "D1" | "D2" | "D3";
+  status: Status;
+  updated_at?: string;
+};
+
 export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
   const [seats, setSeats] = useState<Record<string, Seat>>({});
   const fetchSeats = useCallback(async () => {
@@ -16,19 +25,21 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
 
       if (data.ok) {
         const tempSeats: Record<string, Seat> = {};
-        data.seats.forEach((seat: Seat) => {
+        data.seats.forEach((seat: ApiSeat) => {
           tempSeats[seat.code] = isViewOnly
             ? {
                 id: seat.id,
                 code: seat.code,
                 status: seat.status,
+                updatedAt: seat.updated_at,
               }
             : {
                 id: seat.id,
                 code: seat.code,
-                familyName: seat.familyName,
+                familyName: seat.family_name,
                 grade: seat.grade,
                 status: seat.status,
+                updatedAt: seat.updated_at,
               };
         });
         setSeats(tempSeats);
@@ -92,6 +103,14 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
     }
   };
 
+  const getUpdatedAt = (seats: Record<string, Seat>): Date | null => {
+    const times = Object.values(seats)
+      .map((s) => Date.parse(s.updatedAt ?? ""))
+      .filter(Number.isFinite);
+
+    return times.length ? new Date(Math.max(...times)) : null;
+  };
+
   useEffect(() => {
     queueMicrotask(() => {
       void fetchSeats();
@@ -106,8 +125,9 @@ export default function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
       window.removeEventListener(REFRESH_REQUESTED_EVENT, onRefreshRequested);
     };
   }, [fetchSeats]);
-  return [seats, onClickSeat] as [
+  return [seats, onClickSeat, getUpdatedAt] as [
     Record<string, Seat>,
     (seat: Seat) => Promise<void>,
+    (seats: Record<string, Seat>) => Date | null,
   ];
 }
