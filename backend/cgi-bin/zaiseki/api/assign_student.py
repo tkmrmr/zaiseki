@@ -6,8 +6,7 @@ import os
 import sys
 
 import mysql.connector
-from common.get_db_connection import get_db_connection
-from common.print_json import print_json
+from common import get_db_connection, print_json
 
 print("Content-Type: application/json; charset=utf-8")
 print()
