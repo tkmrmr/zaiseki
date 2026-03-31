@@ -14,7 +14,7 @@
 
 ## 環境
 
-- Python (推奨バージョン: <=3.11)
+- Python (推奨バージョン: 3.10, 3.11)
 - Node.js (推奨バージョン: 25.x)
 - MariaDB（推奨バージョン: 15.x）
 - Docker / Docker Compose
@@ -67,14 +67,15 @@ cd frontend
 npm run dev
 ```
 
-`/cgi-bin` へのリクエストはデフォルトで `http://localhost` にプロキシされます．別ホストのバックエンドへ向けたい場合は `BASE_URL` を指定してください．
+`/cgi-bin` へのリクエストは，デフォルトで `http://localhost` に送られます．
+別のバックエンドを使う場合は，`BASE_URL` を指定してください．
 
 ```bash
 cd frontend
-BASE_URL={BASE_URL} npm run build
+BASE_URL=http://{BACKEND_HOST} npm run dev
 ```
 
-アプリは `http://localhost/zaiseki` または `http://{BASE_URL}/zaiseki` からアクセスすることができます．
+開発中のアプリには `http://localhost:5173/zaiseki/` でアクセスできます．
 
 主なルート:
 
@@ -89,7 +90,9 @@ cd frontend
 npm run build
 ```
 
-ビルド成果物は `frontend/dist` に出力されます．
+ビルドしたファイルは `frontend/dist` に出力されます．
+
+Apache コンテナ上で画面を表示する場合は，先に `npm run build` を実行してください．
 
 ローカルでビルド結果を確認する場合:
 
@@ -104,9 +107,17 @@ npm run preview
 docker compose up --build -d
 ```
 
+`database/schema.sql` は，DB を初回作成するときだけ自動で読み込まれます．
+スキーマをもう一度反映したい場合は，以下のようにボリュームを削除してから起動してください．
+
+```bash
+docker compose down -v
+docker compose up --build -d
+```
+
 起動される主なサービス:
 
-- Apache: `http://localhost/`
+- Apache: `http://localhost/zaiseki/`
 - Adminer: `http://localhost:8080/`
 - MariaDB: `localhost:3306`
 
