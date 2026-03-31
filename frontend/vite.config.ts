@@ -5,6 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const baseURL = process.env.BASE_URL || "http://localhost";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -13,7 +14,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/cgi-bin": {
-        target: "https://project.t-interaction.lab.uec.ac.jp/",
+        target: `${baseURL}`,
         changeOrigin: true,
       },
     },
