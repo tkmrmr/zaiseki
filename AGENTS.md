@@ -1,24 +1,37 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-`frontend/` contains the Vite + React + TypeScript UI. Main app code lives in `frontend/src`, shared UI in `frontend/src/components`, pages in `frontend/src/pages`, utilities and hooks in `frontend/src/lib`, and static assets in `frontend/public` and `frontend/src/assets`. `backend/cgi-bin/` contains Python CGI endpoints plus shared helpers under `backend/cgi-bin/common`. Database schema and seed data live in `database/schema.sql` and `database/data.sql`. Container and Apache runtime files are at the repo root: `Dockerfile`, `docker-compose.yml`, and `httpd.conf`.
+`frontend/` holds the Vite + React + TypeScript app. Route pages live in `frontend/src/pages`, lab/layout components in `frontend/src/components/layout`, reusable UI primitives in `frontend/src/components/ui`, and hooks plus API helpers in `frontend/src/lib`. Static files live in `frontend/public`, and production builds are emitted to `frontend/dist`.
+
+`backend/cgi-bin/zaiseki/api/` contains the Python CGI endpoints. Shared helpers live in `backend/cgi-bin/zaiseki/api/common`. Vendored third-party packages live in `backend/cgi-bin/zaiseki/api/dotenv` and `backend/cgi-bin/zaiseki/api/pymysql`; avoid editing them unless you are intentionally updating vendored code. The CGI runtime reads environment variables from `backend/cgi-bin/zaiseki/.env`, which is mounted from the repo-root `.env` in Docker.
+
+Database DDL currently lives in `database/schema.sql`; there is no checked-in `database/data.sql` seed file. Container and Apache runtime files are at the repo root: `Dockerfile`, `docker-compose.yml`, and `httpd.conf`.
 
 ## Build, Test, and Development Commands
 Frontend commands run from `frontend/`:
 
 - `npm install`: install frontend dependencies.
-- `npm run dev`: start the Vite dev server with `/cgi-bin` proxied to `http://localhost`.
-- `npm run build`: type-check and create a production build in `frontend/dist`.
-- `npm run lint`: run ESLint on all TypeScript and TSX files.
+- `npm run dev`: start the Vite dev server; `/cgi-bin` is proxied to `BASE_URL` or `http://localhost`.
+- `npm run build`: type-check and create a production build in `frontend/dist`. The app is built with `base: "/zaiseki/"`.
+- `npm run lint`: run ESLint on the frontend source.
 - `npm run preview`: serve the built frontend locally.
 
-For the full stack, run `docker compose up --build` from the repository root to start MariaDB, Apache, and Adminer.
+Repository-root commands:
+
+- `docker compose up --build`: start MariaDB, Apache, and Adminer. This brings up the backend stack, but the compose file does not currently copy `frontend/dist` into Apache, so frontend development is usually done through Vite.
+- `python3 -m py_compile backend/cgi-bin/zaiseki/api/*.py backend/cgi-bin/zaiseki/api/common/*.py`: quick syntax check for backend CGI changes.
 
 ## Coding Style & Naming Conventions
-Use 2-space indentation in TypeScript/TSX and 4 spaces in Python. Keep React components and page files in PascalCase (`LabPageLayout.tsx`, `Kiosk.tsx`), hooks in `useX` form, utility modules in camelCase, and Python modules in snake_case. Prefer the existing `@/` import alias for frontend source imports. TypeScript is `strict`; keep types explicit when data crosses API boundaries. ESLint is configured in `frontend/eslint.config.js`; there is no Prettier config, so follow the surrounding file style.
+Use 2-space indentation in TypeScript/TSX and 4 spaces in Python. Keep React components and page files in PascalCase, hooks in `useX` form, utility modules in camelCase, and Python modules in snake_case. Prefer the existing `@/` import alias for frontend source imports. TypeScript runs in `strict` mode, so keep types explicit when data crosses API boundaries.
+
+ESLint is configured in `frontend/eslint.config.js`; there is no Prettier config, so follow the surrounding file style. Avoid editing generated or local-environment directories such as `frontend/dist`, `frontend/node_modules`, `backend/.env`, and `__pycache__` unless the task explicitly requires it.
 
 ## Testing Guidelines
-There is currently no automated test suite checked in. At minimum, run `npm run lint`, `npm run build`, and manually verify the affected UI flow. If you add tests, place frontend tests alongside the feature or under `frontend/src/__tests__/` and use `*.test.ts` or `*.test.tsx` naming.
+There is currently no automated test suite checked in. At minimum, run `npm run build` for frontend changes, `npm run lint` for frontend changes, `python3 -m py_compile backend/cgi-bin/zaiseki/api/*.py backend/cgi-bin/zaiseki/api/common/*.py` for backend CGI changes, and manually verify the affected UI or API flow.
+
+If you add tests, place frontend tests alongside the feature or under `frontend/src/__tests__/` and use `*.test.ts` or `*.test.tsx` naming.
 
 ## Commit & Pull Request Guidelines
-Recent history uses short, imperative messages, often with `feat:` or `fix:` prefixes. Prefer concise subjects such as `feat: add kiosk route` or `fix: handle empty seat state`. Pull requests should describe scope, list verification steps, link related issues, and include screenshots for UI changes. Call out database or environment-variable changes explicitly.
+Recent history mostly uses short Japanese commit subjects, with occasional `feat:`, `fix:`, or `chore:` prefixes. Prefer concise, imperative subjects and add a conventional prefix when it helps clarify intent.
+
+Pull requests should describe scope, list verification steps, link related issues, and include screenshots for UI changes. Call out `.env`, Apache, Docker, or database changes explicitly.
