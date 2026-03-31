@@ -33,8 +33,12 @@ export function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
       refreshInFlightRef.current = true;
       try {
         const res = isViewOnly
-          ? await fetch("/cgi-bin/get_status.py", { cache: "no-store" })
-          : await fetch("/cgi-bin/get_full_status.py", { cache: "no-store" });
+          ? await fetch("/cgi-bin/zaiseki/api/get_status.py", {
+              cache: "no-store",
+            })
+          : await fetch("/cgi-bin/zaiseki/api/get_full_status.py", {
+              cache: "no-store",
+            });
         const data = await res.json();
 
         if (data.ok) {
@@ -70,7 +74,7 @@ export function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
   }, [isViewOnly]);
 
   const updateStatus = async (seat: Seat, newStatus: Status): Promise<void> => {
-    const res = await fetch("/cgi-bin/update_status.py", {
+    const res = await fetch("/cgi-bin/zaiseki/api/update_status.py", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
