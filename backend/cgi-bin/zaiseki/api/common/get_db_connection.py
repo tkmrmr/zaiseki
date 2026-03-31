@@ -9,10 +9,12 @@ ENV_PATH = BASE_DIR / ".env"
 
 load_dotenv(ENV_PATH)
 
+
 def get_db_connection():
     return pymysql.connect(
         host=os.getenv("MARIADB_HOST", "db"),
         user=os.getenv("MARIADB_USER"),
         password=os.getenv("MARIADB_PASSWORD"),
         database=os.getenv("MARIADB_DATABASE"),
+        charset="utf8mb4",
     )
