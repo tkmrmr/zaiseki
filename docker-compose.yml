@@ -22,7 +22,7 @@ services:
     volumes:
       - ./backend/cgi-bin:/usr/local/apache2/cgi-bin
       - ./httpd.conf:/usr/local/apache2/conf/httpd.conf
-      - ./.env:/usr/local/apache2/cgi-bin/zaiseki/api/.env
+      - ./.env:/usr/local/apache2/cgi-bin/zaiseki/.env
 
   adminer:
     image: adminer
