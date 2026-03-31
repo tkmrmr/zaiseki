@@ -58,9 +58,9 @@ npm run preview
 例：
 
 ```.env
-DB_USER=testuser
-DB_PASSWORD=testpass
-DB_HOST=db
-DB_NAME=lab_db
-DB_ROOT_PASSWORD=rootpass # Dockerを使用しない場合は不要
+MARIADB_USER=testuser
+MARIADB_PASSWORD=testpass
+MARIADB_HOST=db
+MARIADB_DATABASE=lab_db
+MARIADB_ROOT_PASSWORD=rootpass # Dockerを使用しない場合は不要
 ```
