@@ -110,12 +110,6 @@ docker compose up --build -d
 - Adminer: `http://localhost:8080/`
 - MariaDB: `localhost:3306`
 
-`database/schema.sql` をMaridDBに取り込みたい際は，以下のコマンドを実行してください．
-
-```bash
-docker compose exec -T db sh -lc 'mariadb -u"$MARIADB_USER" -p"$MARIADB_PASSWORD" "$MARIADB_DATABASE"' < database/schema.sql
-```
-
 ## 補足
 
 `LabMap.tsx` は研究室の配置に合わせて適宜編集してください．
