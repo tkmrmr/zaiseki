@@ -18,8 +18,10 @@ Frontend commands run from `frontend/`:
 
 Repository-root commands:
 
-- `docker compose up --build`: start MariaDB, Apache, and Adminer. This brings up the backend stack, but the compose file does not currently copy `frontend/dist` into Apache, so frontend development is usually done through Vite.
+- `docker compose up --build`: start MariaDB, Apache, and Adminer. `./frontend/dist` is mounted into Apache at `/usr/local/apache2/htdocs/zaiseki`, so build the frontend first when you want Apache to serve the latest UI.
 - `python3 -m py_compile backend/cgi-bin/zaiseki/api/*.py backend/cgi-bin/zaiseki/api/common/*.py`: quick syntax check for backend CGI changes.
+
+`database/schema.sql` is mounted into `/docker-entrypoint-initdb.d/` and runs only when the `db-data` volume is first initialized. If you need to reapply schema changes in Docker, recreate the database volume with `docker compose down -v` before starting the services again.
 
 ## Coding Style & Naming Conventions
 Use 2-space indentation in TypeScript/TSX and 4 spaces in Python. Keep React components and page files in PascalCase, hooks in `useX` form, utility modules in camelCase, and Python modules in snake_case. Prefer the existing `@/` import alias for frontend source imports. TypeScript runs in `strict` mode, so keep types explicit when data crosses API boundaries.
