@@ -3,9 +3,8 @@
 
 import sys
 
-import mysql.connector
-from common.get_db_connection import get_db_connection
-from common.print_json import print_json
+import pymysql
+from common import get_db_connection, print_json
 
 print("Content-Type: application/json; charset=utf-8")
 print()
@@ -37,7 +36,7 @@ try:
 
     print_json({"ok": True, "students": students})
 
-except mysql.connector.Error as e:
+except pymysql.Error as e:
     print(e, file=sys.stderr)
     print_json({"ok": False, "error": "Database error"})
 

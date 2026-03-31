@@ -1,20 +1,18 @@
-import contextlib
 import os
+from pathlib import Path
 
-import mysql.connector
+import pymysql
+from dotenv import load_dotenv
 
+BASE_DIR = Path(__file__).resolve().parents[2]
+ENV_PATH = BASE_DIR / ".env"
 
-@contextlib.contextmanager
+load_dotenv(ENV_PATH)
+
 def get_db_connection():
-    conn = None
-    try:
-        conn = mysql.connector.connect(
-            host=os.getenv("DB_HOST", "db"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
-            database=os.getenv("DB_NAME"),
-        )
-        yield conn
-    finally:
-        if conn is not None:
-            conn.close()
+    return pymysql.connect(
+        host=os.getenv("MARIADB_HOST", "db"),
+        user=os.getenv("MARIADB_USER"),
+        password=os.getenv("MARIADB_PASSWORD"),
+        database=os.getenv("MARIADB_DATABASE"),
+    )

@@ -22,11 +22,7 @@ services:
     volumes:
       - ./backend/cgi-bin:/usr/local/apache2/cgi-bin
       - ./httpd.conf:/usr/local/apache2/conf/httpd.conf
-    environment:
-      DB_HOST: ${DB_HOST:-db}
-      DB_USER: ${MARIADB_USER}
-      DB_PASSWORD: ${MARIADB_PASSWORD}
-      DB_NAME: ${MARIADB_DATABASE}
+      - ./.env:/usr/local/apache2/cgi-bin/zaiseki/.env
 
   adminer:
     image: adminer

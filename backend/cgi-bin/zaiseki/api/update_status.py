@@ -5,9 +5,8 @@ import json
 import os
 import sys
 
-import mysql.connector
-from common.get_db_connection import get_db_connection
-from common.print_json import print_json
+import pymysql
+from common import get_db_connection, print_json
 
 print("Content-Type: application/json; charset=utf-8")
 print()
@@ -27,7 +26,9 @@ try:
         print_json({"ok": False, "error": "Invalid seat_id"})
         sys.exit(0)
 
-    status = data.get("status", "").strip() if isinstance(data.get("status"), str) else ""
+    status = (
+        data.get("status", "").strip() if isinstance(data.get("status"), str) else ""
+    )
     if not status or status not in ALLOWED_STATUS:
         print_json({"ok": False, "error": "Invalid status"})
         sys.exit(0)
@@ -45,7 +46,7 @@ try:
 except json.JSONDecodeError:
     print_json({"ok": False, "error": "Invalid JSON"})
 
-except mysql.connector.Error as e:
+except pymysql.Error as e:
     print(e, file=sys.stderr)
     print_json({"ok": False, "error": "Database error"})
 
