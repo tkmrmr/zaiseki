@@ -9,4 +9,4 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN python3.11 -m pip install --no-cache-dir --break-system-packages mysql-connector-python
+RUN python3.11 -m pip install --no-cache-dir --break-system-packages PyMySQL
