@@ -15,7 +15,6 @@ const Lounge = () => {
   return (
     <div className={getLoungeClass()}>
       <p className={getLoungeTitleClass()}>談話スペース</p>
-      <p className="mt-3 text-md text-slate-600">打ち合わせ・雑談</p>
     </div>
   );
 };
