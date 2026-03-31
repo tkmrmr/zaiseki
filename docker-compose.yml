@@ -22,11 +22,7 @@ services:
     volumes:
       - ./backend/cgi-bin:/usr/local/apache2/cgi-bin
       - ./httpd.conf:/usr/local/apache2/conf/httpd.conf
-    environment:
-      DB_HOST: ${DB_HOST:-db}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_NAME: ${DB_NAME}
+      - ./.env:/usr/local/apache2/cgi-bin/zaiseki/api/.env
 
   adminer:
     image: adminer
