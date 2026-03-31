@@ -10,7 +10,7 @@ export function useSummary() {
 
   useEffect(() => {
     const fetchSummary = () => {
-      fetch("/cgi-bin/get_summary.py")
+      fetch("/cgi-bin/zaiseki/api/get_summary.py")
         .then((res) => res.json())
         .then((data) => {
           if (data.ok) {

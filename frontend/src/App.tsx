@@ -1,4 +1,4 @@
-import { HashRouter as Router, Route, Routes } from "react-router-dom"; // TODO: 可能であればBrowserRouterに変更
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import View from "@/pages/View";
 import Kiosk from "@/pages/Kiosk";
 import Admin from "@/pages/Admin";
@@ -6,7 +6,7 @@ import NotFound from "@/pages/NotFound";
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/zaiseki/">
       <Routes>
         <Route path="/" element={<View />} />
         <Route path="/kiosk" element={<Kiosk />} />
