@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/cgi-bin": {
-        target: "http://localhost",
+        target: "https://project.t-interaction.lab.uec.ac.jp/",
         changeOrigin: true,
       },
     },
