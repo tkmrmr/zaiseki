@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom"; // TODO: 可能であればBrowserRouterに変更
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import View from "@/pages/View";
 import Kiosk from "@/pages/Kiosk";
 import Admin from "@/pages/Admin";
