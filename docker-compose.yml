@@ -3,10 +3,10 @@ services:
     image: mariadb:10.11
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
-      MARIADB_DATABASE: ${MARIADB_DATABASE}
-      MARIADB_USER: ${MARIADB_USER}
-      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
@@ -24,9 +24,9 @@ services:
       - ./httpd.conf:/usr/local/apache2/conf/httpd.conf
     environment:
       DB_HOST: ${DB_HOST:-db}
-      DB_USER: ${MARIADB_USER}
-      DB_PASSWORD: ${MARIADB_PASSWORD}
-      DB_NAME: ${MARIADB_DATABASE}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
 
   adminer:
     image: adminer
