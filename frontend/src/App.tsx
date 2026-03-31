@@ -6,7 +6,7 @@ import NotFound from "@/pages/NotFound";
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/zaiseki/">
       <Routes>
         <Route path="/" element={<View />} />
         <Route path="/kiosk" element={<Kiosk />} />
