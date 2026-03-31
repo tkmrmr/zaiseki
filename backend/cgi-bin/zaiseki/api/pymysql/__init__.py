@@ -1,6 +1,11 @@
 """
 PyMySQL: A pure-Python MySQL client library.
 
+VENDORED COPY - Upstream: https://github.com/PyMySQL/PyMySQL (version 1.1.2)
+This file is vendored to avoid a runtime pip dependency in the CGI environment.
+Local modifications should be kept to an absolute minimum; prefer upgrading
+from upstream rather than patching files in this directory.
+
 Copyright (c) 2010-2016 PyMySQL contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
