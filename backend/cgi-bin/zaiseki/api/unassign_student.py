@@ -5,7 +5,7 @@ import json
 import os
 import sys
 
-import mysql.connector
+import pymysql
 from common import get_db_connection, print_json
 
 print("Content-Type: application/json; charset=utf-8")
@@ -34,7 +34,7 @@ try:
 except json.JSONDecodeError:
     print_json({"ok": False, "error": "Invalid JSON"})
 
-except mysql.connector.Error as e:
+except pymysql.Error as e:
     print(e, file=sys.stderr)
     print_json({"ok": False, "error": "Database error"})
 

@@ -4,7 +4,8 @@
 import sys
 from datetime import datetime, timezone
 
-import mysql.connector
+import pymysql
+import pymysql.cursors
 from common import get_db_connection, print_json
 
 print("Content-Type: application/json; charset=utf-8")
@@ -24,7 +25,7 @@ QUERY = """
 
 try:
     with get_db_connection() as conn:
-        with conn.cursor(dictionary=True) as cur:
+        with conn.cursor(pymysql.cursors.DictCursor) as cur:
             updated_at = datetime.now(timezone.utc).isoformat()
             cur.execute(QUERY)
             row = cur.fetchone()
@@ -38,7 +39,7 @@ try:
 
     print_json({"ok": True, "summary": summary, "updated_at": updated_at})
 
-except mysql.connector.Error as e:
+except pymysql.Error as e:
     print(e, file=sys.stderr)
     print_json({"ok": False, "error": "Database error"})
 
