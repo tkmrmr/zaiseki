@@ -25,6 +25,7 @@ services:
       - ./httpd.conf:/usr/local/apache2/conf/httpd.conf
       - ./.env:/usr/local/apache2/cgi-bin/zaiseki/.env
       - ./frontend/dist/:/usr/local/apache2/htdocs/zaiseki
+      - ./frontend/.htaccess:/usr/local/apache2/htdocs/zaiseki/.htaccess
 
   adminer:
     image: adminer
