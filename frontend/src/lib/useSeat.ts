@@ -21,20 +21,15 @@ export function useSeat({ pageType }: { pageType: PageType }) {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const refreshInFlightRef = useRef(false);
   const pendingRefreshRef = useRef(false);
-  const isViewOnly = pageType === "view";
-
-  const getStatusEndpoint = () => {
-    const apiBase = "/cgi-bin/zaiseki/api";
-    if (pageType === "admin") {
-      return `${apiBase}/admin/get_full_status.py`;
-    } else if (pageType === "kiosk") {
-      return `${apiBase}/kiosk/get_full_status.py`;
-    } else {
-      return `${apiBase}/public/get_status.py`;
-    }
-  };
-
   const refreshSeats = useCallback(async () => {
+    const apiBase = "/cgi-bin/zaiseki/api";
+    const statusEndpoint =
+      pageType === "admin"
+        ? `${apiBase}/admin/get_full_status.py`
+        : pageType === "kiosk"
+          ? `${apiBase}/kiosk/get_full_status.py`
+          : `${apiBase}/public/get_status.py`;
+
     if (refreshInFlightRef.current) {
       pendingRefreshRef.current = true;
       return;
@@ -44,7 +39,7 @@ export function useSeat({ pageType }: { pageType: PageType }) {
       pendingRefreshRef.current = false;
       refreshInFlightRef.current = true;
       try {
-        const res = await fetch(getStatusEndpoint(), {
+        const res = await fetch(statusEndpoint, {
           cache: "no-store",
         });
         const data = await res.json();
@@ -52,21 +47,22 @@ export function useSeat({ pageType }: { pageType: PageType }) {
         if (data.ok) {
           const tempSeats: Record<string, Seat> = {};
           data.seats.forEach((seat: ApiSeat) => {
-            tempSeats[seat.code] = isViewOnly
-              ? {
-                  id: seat.id,
-                  code: seat.code,
-                  status: seat.status,
-                  updatedAt: seat.updated_at,
-                }
-              : {
-                  id: seat.id,
-                  code: seat.code,
-                  familyName: seat.family_name,
-                  grade: seat.grade,
-                  status: seat.status,
-                  updatedAt: seat.updated_at,
-                };
+            tempSeats[seat.code] =
+              pageType === "view"
+                ? {
+                    id: seat.id,
+                    code: seat.code,
+                    status: seat.status,
+                    updatedAt: seat.updated_at,
+                  }
+                : {
+                    id: seat.id,
+                    code: seat.code,
+                    familyName: seat.family_name,
+                    grade: seat.grade,
+                    status: seat.status,
+                    updatedAt: seat.updated_at,
+                  };
           });
           setSeats(tempSeats);
         } else {
@@ -79,7 +75,7 @@ export function useSeat({ pageType }: { pageType: PageType }) {
       }
     } while (pendingRefreshRef.current);
     setIsRefreshing(false);
-  }, [isViewOnly]);
+  }, [pageType]);
 
   const updateStatus = async (seat: Seat, newStatus: Status): Promise<void> => {
     const res = await fetch("/cgi-bin/zaiseki/api/kiosk/update_status.py", {
