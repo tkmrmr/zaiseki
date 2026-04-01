@@ -1,2 +1,5 @@
 .env
 .codex
+.env.uec
+.htaccess
+.htpasswd
