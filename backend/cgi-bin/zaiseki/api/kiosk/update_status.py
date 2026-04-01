@@ -5,11 +5,14 @@ import json
 import os
 import sys
 
+sys.path.append(os.pardir)
 import pymysql
 from common import get_db_connection, print_json
 
 print("Content-Type: application/json; charset=utf-8")
 print()
+
+ALLOWED_STATUS = {"present", "absent"}
 
 try:
     length = int(os.environ.get("CONTENT_LENGTH", 0))
@@ -24,9 +27,19 @@ try:
         print_json({"ok": False, "error": "Invalid seat_id"})
         sys.exit(0)
 
+    status = (
+        data.get("status", "").strip() if isinstance(data.get("status"), str) else ""
+    )
+    if not status or status not in ALLOWED_STATUS:
+        print_json({"ok": False, "error": "Invalid status"})
+        sys.exit(0)
+
     with get_db_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
+            cur.execute(
+                "UPDATE presence_status SET status = %s WHERE seat_id = %s",
+                (status, seat_id),
+            )
             conn.commit()
 
     print_json({"ok": True})

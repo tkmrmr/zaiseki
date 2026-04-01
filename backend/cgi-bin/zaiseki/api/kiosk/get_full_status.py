@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import os
 import sys
 
+sys.path.append(os.pardir)
 import pymysql
 from common import get_db_connection, print_json
 
@@ -13,11 +15,15 @@ QUERY = """
     SELECT
         seats.seat_id, 
         seats.seat_number, 
+        students.name, 
+        students.grade, 
         presence_status.status, 
         presence_status.updated_at
     FROM seats
     LEFT JOIN presence_status
         ON presence_status.seat_id = seats.seat_id
+    LEFT JOIN students
+        ON students.student_id = presence_status.student_id
     ORDER BY seats.seat_id
     ;
 """
@@ -28,13 +34,15 @@ try:
             cur.execute(QUERY)
 
             seats = []
-            for seat_id, seat_number, status, updated_at in cur:
+            for seat_id, seat_number, name, grade, status, updated_at in cur:
                 if status is None:
                     status = "vacant"
                 seats.append(
                     {
                         "id": seat_id,
                         "code": seat_number,
+                        "family_name": name,
+                        "grade": grade,
                         "status": status,
                         "updated_at": updated_at.isoformat() if updated_at else None,
                     }

@@ -5,6 +5,7 @@ import json
 import os
 import sys
 
+sys.path.append(os.pardir)
 import pymysql
 from common import get_db_connection, print_json
 

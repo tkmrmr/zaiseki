@@ -20,7 +20,7 @@ export function useStudent() {
   const [students, setStudents] = useState<Student[]>([]);
 
   useEffect(() => {
-    fetch("/cgi-bin/zaiseki/api/get_students.py")
+    fetch("/cgi-bin/zaiseki/api/admin/get_students.py")
       .then((res) => res.json())
       .then((data: StudentResponse) => {
         if (data.ok) {
