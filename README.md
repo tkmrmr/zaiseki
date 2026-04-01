@@ -51,6 +51,8 @@ MARIADB_DATABASE=lab_db
 MARIADB_ROOT_PASSWORD=rootpass # Docker Composeを使用しない場合は不要
 ```
 
+なお，Docker Composeを使わない場合は`backend/cgi-bin/zaiseki`に配置する必要があります．
+
 ### 3. Node.jsパッケージのインストール
 
 ```bash
