@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useRef } from "react";
-import type { Seat, Status } from "@/lib/type";
+import type { Seat, Status, PageType } from "@/lib/type";
 import {
   REFRESH_REQUESTED_EVENT,
   SEAT_STATUS_UPDATED_EVENT,
@@ -16,13 +16,20 @@ type ApiSeat = {
   updated_at?: string;
 };
 
-export function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
+export function useSeat({ pageType }: { pageType: PageType }) {
   const [seats, setSeats] = useState<Record<string, Seat>>({});
   const [isRefreshing, setIsRefreshing] = useState(false);
   const refreshInFlightRef = useRef(false);
   const pendingRefreshRef = useRef(false);
-
   const refreshSeats = useCallback(async () => {
+    const apiBase = "/cgi-bin/zaiseki/api";
+    const statusEndpoint =
+      pageType === "admin"
+        ? `${apiBase}/admin/get_full_status.py`
+        : pageType === "kiosk"
+          ? `${apiBase}/kiosk/get_full_status.py`
+          : `${apiBase}/public/get_status.py`;
+
     if (refreshInFlightRef.current) {
       pendingRefreshRef.current = true;
       return;
@@ -32,33 +39,30 @@ export function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
       pendingRefreshRef.current = false;
       refreshInFlightRef.current = true;
       try {
-        const res = isViewOnly
-          ? await fetch("/cgi-bin/zaiseki/api/get_status.py", {
-              cache: "no-store",
-            })
-          : await fetch("/cgi-bin/zaiseki/api/get_full_status.py", {
-              cache: "no-store",
-            });
+        const res = await fetch(statusEndpoint, {
+          cache: "no-store",
+        });
         const data = await res.json();
 
         if (data.ok) {
           const tempSeats: Record<string, Seat> = {};
           data.seats.forEach((seat: ApiSeat) => {
-            tempSeats[seat.code] = isViewOnly
-              ? {
-                  id: seat.id,
-                  code: seat.code,
-                  status: seat.status,
-                  updatedAt: seat.updated_at,
-                }
-              : {
-                  id: seat.id,
-                  code: seat.code,
-                  familyName: seat.family_name,
-                  grade: seat.grade,
-                  status: seat.status,
-                  updatedAt: seat.updated_at,
-                };
+            tempSeats[seat.code] =
+              pageType === "view"
+                ? {
+                    id: seat.id,
+                    code: seat.code,
+                    status: seat.status,
+                    updatedAt: seat.updated_at,
+                  }
+                : {
+                    id: seat.id,
+                    code: seat.code,
+                    familyName: seat.family_name,
+                    grade: seat.grade,
+                    status: seat.status,
+                    updatedAt: seat.updated_at,
+                  };
           });
           setSeats(tempSeats);
         } else {
@@ -71,10 +75,10 @@ export function useSeat({ isViewOnly }: { isViewOnly: boolean }) {
       }
     } while (pendingRefreshRef.current);
     setIsRefreshing(false);
-  }, [isViewOnly]);
+  }, [pageType]);
 
   const updateStatus = async (seat: Seat, newStatus: Status): Promise<void> => {
-    const res = await fetch("/cgi-bin/zaiseki/api/update_status.py", {
+    const res = await fetch("/cgi-bin/zaiseki/api/kiosk/update_status.py", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

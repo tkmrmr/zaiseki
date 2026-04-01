@@ -82,15 +82,18 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
     setIsUnassigning(true);
 
     try {
-      const res = await fetch("/cgi-bin/zaiseki/api/unassign_student.py", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        "/cgi-bin/zaiseki/api/admin/unassign_student.py",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            seat_id: seat.id,
+          }),
         },
-        body: JSON.stringify({
-          seat_id: seat.id,
-        }),
-      });
+      );
 
       const body = await parseResponseBody(res);
       if (!res.ok) {
@@ -118,7 +121,7 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
     setShowUnassignConfirm(false);
 
     try {
-      const res = await fetch("/cgi-bin/zaiseki/api/assign_student.py", {
+      const res = await fetch("/cgi-bin/zaiseki/api/admin/assign_student.py", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -9,7 +9,7 @@ import type { PageType } from "@/lib/type";
 export default function LabPageLayout({ pageType }: { pageType: PageType }) {
   const summary = useSummary();
   const [seats, onClickSeat, getUpdatedAt, isRefreshing] = useSeat({
-    isViewOnly: pageType === "view",
+    pageType,
   });
   const presentCount = summary?.presentCount ?? 0;
   const absentCount = summary?.absentCount ?? 0;
