@@ -2,11 +2,31 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/layout/Header";
 import SummaryPanel from "@/components/layout/SummaryPanel";
 import LabMap from "@/components/layout/LabMap";
+import ErrorLayout from "@/components/layout/ErrorLayout";
 import { useSeat } from "@/lib/useSeat";
-import type { PageType } from "@/lib/type";
+import type { PageType, ErrorType } from "@/lib/type";
+
+const ErrorViews = ({ errorType }: { errorType: ErrorType }) => {
+  if (errorType === "unauthorized") {
+    return <ErrorLayout errorPageType="unauthorized" />;
+  } else if (errorType === "forbidden") {
+    return <ErrorLayout errorPageType="forbidden" />;
+  } else if (errorType === "unknown") {
+    return <ErrorLayout errorPageType="unknown" />;
+  } else {
+    return null;
+  }
+};
 
 export default function LabPageLayout({ pageType }: { pageType: PageType }) {
-  const [seats, onClickSeat, getUpdatedAt, isRefreshing] = useSeat({
+  const [
+    seats,
+    onClickSeat,
+    getUpdatedAt,
+    isRefreshing,
+    isCheckingAuth,
+    errorType,
+  ] = useSeat({
     pageType,
   });
   const seatList = Object.values(seats);
@@ -22,7 +42,7 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
   const totalSeats = seatList.length;
   const updatedAt = getUpdatedAt();
 
-  return (
+  return pageType === "view" || (!isCheckingAuth && errorType === null) ? (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.2),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(253,224,71,0.18),_transparent_32%),linear-gradient(180deg,#f6f2e9_0%,#edf4f7_100%)] text-slate-800">
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col p-4 sm:px-6 lg:px-8 lg:py-8">
         <Header
@@ -62,5 +82,11 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
         </main>
       </div>
     </div>
+  ) : (
+    <>
+      {isCheckingAuth || errorType === null ? null : (
+        <ErrorViews errorType={errorType} />
+      )}
+    </>
   );
 }

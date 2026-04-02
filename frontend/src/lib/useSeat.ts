@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useRef } from "react";
-import type { Seat, Status, PageType } from "@/lib/type";
+import type { Seat, Status, PageType, ErrorType } from "@/lib/type";
 import {
   REFRESH_REQUESTED_EVENT,
   SEAT_STATUS_UPDATED_EVENT,
@@ -19,8 +19,11 @@ type ApiSeat = {
 export function useSeat({ pageType }: { pageType: PageType }) {
   const [seats, setSeats] = useState<Record<string, Seat>>({});
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [errorType, setErrorType] = useState<ErrorType>(null);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const refreshInFlightRef = useRef(false);
   const pendingRefreshRef = useRef(false);
+
   const refreshSeats = useCallback(async () => {
     const apiBase = "/cgi-bin/zaiseki/api";
     const statusEndpoint =
@@ -29,6 +32,10 @@ export function useSeat({ pageType }: { pageType: PageType }) {
         : pageType === "kiosk"
           ? `${apiBase}/kiosk/get_full_status.py`
           : `${apiBase}/public/get_status.py`;
+
+    if (pageType === "view") {
+      setIsCheckingAuth(false);
+    }
 
     if (refreshInFlightRef.current) {
       pendingRefreshRef.current = true;
@@ -42,10 +49,33 @@ export function useSeat({ pageType }: { pageType: PageType }) {
         const res = await fetch(statusEndpoint, {
           cache: "no-store",
         });
-        const data = await res.json();
 
+        if (!res.ok) {
+          let message = `Server error: ${res.status}`;
+          setIsCheckingAuth(false);
+          if (res.status === 401) {
+            setErrorType("unauthorized");
+            message = "Unauthorized.";
+            return;
+          } else if (res.status === 403) {
+            setErrorType("forbidden");
+            message = "Authentication failed.";
+            return;
+          }
+          try {
+            const data = await res.json();
+            if (data.error) message = data.error;
+          } catch {
+            // non-JSON body; keep the status-code message
+          }
+          throw new Error(message);
+        }
+
+        const data = await res.json();
         if (data.ok) {
           const tempSeats: Record<string, Seat> = {};
+          setErrorType(null);
+          setIsCheckingAuth(false);
           data.seats.forEach((seat: ApiSeat) => {
             tempSeats[seat.code] =
               pageType === "view"
@@ -67,11 +97,16 @@ export function useSeat({ pageType }: { pageType: PageType }) {
           setSeats(tempSeats);
         } else {
           console.error(data.error);
+          setErrorType("unknown");
+          setIsCheckingAuth(false);
         }
       } catch (err) {
         console.error(err);
+        setErrorType("unknown");
+        setIsCheckingAuth(false);
       } finally {
         refreshInFlightRef.current = false;
+        setIsRefreshing(false);
       }
     } while (pendingRefreshRef.current);
     setIsRefreshing(false);
@@ -91,6 +126,11 @@ export function useSeat({ pageType }: { pageType: PageType }) {
 
     if (!res.ok) {
       let message = `Server error: ${res.status}`;
+      if (res.status === 401) {
+        message = "Unauthorized.";
+      } else if (res.status === 403) {
+        message = "Authentication failed.";
+      }
       try {
         const data = await res.json();
         if (data.error) message = data.error;
@@ -161,10 +201,19 @@ export function useSeat({ pageType }: { pageType: PageType }) {
       window.removeEventListener(REFRESH_REQUESTED_EVENT, onRefreshRequested);
     };
   }, [refreshSeats]);
-  return [seats, onClickSeat, getUpdatedAt, isRefreshing] as [
+  return [
+    seats,
+    onClickSeat,
+    getUpdatedAt,
+    isRefreshing,
+    isCheckingAuth,
+    errorType,
+  ] as [
     Record<string, Seat>,
     (seat: Seat) => Promise<void>,
     () => Date | null,
     boolean,
+    boolean,
+    ErrorType,
   ];
 }
