@@ -58,9 +58,10 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
   const { control, handleSubmit, reset, formState } = useForm<FormValues>({
     defaultValues: { studentId: "" },
   });
-  const students = useStudent();
+  const { students, error: studentLoadError } = useStudent();
   const hasAssignedStudent = Boolean(seat.familyName);
   const isBusy = formState.isSubmitting || isUnassigning;
+  const isAssignDisabled = isBusy || Boolean(studentLoadError);
   const submitLabel = hasAssignedStudent ? "変更を保存" : "登録する";
 
   const parseResponseBody = async (
@@ -119,6 +120,10 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
   const onSubmit = async (data: FormValues): Promise<void> => {
     setSubmitError(null);
     setShowUnassignConfirm(false);
+    if (studentLoadError) {
+      setSubmitError(studentLoadError);
+      return;
+    }
 
     try {
       const res = await fetch("/cgi-bin/zaiseki/api/admin/assign_student.py", {
@@ -259,6 +264,7 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
                       <FieldLabel htmlFor="studentId">登録する学生</FieldLabel>
                       <FieldContent>
                         <Select
+                          disabled={isAssignDisabled}
                           value={field.value}
                           onValueChange={(value) => {
                             field.onChange(value);
@@ -287,6 +293,9 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
                           </SelectContent>
                         </Select>
                         <FieldError errors={[fieldState.error]} />
+                        {studentLoadError && (
+                          <FieldError>{studentLoadError}</FieldError>
+                        )}
                       </FieldContent>
                     </Field>
                   )}
@@ -303,7 +312,7 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
                 キャンセル
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={isBusy}>
+            <Button type="submit" disabled={isAssignDisabled}>
               {formState.isSubmitting ? "保存中..." : submitLabel}
             </Button>
           </DialogFooter>
