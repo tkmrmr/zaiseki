@@ -6,6 +6,7 @@ import {
 } from "@/lib/events";
 
 const AUTO_REFRESH_INTERVAL_MS = 30_000;
+const TZ_OFFSET_RE = /[+-]\d{2}:\d{2}$/;
 
 type ApiSeat = {
   id: number;
@@ -132,18 +133,15 @@ export function useSeat({ pageType }: { pageType: PageType }) {
 
   const getUpdatedAt = (): Date | null => {
     const times = Object.values(seats)
-      .map((s) => Date.parse(s.updatedAt ?? ""))
+      .map((s) => {
+        const ua = s.updatedAt;
+        if (!ua) return NaN;
+        const hasOffset = ua.endsWith("Z") || TZ_OFFSET_RE.test(ua);
+        return Date.parse(hasOffset ? ua : ua + "Z");
+      })
       .filter(Number.isFinite);
 
-    let updatedAt: Date | null = null;
-    if (times.length) {
-      const updatedAtUTC = new Date(Math.max(...times));
-      const timezoneOffset =
-        new Date().getTimezoneOffset() + 9 * 60 * 60 * 1000;
-      updatedAt = new Date(updatedAtUTC.getTime() + timezoneOffset);
-    }
-
-    return updatedAt;
+    return times.length ? new Date(Math.max(...times)) : null;
   };
 
   useEffect(() => {
