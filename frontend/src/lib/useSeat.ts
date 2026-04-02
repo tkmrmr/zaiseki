@@ -6,6 +6,7 @@ import {
 } from "@/lib/events";
 
 const AUTO_REFRESH_INTERVAL_MS = 30_000;
+const TZ_OFFSET_RE = /[+-]\d{2}:\d{2}$/;
 
 type ApiSeat = {
   id: number;
@@ -135,7 +136,7 @@ export function useSeat({ pageType }: { pageType: PageType }) {
       .map((s) => {
         const ua = s.updatedAt;
         if (!ua) return NaN;
-        const hasOffset = ua.endsWith("Z") || /[+-]\d{2}:\d{2}$/.test(ua);
+        const hasOffset = ua.endsWith("Z") || TZ_OFFSET_RE.test(ua);
         return Date.parse(hasOffset ? ua : ua + "Z");
       })
       .filter(Number.isFinite);
