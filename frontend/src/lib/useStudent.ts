@@ -21,7 +21,12 @@ export function useStudent() {
 
   useEffect(() => {
     fetch("/cgi-bin/zaiseki/api/admin/get_students.py")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Server error: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data: StudentResponse) => {
         if (data.ok) {
           const tempStudents: Student[] = data.students.map((student) => ({
