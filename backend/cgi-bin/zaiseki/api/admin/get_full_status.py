@@ -6,7 +6,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import get_db_connection, get_timedelta, print_json
+from common import get_db_connection, print_json
 
 print("Content-Type: application/json; charset=utf-8")
 print()
@@ -44,9 +44,7 @@ try:
                         "family_name": name,
                         "grade": grade,
                         "status": status,
-                        "updated_at": (updated_at + get_timedelta()).isoformat()
-                        if updated_at
-                        else None,
+                        "updated_at": updated_at.isoformat() if updated_at else None,
                     }
                 )
 
