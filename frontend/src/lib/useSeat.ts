@@ -106,7 +106,6 @@ export function useSeat({ pageType }: { pageType: PageType }) {
         setIsCheckingAuth(false);
       } finally {
         refreshInFlightRef.current = false;
-        setIsRefreshing(false);
       }
     } while (pendingRefreshRef.current);
     setIsRefreshing(false);
