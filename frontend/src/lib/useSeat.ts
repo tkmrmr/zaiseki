@@ -16,6 +16,16 @@ type ApiSeat = {
   updated_at?: string;
 };
 
+type RequestError = Error & {
+  status?: number;
+};
+
+const createRequestError = (message: string, status?: number): RequestError => {
+  const error = new Error(message) as RequestError;
+  error.status = status;
+  return error;
+};
+
 export function useSeat({ pageType }: { pageType: PageType }) {
   const [seats, setSeats] = useState<Record<string, Seat>>({});
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -136,12 +146,12 @@ export function useSeat({ pageType }: { pageType: PageType }) {
       } catch {
         // non-JSON body; keep the status-code message
       }
-      throw new Error(message);
+      throw createRequestError(message, res.status);
     }
 
     const data = await res.json();
     if (!data.ok) {
-      throw new Error(data.error ?? "Unknown error");
+      throw createRequestError(data.error ?? "Unknown error", res.status);
     }
   };
 
@@ -166,6 +176,10 @@ export function useSeat({ pageType }: { pageType: PageType }) {
         ...prev,
         [seat.code]: { ...prev[seat.code], status: seat.status },
       }));
+      const status = (err as RequestError).status;
+      if (status === 401 || status === 403) {
+        await refreshSeats();
+      }
     }
   };
 
