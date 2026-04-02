@@ -23,3 +23,11 @@ export type Seat = {
 };
 
 export type PageType = "view" | "kiosk" | "admin";
+
+export type ErrorPageType =
+  | "not-found"
+  | "unauthorized"
+  | "forbidden"
+  | "unknown";
+
+export type ErrorType = null | "unauthorized" | "forbidden" | "unknown";
