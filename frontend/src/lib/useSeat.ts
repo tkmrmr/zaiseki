@@ -132,17 +132,15 @@ export function useSeat({ pageType }: { pageType: PageType }) {
 
   const getUpdatedAt = (): Date | null => {
     const times = Object.values(seats)
-      .map((s) => Date.parse(s.updatedAt ?? ""))
+      .map((s) => {
+        const ua = s.updatedAt;
+        if (!ua) return NaN;
+        const hasOffset = ua.endsWith("Z") || /[+-]\d{2}:\d{2}$/.test(ua);
+        return Date.parse(hasOffset ? ua : ua + "Z");
+      })
       .filter(Number.isFinite);
 
-    let updatedAt: Date | null = null;
-    if (times.length) {
-      const updatedAtUTC = new Date(Math.max(...times));
-      const timezoneOffset = new Date().getTimezoneOffset();
-      updatedAt = new Date(updatedAtUTC.getTime() + timezoneOffset);
-    }
-
-    return updatedAt;
+    return times.length ? new Date(Math.max(...times)) : null;
   };
 
   useEffect(() => {
