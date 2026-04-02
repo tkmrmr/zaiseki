@@ -52,73 +52,76 @@ export function useSeat({ pageType }: { pageType: PageType }) {
       return;
     }
     setIsRefreshing(true);
-    do {
-      pendingRefreshRef.current = false;
-      refreshInFlightRef.current = true;
-      try {
-        const res = await fetch(statusEndpoint, {
-          cache: "no-store",
-        });
-
-        if (!res.ok) {
-          let message = `Server error: ${res.status}`;
-          setIsCheckingAuth(false);
-          if (res.status === 401) {
-            setErrorType("unauthorized");
-            message = "Unauthorized.";
-            return;
-          } else if (res.status === 403) {
-            setErrorType("forbidden");
-            message = "Forbideen.";
-            return;
-          }
-          try {
-            const data = await res.json();
-            if (data.error) message = data.error;
-          } catch {
-            // non-JSON body; keep the status-code message
-          }
-          throw new Error(message);
-        }
-
-        const data = await res.json();
-        if (data.ok) {
-          const tempSeats: Record<string, Seat> = {};
-          setErrorType(null);
-          setIsCheckingAuth(false);
-          data.seats.forEach((seat: ApiSeat) => {
-            tempSeats[seat.code] =
-              pageType === "view"
-                ? {
-                    id: seat.id,
-                    code: seat.code,
-                    status: seat.status,
-                    updatedAt: seat.updated_at,
-                  }
-                : {
-                    id: seat.id,
-                    code: seat.code,
-                    familyName: seat.family_name,
-                    grade: seat.grade,
-                    status: seat.status,
-                    updatedAt: seat.updated_at,
-                  };
+    try {
+      do {
+        pendingRefreshRef.current = false;
+        refreshInFlightRef.current = true;
+        try {
+          const res = await fetch(statusEndpoint, {
+            cache: "no-store",
           });
-          setSeats(tempSeats);
-        } else {
-          console.error(data.error);
+
+          if (!res.ok) {
+            let message = `Server error: ${res.status}`;
+            setIsCheckingAuth(false);
+            if (res.status === 401) {
+              setErrorType("unauthorized");
+              message = "Unauthorized.";
+              return;
+            } else if (res.status === 403) {
+              setErrorType("forbidden");
+              message = "Forbidden.";
+              return;
+            }
+            try {
+              const data = await res.json();
+              if (data.error) message = data.error;
+            } catch {
+              // non-JSON body; keep the status-code message
+            }
+            throw new Error(message);
+          }
+
+          const data = await res.json();
+          if (data.ok) {
+            const tempSeats: Record<string, Seat> = {};
+            setErrorType(null);
+            setIsCheckingAuth(false);
+            data.seats.forEach((seat: ApiSeat) => {
+              tempSeats[seat.code] =
+                pageType === "view"
+                  ? {
+                      id: seat.id,
+                      code: seat.code,
+                      status: seat.status,
+                      updatedAt: seat.updated_at,
+                    }
+                  : {
+                      id: seat.id,
+                      code: seat.code,
+                      familyName: seat.family_name,
+                      grade: seat.grade,
+                      status: seat.status,
+                      updatedAt: seat.updated_at,
+                    };
+            });
+            setSeats(tempSeats);
+          } else {
+            console.error(data.error);
+            setErrorType("unknown");
+            setIsCheckingAuth(false);
+          }
+        } catch (err) {
+          console.error(err);
           setErrorType("unknown");
           setIsCheckingAuth(false);
+        } finally {
+          refreshInFlightRef.current = false;
         }
-      } catch (err) {
-        console.error(err);
-        setErrorType("unknown");
-        setIsCheckingAuth(false);
-      } finally {
-        refreshInFlightRef.current = false;
-      }
-    } while (pendingRefreshRef.current);
-    setIsRefreshing(false);
+      } while (pendingRefreshRef.current);
+    } finally {
+      setIsRefreshing(false);
+    }
   }, [pageType]);
 
   const updateStatus = async (seat: Seat, newStatus: Status): Promise<void> => {
@@ -138,7 +141,7 @@ export function useSeat({ pageType }: { pageType: PageType }) {
       if (res.status === 401) {
         message = "Unauthorized.";
       } else if (res.status === 403) {
-        message = "Forbideen.";
+        message = "Forbidden.";
       }
       try {
         const data = await res.json();
