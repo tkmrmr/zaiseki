@@ -69,7 +69,7 @@ export function useSeat({ pageType }: { pageType: PageType }) {
             return;
           } else if (res.status === 403) {
             setErrorType("forbidden");
-            message = "Authentication failed.";
+            message = "Forbideen.";
             return;
           }
           try {
@@ -138,7 +138,7 @@ export function useSeat({ pageType }: { pageType: PageType }) {
       if (res.status === 401) {
         message = "Unauthorized.";
       } else if (res.status === 403) {
-        message = "Authentication failed.";
+        message = "Forbideen.";
       }
       try {
         const data = await res.json();
