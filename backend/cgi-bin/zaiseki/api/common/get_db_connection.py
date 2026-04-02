@@ -12,6 +12,7 @@ load_dotenv(ENV_PATH)
 
 def get_db_connection():
     return pymysql.connect(
+        init_command="SET time_zone = '+00:00'",  # セッションのタイムゾーンをUTCに設定
         host=os.getenv("MARIADB_HOST", "db"),
         user=os.getenv("MARIADB_USER"),
         password=os.getenv("MARIADB_PASSWORD"),
