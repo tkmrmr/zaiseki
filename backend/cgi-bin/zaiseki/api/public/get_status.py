@@ -3,10 +3,11 @@
 
 import os
 import sys
+from datetime import timezone
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import get_db_connection, get_timedelta, print_json
+from common import get_db_connection, print_json
 
 print("Content-Type: application/json; charset=utf-8")
 print()
@@ -38,7 +39,9 @@ try:
                         "id": seat_id,
                         "code": seat_number,
                         "status": status,
-                        "updated_at": (updated_at + get_timedelta()).isoformat()
+                        "updated_at": updated_at.replace(tzinfo=timezone.utc)
+                        .isoformat()
+                        .replace("+00:00", "Z")
                         if updated_at
                         else None,
                     }

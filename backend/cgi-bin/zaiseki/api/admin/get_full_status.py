@@ -3,6 +3,7 @@
 
 import os
 import sys
+from datetime import timezone
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
@@ -44,7 +45,11 @@ try:
                         "family_name": name,
                         "grade": grade,
                         "status": status,
-                        "updated_at": updated_at.isoformat() if updated_at else None,
+                        "updated_at": updated_at.replace(tzinfo=timezone.utc)
+                        .isoformat()
+                        .replace("+00:00", "Z")
+                        if updated_at
+                        else None,
                     }
                 )
 
