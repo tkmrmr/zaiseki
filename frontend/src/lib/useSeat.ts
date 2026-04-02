@@ -138,8 +138,7 @@ export function useSeat({ pageType }: { pageType: PageType }) {
     let updatedAt: Date | null = null;
     if (times.length) {
       const updatedAtUTC = new Date(Math.max(...times));
-      const timezoneOffset =
-        new Date().getTimezoneOffset() + 9 * 60 * 60 * 1000;
+      const timezoneOffset = new Date().getTimezoneOffset();
       updatedAt = new Date(updatedAtUTC.getTime() + timezoneOffset);
     }
 
