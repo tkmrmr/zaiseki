@@ -25,7 +25,6 @@
     "noUncheckedSideEffectImports": true,
 
     // TypeScript compiler configuration
-    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
