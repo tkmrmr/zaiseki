@@ -16,7 +16,9 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
   const absentCount = seatList.filter(
     (seat) => seat.status === "absent",
   ).length;
-  const vacantCount = seatList.filter((seat) => seat.status === "vacant").length;
+  const vacantCount = seatList.filter(
+    (seat) => seat.status === "vacant",
+  ).length;
   const totalSeats = seatList.length;
   const updatedAt = getUpdatedAt();
 
