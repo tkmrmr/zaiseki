@@ -16,7 +16,7 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
   const absentCount = seatList.filter(
     (seat) => seat.status === "absent",
   ).length;
-  const nullCount = seatList.filter((seat) => seat.status === "vacant").length;
+  const vacantCount = seatList.filter((seat) => seat.status === "vacant").length;
   const totalSeats = seatList.length;
   const updatedAt = getUpdatedAt();
 
@@ -40,7 +40,7 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
               { label: "不在", value: `${absentCount} 名` },
               {
                 label: "空席",
-                value: `${nullCount} 席`,
+                value: `${vacantCount} 席`,
               },
               { label: "総席数", value: `${totalSeats} 席` },
             ]}
