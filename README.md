@@ -10,7 +10,7 @@
 
 - Database: MariaDB
 
-- Runtime: Apache
+- Runtime: Apache 2.4
 
 ## 環境
 
@@ -39,7 +39,7 @@ cd zaiseki
 
 ### 2. .env ファイルを用意
 
-リポジトリ直下に`.env` ファイルを作成してください．
+Docker Composeを使う場合はリポジトリ直下に，使わない場合は`backend/cgi-bin/zaiseki`に`.env` ファイルを作成してください．
 
 例：
 
@@ -50,8 +50,6 @@ MARIADB_HOST=db
 MARIADB_DATABASE=lab_db
 MARIADB_ROOT_PASSWORD=rootpass # Docker Composeを使用しない場合は不要
 ```
-
-なお，Docker Composeを使わない場合は`backend/cgi-bin/zaiseki`に配置する必要があります．
 
 ### 3. Node.jsパッケージのインストール
 
@@ -87,6 +85,8 @@ BASE_URL=http://{BACKEND_HOST} npm run dev
 
 ## ビルド
 
+フロントエンドを本番環境で動かすときはビルドする必要があります．
+
 ```bash
 cd frontend
 npm run build
@@ -94,9 +94,7 @@ npm run build
 
 ビルドしたファイルは `frontend/dist` に出力されます．
 
-Apache コンテナ上で画面を表示する場合は，先に `npm run build` を実行してください．
-
-ローカルでビルド結果を確認する場合:
+ローカル(`http://localhost/zaiseki/`)でビルド結果を確認する場合は以下のコマンドを実行してください．
 
 ```bash
 cd frontend
@@ -125,4 +123,6 @@ docker compose up --build -d
 
 ## 補足
 
-`LabMap.tsx` は研究室の配置に合わせて適宜編集してください．
+- `LabMap.tsx` は研究室の配置に合わせて適宜編集してください．
+
+- `frontend/public/.htaccess`はReact RouterをApache上で動かすための設定ファイルです．
