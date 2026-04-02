@@ -101,7 +101,7 @@ cd frontend
 npm run preview
 ```
 
-なお，Docker Composeを使用する場合は`http://localhost/zaiseki/`からより本番環境に近い関係でビルド結果を確認することができます．
+なお，Docker Composeを使用する場合は`http://localhost/zaiseki/`からより本番環境に近い環境でビルド結果を確認することができます．
 
 ## バックエンド起動
 
