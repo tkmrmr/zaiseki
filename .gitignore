@@ -2,4 +2,5 @@
 .codex
 .env.uec
 .htaccess
+!frontend/public/.htaccess
 .htpasswd
