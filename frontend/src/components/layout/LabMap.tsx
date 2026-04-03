@@ -129,7 +129,7 @@ export default function LabMap({
 
           <div className={`col-span-12 h-28 ${AISLE_CLASS}`}>
             {/* スクリーンリーダオンリー */}
-            <span className=" sr-only ">通路</span>
+            <span className=" sr-only ">メイン通路</span>
           </div>
 
           <div className="col-span-4 grid grid-cols-3">
