@@ -69,11 +69,10 @@ export function getSummaryCardClass({
 }): string {
   return cn(
     "rounded-4xl p-3 md:p-4",
-    isHidden
-      ? "hidden xl:flex"
-      : tone === "highlight"
-        ? "ring-emerald-200 bg-emerald-50/90"
-        : "ring-white/79 bg-white/80",
+    isHidden && "hidden xl:flex",
+    tone === "highlight"
+      ? "ring-emerald-200 bg-emerald-50/90"
+      : "ring-white/79 bg-white/80",
   );
 }
 
