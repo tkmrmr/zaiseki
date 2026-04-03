@@ -3,7 +3,7 @@ import { getSummaryCardClass } from "@/lib/styleVariants";
 import type { SummaryItem } from "@/lib/type";
 
 export function SummaryCard({ item }: { item: SummaryItem }) {
-  const isHidden = item.label === "空席" || item.label === "総席数";
+  const isHidden = item.hideOnSmall ?? false;
   return (
     <Card className={getSummaryCardClass({ tone: item.tone, isHidden })}>
       <CardHeader>
