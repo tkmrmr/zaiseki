@@ -57,7 +57,10 @@ export default function LabMap({
               onClickSeat={handleTileClick}
               pageType={pageType}
             />
-            <div className={`row-span-3 ${AISLE_CLASS}`}></div>
+            <div className={`row-span-3 ${AISLE_CLASS}`}>
+              {/* スクリーンリーダオンリー */}
+              <span className=" sr-only ">通路</span>
+            </div>
             <SeatTile
               seat={seats.B1}
               onClickSeat={handleTileClick}
@@ -91,7 +94,10 @@ export default function LabMap({
               onClickSeat={handleTileClick}
               pageType={pageType}
             />
-            <div className={`row-span-3 ${AISLE_CLASS}`}></div>
+            <div className={`row-span-3 ${AISLE_CLASS}`}>
+              {/* スクリーンリーダオンリー */}
+              <span className=" sr-only ">通路</span>
+            </div>
             <SeatTile
               seat={seats.D1}
               onClickSeat={handleTileClick}
@@ -121,7 +127,10 @@ export default function LabMap({
 
           <Lounge />
 
-          <div className={`col-span-12 h-28 ${AISLE_CLASS}`}></div>
+          <div className={`col-span-12 h-28 ${AISLE_CLASS}`}>
+            {/* スクリーンリーダオンリー */}
+            <span className=" sr-only ">通路</span>
+          </div>
 
           <div className="col-span-4 grid grid-cols-3">
             <SeatTile
