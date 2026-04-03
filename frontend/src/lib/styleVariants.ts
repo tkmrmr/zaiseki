@@ -64,7 +64,7 @@ export function getSummaryCardClass({
   tone,
   isHidden,
 }: {
-  tone: SummaryItem["tone"];
+  tone?: SummaryItem["tone"];
   isHidden?: boolean;
 }): string {
   return cn(
