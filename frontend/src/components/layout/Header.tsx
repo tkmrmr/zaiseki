@@ -65,7 +65,7 @@ export default function Header({
             )}
           </div>
         </div>
-        <div className="flex justify-end md:shrink-0 items-center">
+        <div className="flex justify-end md:shrink-0 md:self-center">
           <Button
             variant="default"
             size="lg"
