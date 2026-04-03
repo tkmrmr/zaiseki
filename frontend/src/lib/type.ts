@@ -4,6 +4,7 @@ export type SummaryItem = {
   label: string;
   value: string;
   tone?: "default" | "highlight";
+  hideOnSmall?: boolean;
 };
 
 export type SummaryNum = {

@@ -62,8 +62,9 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
               {
                 label: "空席",
                 value: `${vacantCount}`,
+                hideOnSmall: true,
               },
-              { label: "総席数", value: `${totalSeats}` },
+              { label: "総席数", value: `${totalSeats}`, hideOnSmall: true },
             ]}
           />
           <Card className="rounded-4xl px-3 py-6 md:px-4 md:py-7">
