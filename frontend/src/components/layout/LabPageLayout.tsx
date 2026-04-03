@@ -44,30 +44,29 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
 
   return pageType === "view" || (!isCheckingAuth && errorType === null) ? (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.2),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(253,224,71,0.18),_transparent_32%),linear-gradient(180deg,#f6f2e9_0%,#edf4f7_100%)] text-slate-800">
-      <div className="mx-auto flex min-h-screen max-w-7xl flex-col p-4 sm:px-6 lg:px-8 lg:py-8">
+      <div className="mx-auto flex min-h-screen max-w-7xl flex-col p-4 px-6 lg:px-8 lg:py-8">
         <Header
-          appName="研究室 在室管理アプリ"
           updatedAt={updatedAt}
           isRefreshing={isRefreshing}
           pageType={pageType}
         />
-        <main className="mt-8 space-y-8">
+        <main className="mt-4 space-y-4 md:space-y-6 md:mt-6">
           <SummaryPanel
             items={[
               {
                 label: "在室",
-                value: `${presentCount} 名`,
+                value: `${presentCount}`,
                 tone: "highlight",
               },
-              { label: "不在", value: `${absentCount} 名` },
+              { label: "不在", value: `${absentCount}` },
               {
                 label: "空席",
-                value: `${vacantCount} 席`,
+                value: `${vacantCount}`,
               },
-              { label: "総席数", value: `${totalSeats} 席` },
+              { label: "総席数", value: `${totalSeats}` },
             ]}
           />
-          <Card className="rounded-4xl px-3 py-5 md:px-4 md:py-6">
+          <Card className="rounded-4xl px-3 py-6 md:px-4 md:py-7">
             <CardHeader>
               <CardTitle className="font-bold text-xl">研究室マップ</CardTitle>
             </CardHeader>
