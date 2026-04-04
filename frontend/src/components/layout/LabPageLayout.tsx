@@ -67,7 +67,7 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
               { label: "総席数", value: `${totalSeats}`, hideOnSmall: true },
             ]}
           />
-          <Card className="rounded-4xl px-3 py-6 md:px-4 md:py-7">
+          <Card className="rounded-xl px-3 py-6 md:px-4 md:py-7">
             <CardHeader>
               <CardTitle className="font-bold text-xl">研究室マップ</CardTitle>
             </CardHeader>

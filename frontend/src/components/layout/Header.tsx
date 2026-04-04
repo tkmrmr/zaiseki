@@ -67,7 +67,7 @@ export default function Header({
   };
 
   return (
-    <header className="sticky top-4 z-10 rounded-4xl border border-white/70 bg-white/75 px-5 py-3 shadow-[0_18px_40px_rgba(36,57,69,0.08)] backdrop-blur md:px-6 md:py-4">
+    <header className="sticky top-4 z-10 rounded-xl border border-white/70 bg-white/75 px-5 py-3 shadow-[0_18px_40px_rgba(36,57,69,0.08)] backdrop-blur md:px-6 md:py-4">
       <div className="m-1 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div className="min-w-0">
           <div className="flex items-center gap-1 md:gap-2">

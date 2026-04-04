@@ -68,7 +68,7 @@ export function getSummaryCardClass({
   isHidden?: boolean;
 }): string {
   return cn(
-    "rounded-4xl p-3 md:p-4",
+    "rounded-xl p-3 md:p-4",
     isHidden && "hidden xl:flex",
     tone === "highlight"
       ? "ring-emerald-200 bg-emerald-50/90"
