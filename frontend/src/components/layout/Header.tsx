@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
 import type { PageType } from "@/lib/type";
 
@@ -42,13 +43,39 @@ export default function Header({
       })
     : "取得中";
 
+  const PageBadge = (pageType: PageType) => {
+    const text =
+      pageType === "view"
+        ? "閲覧画面"
+        : pageType === "kiosk"
+          ? "操作画面"
+          : "管理画面";
+    const color =
+      pageType === "view"
+        ? "border-sky-200/70 bg-sky-100/70 text-sky-700"
+        : pageType === "kiosk"
+          ? "border-emerald-200/70 bg-emerald-100/70 text-emerald-700"
+          : "border-violet-200/70 bg-violet-100/70 text-violet-700";
+    return (
+      <Badge
+        variant="secondary"
+        className={`${color} px-2.5 py-1 text-[11px] font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] backdrop-blur-sm`}
+      >
+        {text}
+      </Badge>
+    );
+  };
+
   return (
     <header className="sticky top-4 z-10 rounded-4xl border border-white/70 bg-white/75 px-5 py-3 shadow-[0_18px_40px_rgba(36,57,69,0.08)] backdrop-blur md:px-6 md:py-4">
       <div className="m-1 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div className="min-w-0">
-          <p className="text-xl font-semibold tracking-tight text-slate-950 md:text-2xl">
-            {appName}
-          </p>
+          <div className="flex items-center gap-1 md:gap-2">
+            <p className="text-xl font-semibold tracking-tight text-slate-950 md:text-2xl">
+              {appName}
+            </p>
+            {PageBadge(pageType)}
+          </div>
           <div className="mt-1 flex flex-wrap items-center gap-3">
             <p className="text-sm font-semibold text-slate-500">
               最終更新：{updatedAtText}
