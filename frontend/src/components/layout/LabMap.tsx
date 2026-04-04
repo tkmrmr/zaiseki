@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 import SeatDialog from "@/components/layout/SeatDialog";
 import { SeatTile } from "@/components/ui/SeatTile";
 import {
@@ -9,7 +10,7 @@ import {
 import type { PageType, Seat } from "@/lib/type";
 
 const FACILITY_CLASS = getLabZoneClass("facility");
-const AISLE_CLASS = getLabZoneClass("aisle");
+const AISLE_CLASS = cn(getLabZoneClass("aisle"), "relative"); // sr-onlyはabsoluteになるため親にrelativeを追加
 
 const Lounge = () => {
   return (
@@ -57,9 +58,8 @@ export default function LabMap({
               onClickSeat={handleTileClick}
               pageType={pageType}
             />
-            <div className={`relative row-span-3 ${AISLE_CLASS}`}>
+            <div className={`row-span-3 ${AISLE_CLASS}`}>
               {/* スクリーンリーダオンリー */}
-              {/* sr-onlyはabsoluteになるため親にrelativeを追加 */}
               <span className=" sr-only ">通路</span>
             </div>
             <SeatTile
@@ -95,9 +95,8 @@ export default function LabMap({
               onClickSeat={handleTileClick}
               pageType={pageType}
             />
-            <div className={`relative row-span-3 ${AISLE_CLASS}`}>
+            <div className={`row-span-3 ${AISLE_CLASS}`}>
               {/* スクリーンリーダオンリー */}
-              {/* sr-onlyはabsoluteになるため親にrelativeを追加 */}
               <span className=" sr-only ">通路</span>
             </div>
             <SeatTile
@@ -129,9 +128,8 @@ export default function LabMap({
 
           <Lounge />
 
-          <div className={`relative col-span-12 h-28 ${AISLE_CLASS}`}>
+          <div className={`col-span-12 h-28 ${AISLE_CLASS}`}>
             {/* スクリーンリーダオンリー */}
-            {/* sr-onlyはabsoluteになるため親にrelativeを追加 */}
             <span className=" sr-only ">メイン通路</span>
           </div>
 
@@ -157,7 +155,6 @@ export default function LabMap({
             <div className={FACILITY_CLASS}>食器棚</div>
             <div className={AISLE_CLASS}>
               {/* スクリーンリーダオンリー */}
-              {/* sr-onlyはabsoluteになるため親にrelativeを追加 */}
               <span className=" sr-only ">入口</span>
             </div>
             <div className={`text-center ${FACILITY_CLASS}`}>
