@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import SeatDialog from "@/components/layout/SeatDialog";
 import { SeatTile } from "@/components/ui/SeatTile";
 import {
@@ -57,8 +57,9 @@ export default function LabMap({
               onClickSeat={handleTileClick}
               pageType={pageType}
             />
-            <div className={`row-span-3 ${AISLE_CLASS}`}>
+            <div className={`relative row-span-3 ${AISLE_CLASS}`}>
               {/* スクリーンリーダオンリー */}
+              {/* sr-onlyはabsoluteになるため親にrelativeを追加 */}
               <span className=" sr-only ">通路</span>
             </div>
             <SeatTile
@@ -94,8 +95,9 @@ export default function LabMap({
               onClickSeat={handleTileClick}
               pageType={pageType}
             />
-            <div className={`row-span-3 ${AISLE_CLASS}`}>
+            <div className={`relative row-span-3 ${AISLE_CLASS}`}>
               {/* スクリーンリーダオンリー */}
+              {/* sr-onlyはabsoluteになるため親にrelativeを追加 */}
               <span className=" sr-only ">通路</span>
             </div>
             <SeatTile
@@ -127,8 +129,9 @@ export default function LabMap({
 
           <Lounge />
 
-          <div className={`col-span-12 h-28 ${AISLE_CLASS}`}>
+          <div className={`relative col-span-12 h-28 ${AISLE_CLASS}`}>
             {/* スクリーンリーダオンリー */}
+            {/* sr-onlyはabsoluteになるため親にrelativeを追加 */}
             <span className=" sr-only ">メイン通路</span>
           </div>
 
