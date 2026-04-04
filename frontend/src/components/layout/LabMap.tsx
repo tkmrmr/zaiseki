@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import SeatDialog from "@/components/layout/SeatDialog";
 import { SeatTile } from "@/components/ui/SeatTile";
