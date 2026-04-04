@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import ScrollHint from "scroll-hint";
 import { cn } from "@/lib/utils";
 import SeatDialog from "@/components/layout/SeatDialog";
 import { SeatTile } from "@/components/ui/SeatTile";
@@ -32,6 +33,10 @@ export default function LabMap({
   const [isSeatDialogOpen, setIsSeatDialogOpen] = useState(false);
   const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
 
+  useEffect(() => {
+    new ScrollHint(".scroll-hint");
+  }, []);
+
   const handleTileClick = (seat: Seat) => {
     if (pageType === "admin") {
       setSelectedSeat(seat);
@@ -49,7 +54,7 @@ export default function LabMap({
   };
 
   return (
-    <div className="w-full overflow-x-auto pb-2">
+    <div className="w-full overflow-x-auto pb-2 scroll-hint">
       <section className="min-w-[950px] overflow-hidden rounded-[28px] border border-slate-300 bg-white">
         <div className="grid grid-cols-12">
           <div className="col-span-4 grid grid-cols-3">
