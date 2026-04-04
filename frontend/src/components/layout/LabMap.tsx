@@ -155,7 +155,11 @@ export default function LabMap({
 
           <div className="col-span-8 grid grid-cols-4">
             <div className={FACILITY_CLASS}>食器棚</div>
-            <div className={AISLE_CLASS}>入口</div>
+            <div className={AISLE_CLASS}>
+              {/* スクリーンリーダオンリー */}
+              {/* sr-onlyはabsoluteになるため親にrelativeを追加 */}
+              <span className=" sr-only ">入口</span>
+            </div>
             <div className={`text-center ${FACILITY_CLASS}`}>
               冷蔵庫
               <br />
