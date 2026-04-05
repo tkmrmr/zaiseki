@@ -37,7 +37,7 @@ export default function LabMap({
   useEffect(() => {
     const el = scrollContainerRef.current;
     if (!el) return;
-    new ScrollHint(el);
+    new ScrollHint(el, { remainingTime: "3000" });
     return () => {
       const icon = el.querySelector('[data-target="scrollable-icon"]');
       if (icon) icon.remove();
