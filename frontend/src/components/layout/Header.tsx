@@ -70,7 +70,7 @@ export default function Header({
       <div className="m-1 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div className="min-w-0">
           <div className="flex items-center md:gap-2 justify-between">
-            <p className="text-xl font-semibold tracking-tight text-slate-950 md:text-2xl">
+            <p className="text-xl font-bold tracking-tight text-slate-950 md:text-2xl">
               {appName}
             </p>
             {PageBadge(pageType)}
