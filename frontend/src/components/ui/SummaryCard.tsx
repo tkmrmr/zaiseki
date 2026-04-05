@@ -1,4 +1,9 @@
-import { UserRound, UsersRound, UserRoundX, Armchair } from "lucide-react";
+import {
+  UserRoundCheck,
+  UserRoundX,
+  CircleSlash2,
+  Armchair,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSummaryCardClass } from "@/lib/styleVariants";
 import type { SummaryItem } from "@/lib/type";
@@ -12,13 +17,13 @@ export function SummaryCard({ item }: { item: SummaryItem }) {
 
     switch (item.label) {
       case "在室":
-        return <UserRound className={iconColor} size={32} />;
+        return <UserRoundCheck className={iconColor} size={32} />;
       case "不在":
         return <UserRoundX className={iconColor} size={32} />;
       case "空席":
-        return <Armchair className={iconColor} size={32} />;
+        return <CircleSlash2 className={iconColor} size={32} />;
       case "総席数":
-        return <UsersRound className={iconColor} size={32} />;
+        return <Armchair className={iconColor} size={32} />;
       default:
         return null;
     }
