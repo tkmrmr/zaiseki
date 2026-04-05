@@ -45,7 +45,7 @@ export function SummaryCard({ item }: { item: SummaryItem }) {
           <p
             className={`text-2xl font-semibold tracking-tight ${item.tone === "highlight" ? "text-emerald-800/80" : "text-slate-900"}`}
           >
-            {item.value}
+            {item.value ? item.value : "取得中"}
           </p>
           {icon && <div className="flex-shrink-0">{icon}</div>}
         </div>

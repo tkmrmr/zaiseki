@@ -30,16 +30,16 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
     pageType,
   });
   const seatList = Object.values(seats);
-  const presentCount = seatList.filter(
+  const presentCount = seats ? seatList.filter(
     (seat) => seat.status === "present",
-  ).length;
-  const absentCount = seatList.filter(
+  ).length : null;
+  const absentCount = seats ? seatList.filter(
     (seat) => seat.status === "absent",
-  ).length;
-  const vacantCount = seatList.filter(
+  ).length : null;
+  const vacantCount = seats ? seatList.filter(
     (seat) => seat.status === "vacant",
-  ).length;
-  const totalSeats = seatList.length;
+  ).length : null;
+  const totalSeats = seats ? seatList.length : null;
   const updatedAt = getUpdatedAt();
 
   return pageType === "view" || (!isCheckingAuth && errorType === null) ? (
@@ -55,16 +55,16 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
             items={[
               {
                 label: "在室",
-                value: `${presentCount}`,
+                value: presentCount,
                 tone: "highlight",
               },
-              { label: "不在", value: `${absentCount}` },
+              { label: "不在", value: absentCount },
               {
                 label: "空席",
-                value: `${vacantCount}`,
+                value: vacantCount,
                 hideOnSmall: true,
               },
-              { label: "総席数", value: `${totalSeats}`, hideOnSmall: true },
+              { label: "総席数", value: totalSeats, hideOnSmall: true },
             ]}
           />
           <Card className="rounded-xl px-3 py-6 md:px-4 md:py-7 shadow-sm ring-0">
