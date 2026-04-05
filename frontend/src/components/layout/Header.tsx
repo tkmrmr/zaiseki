@@ -58,7 +58,7 @@ export default function Header({
           : "border-violet-200/70 bg-violet-100/70 text-violet-700";
     return (
       <Badge
-        className={`${color} justify-self-end px-2.5 py-1 text-xs xl:text-sm font-semibold shadow-xs backdrop-blur-sm`}
+        className={`${color} px-2.5 py-1 text-xs xl:text-sm font-semibold shadow-xs backdrop-blur-sm`}
       >
         {text}
       </Badge>
@@ -69,13 +69,13 @@ export default function Header({
     <header className="sticky top-4 z-10 rounded-xl border border-white/70 bg-white/75 px-5 py-3 shadow-md backdrop-blur md:px-6 md:py-4">
       <div className="m-1 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div className="min-w-0">
-          <div className="flex items-center md:gap-2 justify-between">
+          <div className="flex items-center gap-1 md:gap-2">
             <p className="text-xl font-bold tracking-tight text-slate-950 md:text-2xl">
               {appName}
             </p>
             {PageBadge(pageType)}
           </div>
-          <div className="mt-1 flex flex-wrap items-center gap-3 justify-between">
+          <div className="mt-1 flex flex-wrap items-center gap-1 md:gap-2 justify-between">
             <p className="text-sm font-semibold text-slate-500">
               最終更新：{updatedAtText}
             </p>
