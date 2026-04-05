@@ -58,8 +58,7 @@ export default function Header({
           : "border-violet-200/70 bg-violet-100/70 text-violet-700";
     return (
       <Badge
-        variant="secondary"
-        className={`${color} px-2.5 py-1 text-[11px] font-semibold shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] backdrop-blur-sm`}
+        className={`${color} justify-self-end px-2.5 py-1 text-xs xl:text-sm font-semibold shadow-xs backdrop-blur-sm`}
       >
         {text}
       </Badge>
@@ -67,16 +66,16 @@ export default function Header({
   };
 
   return (
-    <header className="sticky top-4 z-10 rounded-xl border border-white/70 bg-white/75 px-5 py-3 shadow-[0_18px_40px_rgba(36,57,69,0.08)] backdrop-blur md:px-6 md:py-4">
+    <header className="sticky top-4 z-10 rounded-xl border border-white/70 bg-white/75 px-5 py-3 shadow-md backdrop-blur md:px-6 md:py-4">
       <div className="m-1 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div className="min-w-0">
-          <div className="flex items-center gap-1 md:gap-2">
+          <div className="flex items-center md:gap-2 justify-between">
             <p className="text-xl font-semibold tracking-tight text-slate-950 md:text-2xl">
               {appName}
             </p>
             {PageBadge(pageType)}
           </div>
-          <div className="mt-1 flex flex-wrap items-center gap-3">
+          <div className="mt-1 flex flex-wrap items-center gap-3 justify-between">
             <p className="text-sm font-semibold text-slate-500">
               最終更新：{updatedAtText}
             </p>
@@ -84,7 +83,7 @@ export default function Header({
               <Button
                 variant="outline"
                 size="sm"
-                className="rounded-full border-slate-200 bg-white/80 px-4 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-white md:h-9"
+                className="rounded-full border-slate-200 bg-white/80 px-4 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-white"
                 onClick={onClickNavigate}
               >
                 {pageType === "kiosk" ? "管理画面へ" : "操作画面へ"}
@@ -94,9 +93,9 @@ export default function Header({
         </div>
         <div className="flex justify-end md:shrink-0 md:self-center">
           <Button
-            variant="default"
+            variant="secondary"
             size="lg"
-            className="w-full rounded-full px-6 text-base shadow-sm transition sm:w-auto md:h-10"
+            className="w-full min-w-[9em] rounded-full px-6 text-base shadow-sm transition sm:w-auto md:h-10"
             onClick={onClickUpdate}
             disabled={isRefreshing}
           >
