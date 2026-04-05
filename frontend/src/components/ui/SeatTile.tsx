@@ -33,7 +33,7 @@ export function SeatTile({
           {seat.code}
         </p>
         {!isVacant && (
-          <Badge className="bg-white/80 text-slate-800" variant="outline">
+          <Badge className={seat.status === "present" ? "bg-white/80 text-emerald-600" : "bg-white/80 text-slate-800"} variant="outline">
             {getSeatStatusLabel(seat.status)}
           </Badge>
         )}
