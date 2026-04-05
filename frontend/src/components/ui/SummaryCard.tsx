@@ -43,11 +43,11 @@ export function SummaryCard({ item }: { item: SummaryItem }) {
       </CardHeader>
       <CardContent>
         <div className="flex items-center justify-between gap-3">
-          <p
+          <div
             className={`text-2xl font-semibold tracking-tight ${item.tone === "highlight" ? "text-emerald-800/80" : "text-slate-900"}`}
           >
             {item.value === -1 ? <Skeleton className="h-6 w-6" /> : item.value}
-          </p>
+          </div>
           {icon && <div className="flex-shrink-0">{icon}</div>}
         </div>
       </CardContent>
