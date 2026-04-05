@@ -1,8 +1,8 @@
 export type Status = "present" | "absent" | "vacant";
 
 export type SummaryItem = {
-  label: string;
-  value: string;
+  label: "在室" | "不在" | "空席" | "総席数";
+  value: number | null;
   tone?: "default" | "highlight";
   hideOnSmall?: boolean;
 };

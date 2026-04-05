@@ -30,44 +30,44 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
     pageType,
   });
   const seatList = Object.values(seats);
-  const presentCount = seatList.filter(
-    (seat) => seat.status === "present",
-  ).length;
-  const absentCount = seatList.filter(
-    (seat) => seat.status === "absent",
-  ).length;
-  const vacantCount = seatList.filter(
-    (seat) => seat.status === "vacant",
-  ).length;
-  const totalSeats = seatList.length;
+  const presentCount = seatList.length
+    ? seatList.filter((seat) => seat.status === "present").length
+    : null;
+  const absentCount = seatList.length
+    ? seatList.filter((seat) => seat.status === "absent").length
+    : null;
+  const vacantCount = seatList.length
+    ? seatList.filter((seat) => seat.status === "vacant").length
+    : null;
+  const totalSeats = seatList.length ? seatList.length : null;
   const updatedAt = getUpdatedAt();
 
-  return pageType === "view" || (!isCheckingAuth && errorType === null) ? (
+  return (pageType === "view" || !isCheckingAuth) && errorType === null ? (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.2),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(253,224,71,0.18),_transparent_32%),linear-gradient(180deg,#f6f2e9_0%,#edf4f7_100%)] text-slate-800">
-      <div className="mx-auto flex min-h-screen max-w-7xl flex-col p-4 px-6 lg:px-8 lg:py-8">
+      <div className="mx-auto flex min-h-screen max-w-7xl flex-col p-4 lg:p-8">
         <Header
           updatedAt={updatedAt}
           isRefreshing={isRefreshing}
           pageType={pageType}
         />
-        <main className="mt-4 space-y-4 md:space-y-6 md:mt-6">
+        <main className="mt-3 space-y-3 md:space-y-6 md:mt-6">
           <SummaryPanel
             items={[
               {
                 label: "在室",
-                value: `${presentCount}`,
+                value: presentCount,
                 tone: "highlight",
               },
-              { label: "不在", value: `${absentCount}` },
+              { label: "不在", value: absentCount },
               {
                 label: "空席",
-                value: `${vacantCount}`,
+                value: vacantCount,
                 hideOnSmall: true,
               },
-              { label: "総席数", value: `${totalSeats}`, hideOnSmall: true },
+              { label: "総席数", value: totalSeats, hideOnSmall: true },
             ]}
           />
-          <Card className="rounded-4xl px-3 py-6 md:px-4 md:py-7">
+          <Card className="rounded-xl px-3 py-6 md:px-4 md:py-7 shadow-sm ring-0">
             <CardHeader>
               <CardTitle className="font-bold text-xl">研究室マップ</CardTitle>
             </CardHeader>

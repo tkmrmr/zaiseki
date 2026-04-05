@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 import SeatDialog from "@/components/layout/SeatDialog";
 import { SeatTile } from "@/components/ui/SeatTile";
 import {
@@ -9,7 +10,7 @@ import {
 import type { PageType, Seat } from "@/lib/type";
 
 const FACILITY_CLASS = getLabZoneClass("facility");
-const AISLE_CLASS = getLabZoneClass("aisle");
+const AISLE_CLASS = cn(getLabZoneClass("aisle"), "relative"); // sr-onlyはabsoluteになるため親にrelativeを追加
 
 const Lounge = () => {
   return (
@@ -49,7 +50,7 @@ export default function LabMap({
 
   return (
     <div className="w-full overflow-x-auto pb-2">
-      <section className="min-w-[950px] overflow-hidden rounded-[28px] border border-slate-300 bg-white">
+      <section className="min-w-[950px] overflow-hidden rounded-xl border border-slate-300 bg-white">
         <div className="grid grid-cols-12">
           <div className="col-span-4 grid grid-cols-3">
             <SeatTile
@@ -59,7 +60,7 @@ export default function LabMap({
             />
             <div className={`row-span-3 ${AISLE_CLASS}`}>
               {/* スクリーンリーダオンリー */}
-              <span className=" sr-only ">通路</span>
+              <span className="sr-only">通路</span>
             </div>
             <SeatTile
               seat={seats.B1}
@@ -96,7 +97,7 @@ export default function LabMap({
             />
             <div className={`row-span-3 ${AISLE_CLASS}`}>
               {/* スクリーンリーダオンリー */}
-              <span className=" sr-only ">通路</span>
+              <span className="sr-only">通路</span>
             </div>
             <SeatTile
               seat={seats.D1}
@@ -129,7 +130,7 @@ export default function LabMap({
 
           <div className={`col-span-12 h-28 ${AISLE_CLASS}`}>
             {/* スクリーンリーダオンリー */}
-            <span className=" sr-only ">メイン通路</span>
+            <span className="sr-only">メイン通路</span>
           </div>
 
           <div className="col-span-4 grid grid-cols-3">
@@ -152,7 +153,10 @@ export default function LabMap({
 
           <div className="col-span-8 grid grid-cols-4">
             <div className={FACILITY_CLASS}>食器棚</div>
-            <div className={AISLE_CLASS}>入口</div>
+            <div className={AISLE_CLASS}>
+              {/* スクリーンリーダオンリー */}
+              <span className="sr-only">入口</span>
+            </div>
             <div className={`text-center ${FACILITY_CLASS}`}>
               冷蔵庫
               <br />

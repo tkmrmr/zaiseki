@@ -1,5 +1,9 @@
 import { Badge } from "@/components/ui/badge";
-import { getSeatStatusLabel, getSeatTileClass } from "@/lib/styleVariants";
+import {
+  getSeatStatusLabel,
+  getSeatTileClass,
+  getSeatTilePlaceholderClass,
+} from "@/lib/styleVariants";
 import type { Seat, PageType } from "@/lib/type";
 
 export function SeatTile({
@@ -12,7 +16,16 @@ export function SeatTile({
   pageType: PageType;
 }) {
   if (!seat) {
-    return <div className="h-full border border-slate-300 bg-slate-100/70" />;
+    return (
+      <div aria-hidden="true" className={getSeatTilePlaceholderClass(pageType)}>
+        <div className="flex items-center justify-between">
+          <p className="invisible"></p>
+          <Badge className="invisible"></Badge>
+        </div>
+        <p aria-hidden="true" className="mt-4 h-[28px]" />
+        <p aria-hidden="true" className="mt-1 h-[20px]" />
+      </div>
+    );
   }
   const isVacant = seat.status === "vacant";
   const isViewOnly = pageType === "view" ? true : false;
@@ -33,17 +46,18 @@ export function SeatTile({
           {seat.code}
         </p>
         {!isVacant ? (
-          <Badge className="bg-white/80 text-slate-800" variant="outline">
+          <Badge
+            className={
+              seat.status === "present"
+                ? "bg-white/80 text-emerald-600"
+                : "bg-white/80 text-slate-800"
+            }
+            variant="outline"
+          >
             {getSeatStatusLabel(seat.status)}
           </Badge>
         ) : (
-          <Badge
-            aria-hidden
-            className="invisible bg-white/80 text-slate-800"
-            variant="outline"
-          >
-            空席
-          </Badge>
+          <Badge className="invisible"></Badge>
         )}
       </div>
       {!isViewOnly && !isVacant ? (

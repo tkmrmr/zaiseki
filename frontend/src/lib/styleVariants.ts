@@ -10,32 +10,36 @@ const STATUS_LABEL: Record<Status, string> = {
   vacant: "空席",
 };
 
-const SEAT_TILE_STATUS_CLASS: Record<Status, string> = {
-  present:
-    "bg-gradient-to-b from-green-100/85 to-green-200/90 active:from-green-200/90 active:to-green-300/95",
-  absent:
-    "bg-gradient-to-b from-slate-100/85 to-slate-200/90 active:from-slate-200/90 active:to-slate-300/95",
-  vacant: "bg-gradient-to-b from-white/85 to-gray-300/90",
-};
 
 const SEAT_TILE_STATUS_CLASS_WITHOUT_ACTIVE: Record<Status, string> = {
-  present: "bg-gradient-to-b from-green-100/85 to-green-200/90",
-  absent: "bg-gradient-to-b from-slate-100/85 to-slate-200/90",
-  vacant: "bg-gradient-to-b from-white/85 to-gray-300/90",
+  present: "bg-gradient-to-b from-emerald-200/60 to-emerald-300/65",
+  absent: "bg-gradient-to-b from-slate-200/50 to-slate-300/55",
+  vacant: "bg-gray-200/40 border-dashed",
 };
 
-const LAB_ZONE_BASE_CLASS =
-  "border border-slate-300 flex items-center justify-center";
+const SEAT_TILE_STATUS_CLASS: Record<Status, string> = {
+  present:
+    `${SEAT_TILE_STATUS_CLASS_WITHOUT_ACTIVE.present} active:from-emerald-200/90 active:to-emerald-300/95`,
+  absent:
+    `${SEAT_TILE_STATUS_CLASS_WITHOUT_ACTIVE.absent} active:from-slate-200/90 active:to-slate-300/95`,
+  vacant: `${SEAT_TILE_STATUS_CLASS_WITHOUT_ACTIVE.vacant}`,
+};
 
-const LAB_ZONE_TEXT_CLASS = "text-xl font-bold text-slate-800";
+const SEAT_TILE_BASE_CLASS =
+  "h-full min-h-28 rounded-none border border-slate-700/20 p-3";
+
+const LAB_ZONE_BASE_CLASS =
+  "border border-slate-200 flex items-center justify-center";
+
+const LAB_ZONE_TEXT_CLASS = "text-xl font-bold text-slate-700/90";
 
 const LAB_ZONE_STYLE_CLASS: Record<LabZoneType, string> = {
   facility:
-    "bg-gradient-to-b from-[rgba(252,237,192,0.92)] to-[rgba(249,229,170,0.95)]",
+    "bg-gradient-to-b from-[rgba(253,243,210,0.9)] to-[rgba(250,236,190,0.93)]",
   aisle:
-    "bg-gradient-to-b from-[rgba(250,248,241,0.95)] to-[rgba(245,240,229,0.98)]",
+    "bg-gradient-to-b from-[rgba(252,250,245,0.94)] to-[rgba(248,244,235,0.97)]",
   lounge:
-    "bg-gradient-to-b from-[rgba(250,219,210,0.9)] to-[rgba(247,208,202,0.95)]",
+    "bg-gradient-to-b from-[rgba(252,230,223,0.9)] to-[rgba(249,219,212,0.94)]",
 };
 
 export function getSeatStatusLabel(status: Status): string {
@@ -52,11 +56,19 @@ export function getSeatTileClass(
     : SEAT_TILE_STATUS_CLASS[status];
 
   return cn(
-    "h-full rounded-none border border-slate-900/20 p-3",
+    SEAT_TILE_BASE_CLASS,
+    "shadow-md hover:shadow-sm active:translate-y-px",
     statusClass,
     (status === "vacant" || isViewOnly) && pageType !== "admin"
-      ? "cursor-default"
+      ? "cursor-default shadow-none hover:shadow-none active:translate-y-0"
       : "cursor-pointer",
+  );
+}
+
+export function getSeatTilePlaceholderClass(pageType: PageType): string {
+  return cn(
+    SEAT_TILE_BASE_CLASS,
+    pageType === "view" ? "shadow-none" : "shadow-md",
   );
 }
 
@@ -68,11 +80,9 @@ export function getSummaryCardClass({
   isHidden?: boolean;
 }): string {
   return cn(
-    "rounded-4xl p-3 md:p-4",
+    "rounded-xl p-3 md:p-4 ring-0 shadow-sm",
     isHidden && "hidden xl:flex",
-    tone === "highlight"
-      ? "ring-emerald-200 bg-emerald-50/90"
-      : "ring-white/79 bg-white/80",
+    tone === "highlight" ? "bg-emerald-50/90" : "bg-white/80",
   );
 }
 
