@@ -19,18 +19,11 @@ export function SeatTile({
     return (
       <div aria-hidden="true" className={getSeatTilePlaceholderClass(pageType)}>
         <div className="flex items-center justify-between">
-          <p className="invisible text-xs font-semibold tracking-wide text-slate-500">
-            A0
-          </p>
+          <p className="invisible"></p>
+          <Badge className="invisible"></Badge>
         </div>
-        <p
-          aria-hidden="true"
-          className="mt-4 h-[28px] text-xl font-bold tracking-tight text-slate-900"
-        />
-        <p
-          aria-hidden="true"
-          className="mt-1 h-[20px] text-sm text-slate-600"
-        />
+        <p aria-hidden="true" className="mt-4 h-[28px]" />
+        <p aria-hidden="true" className="mt-1 h-[20px]" />
       </div>
     );
   }
@@ -52,7 +45,7 @@ export function SeatTile({
         <p className="text-xs font-semibold tracking-wide text-slate-500">
           {seat.code}
         </p>
-        {!isVacant && (
+        {!isVacant ? (
           <Badge
             className={
               seat.status === "present"
@@ -63,6 +56,8 @@ export function SeatTile({
           >
             {getSeatStatusLabel(seat.status)}
           </Badge>
+        ) : (
+          <Badge className="invisible"></Badge>
         )}
       </div>
       {!isViewOnly && !isVacant ? (
