@@ -10,18 +10,19 @@ const STATUS_LABEL: Record<Status, string> = {
   vacant: "空席",
 };
 
-const SEAT_TILE_STATUS_CLASS: Record<Status, string> = {
-  present:
-    "bg-gradient-to-b from-emerald-100/85 to-emerald-200/90 active:from-emerald-200/90 active:to-emerald-300/95",
-  absent:
-    "bg-gradient-to-b from-slate-100/85 to-slate-200/90 active:from-slate-200/90 active:to-slate-300/95",
-  vacant: "bg-gradient-to-b from-white/85 to-gray-300/90",
-};
 
 const SEAT_TILE_STATUS_CLASS_WITHOUT_ACTIVE: Record<Status, string> = {
-  present: "bg-gradient-to-b from-emerald-100/85 to-emerald-200/90",
-  absent: "bg-gradient-to-b from-slate-100/85 to-slate-200/90",
+  present: "bg-gradient-to-b from-emerald-200/60 to-emerald-300/65",
+  absent: "bg-gradient-to-b from-slate-200/50 to-slate-300/55",
   vacant: "bg-gray-200/40 border-dashed",
+};
+
+const SEAT_TILE_STATUS_CLASS: Record<Status, string> = {
+  present:
+    `${SEAT_TILE_STATUS_CLASS_WITHOUT_ACTIVE.present} active:from-emerald-200/90 active:to-emerald-300/95`,
+  absent:
+    `${SEAT_TILE_STATUS_CLASS_WITHOUT_ACTIVE.absent} active:from-slate-200/90 active:to-slate-300/95`,
+  vacant: `${SEAT_TILE_STATUS_CLASS_WITHOUT_ACTIVE.vacant}`,
 };
 
 const LAB_ZONE_BASE_CLASS =
