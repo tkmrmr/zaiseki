@@ -32,8 +32,20 @@ export default function Header({
     }
   };
 
-  const updatedAtText = updatedAt
-    ? updatedAt.toLocaleString("ja-JP", {
+  const formatRelativeTime = (date: Date) => {
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    if (diffInSeconds < 60) {
+      return "たった今";
+    }
+    if (diffInSeconds < 3600) {
+      return `${Math.floor(diffInSeconds / 60)}分前`;
+    }
+    if (diffInSeconds < 86400) {
+      return `${Math.floor(diffInSeconds / 3600)}時間前`;
+    }
+    return date.toLocaleString("ja-JP", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
@@ -41,7 +53,11 @@ export default function Header({
         minute: "2-digit",
         timeZone: "Asia/Tokyo",
         hour12: false,
-      })
+      });
+  };
+
+    const updatedAtText = updatedAt
+    ? formatRelativeTime(updatedAt)
     : <Skeleton className="h-4 w-36" />;
 
   const PageBadge = (pageType: PageType) => {
