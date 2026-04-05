@@ -70,7 +70,7 @@ export function getSummaryCardClass({
   return cn(
     "rounded-xl p-3 md:p-4 ring-0 shadow-sm",
     isHidden && "hidden xl:flex",
-    tone === "highlight" ? "bg-emerald-100/40" : " bg-white/80",
+    tone === "highlight" ? "bg-emerald-50/90" : " bg-white/80",
   );
 }
 
