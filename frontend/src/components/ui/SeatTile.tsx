@@ -32,17 +32,9 @@ export function SeatTile({
         <p className="text-xs font-semibold tracking-wide text-slate-500">
           {seat.code}
         </p>
-        {!isVacant ? (
+        {!isVacant && (
           <Badge className="bg-white/80 text-slate-800" variant="outline">
             {getSeatStatusLabel(seat.status)}
-          </Badge>
-        ) : (
-          <Badge
-            aria-hidden
-            className="invisible bg-white/80 text-slate-800"
-            variant="outline"
-          >
-            空席
           </Badge>
         )}
       </div>
