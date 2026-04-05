@@ -57,7 +57,7 @@ export function getSeatTileClass(
     statusClass,
     (status === "vacant" || isViewOnly) && pageType !== "admin"
       ? "cursor-default"
-      : "cursor-pointer",
+      : "cursor-pointer shadow-md hover:shadow-sm active:translate-y-px",
   );
 }
 
