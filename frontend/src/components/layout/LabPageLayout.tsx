@@ -44,13 +44,13 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
 
   return pageType === "view" || (!isCheckingAuth && errorType === null) ? (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.2),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(253,224,71,0.18),_transparent_32%),linear-gradient(180deg,#f6f2e9_0%,#edf4f7_100%)] text-slate-800">
-      <div className="mx-auto flex min-h-screen max-w-7xl flex-col p-4 lg:p-6">
+      <div className="mx-auto flex min-h-screen max-w-7xl flex-col p-4 lg:p-8">
         <Header
           updatedAt={updatedAt}
           isRefreshing={isRefreshing}
           pageType={pageType}
         />
-        <main className="mt-3 space-y-3 md:space-y-4 md:mt-4">
+        <main className="mt-3 space-y-3 md:space-y-6 md:mt-6">
           <SummaryPanel
             items={[
               {
