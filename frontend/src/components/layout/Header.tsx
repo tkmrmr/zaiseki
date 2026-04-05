@@ -69,7 +69,7 @@ export default function Header({
     <header className="sticky top-4 z-10 rounded-xl border border-white/70 bg-white/75 px-5 py-3 shadow-md backdrop-blur md:px-6 md:py-4">
       <div className="m-1 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div className="min-w-0">
-          <div className="flex items-center gap-1 md:gap-2">
+          <div className="flex items-center gap-2">
             <p className="text-xl font-bold tracking-tight text-slate-950 md:text-2xl">
               {appName}
             </p>
