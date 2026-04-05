@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { RefreshCw } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
@@ -41,7 +42,7 @@ export default function Header({
         timeZone: "Asia/Tokyo",
         hour12: false,
       })
-    : "取得中";
+    : <Skeleton className="h-4 w-36" />;
 
   const PageBadge = (pageType: PageType) => {
     const text =
@@ -76,9 +77,9 @@ export default function Header({
             {PageBadge(pageType)}
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-1 md:gap-2 justify-between">
-            <p className="text-sm font-semibold text-slate-500">
+            <div className="flex text-sm font-semibold text-slate-500">
               最終更新：{updatedAtText}
-            </p>
+            </div>
             {pageType !== "view" && (
               <Button
                 variant="outline"

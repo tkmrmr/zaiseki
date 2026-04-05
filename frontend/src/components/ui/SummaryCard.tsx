@@ -5,6 +5,7 @@ import {
   Armchair,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton"
 import { getSummaryCardClass } from "@/lib/styleVariants";
 import type { SummaryItem } from "@/lib/type";
 
@@ -45,7 +46,7 @@ export function SummaryCard({ item }: { item: SummaryItem }) {
           <p
             className={`text-2xl font-semibold tracking-tight ${item.tone === "highlight" ? "text-emerald-800/80" : "text-slate-900"}`}
           >
-            {item.value ? item.value : "取得中"}
+            {item.value ? item.value : <Skeleton className="h-6 w-6" />}
           </p>
           {icon && <div className="flex-shrink-0">{icon}</div>}
         </div>
