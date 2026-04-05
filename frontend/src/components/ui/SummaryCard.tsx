@@ -30,7 +30,7 @@ export function SummaryCard({ item }: { item: SummaryItem }) {
     <Card className={getSummaryCardClass({ tone: item.tone, isHidden })}>
       <CardHeader>
         <CardTitle
-          className={`text-sm font-medium ${item.tone === "highlight" ? "text-emerald-400/60" : "text-slate-500"}`}
+          className={`text-sm font-medium ${item.tone === "highlight" ? "text-emerald-500/90" : "text-slate-500"}`}
         >
           {item.label}
         </CardTitle>
@@ -38,7 +38,7 @@ export function SummaryCard({ item }: { item: SummaryItem }) {
       <CardContent>
         <div className="flex items-center justify-between gap-3">
           <p
-            className={`text-2xl font-semibold tracking-tight ${item.tone === "highlight" ? "text-emerald-800/90" : "text-slate-900"}`}
+            className={`text-2xl font-semibold tracking-tight ${item.tone === "highlight" ? "text-emerald-800/80" : "text-slate-900"}`}
           >
             {item.value}
           </p>
