@@ -25,6 +25,9 @@ const SEAT_TILE_STATUS_CLASS: Record<Status, string> = {
   vacant: `${SEAT_TILE_STATUS_CLASS_WITHOUT_ACTIVE.vacant}`,
 };
 
+const SEAT_TILE_BASE_CLASS =
+  "h-full min-h-28 rounded-none border border-slate-700/20 p-3";
+
 const LAB_ZONE_BASE_CLASS =
   "border border-slate-200 flex items-center justify-center";
 
@@ -53,11 +56,19 @@ export function getSeatTileClass(
     : SEAT_TILE_STATUS_CLASS[status];
 
   return cn(
-    "h-full rounded-none border border-slate-700/20 p-3  shadow-md hover:shadow-sm active:translate-y-px",
+    SEAT_TILE_BASE_CLASS,
+    "shadow-md hover:shadow-sm active:translate-y-px",
     statusClass,
     (status === "vacant" || isViewOnly) && pageType !== "admin"
       ? "cursor-default shadow-none hover:shadow-none active:translate-y-0"
       : "cursor-pointer",
+  );
+}
+
+export function getSeatTilePlaceholderClass(pageType: PageType): string {
+  return cn(
+    SEAT_TILE_BASE_CLASS,
+    pageType === "view" ? "shadow-none" : "shadow-md",
   );
 }
 
