@@ -46,7 +46,7 @@ export function SummaryCard({ item }: { item: SummaryItem }) {
           <p
             className={`text-2xl font-semibold tracking-tight ${item.tone === "highlight" ? "text-emerald-800/80" : "text-slate-900"}`}
           >
-            {item.value ? item.value : <Skeleton className="h-6 w-6" />}
+            {item.value === -1 ? <Skeleton className="h-6 w-6" /> : item.value}
           </p>
           {icon && <div className="flex-shrink-0">{icon}</div>}
         </div>
