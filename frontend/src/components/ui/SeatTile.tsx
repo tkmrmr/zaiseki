@@ -12,7 +12,19 @@ export function SeatTile({
   pageType: PageType;
 }) {
   if (!seat) {
-    return <div className="h-full bg-slate-100/70" />;
+    return (
+      <div
+        aria-hidden="true"
+        className="rounded-none border border-slate-700/20 bg-transparent p-3 shadow-none"
+      >
+        <div className="flex items-center justify-between">
+          <span className="block h-4 w-8" />
+          <span className="block h-5 w-12" />
+        </div>
+        <span className="mt-4 block h-[28px] w-full" />
+        <span className="mt-1 block h-[20px] w-full" />
+      </div>
+    );
   }
   const isVacant = seat.status === "vacant";
   const isViewOnly = pageType === "view" ? true : false;
