@@ -30,15 +30,15 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
     pageType,
   });
   const seatList = Object.values(seats);
-  const presentCount = seats ? seatList.filter(
-    (seat) => seat.status === "present",
-  ).length : null;
-  const absentCount = seats ? seatList.filter(
-    (seat) => seat.status === "absent",
-  ).length : null;
-  const vacantCount = seats ? seatList.filter(
-    (seat) => seat.status === "vacant",
-  ).length : null;
+  const presentCount = seats
+    ? seatList.filter((seat) => seat.status === "present").length
+    : null;
+  const absentCount = seats
+    ? seatList.filter((seat) => seat.status === "absent").length
+    : null;
+  const vacantCount = seats
+    ? seatList.filter((seat) => seat.status === "vacant").length
+    : null;
   const totalSeats = seats ? seatList.length : null;
   const updatedAt = getUpdatedAt();
 

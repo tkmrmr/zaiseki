@@ -5,7 +5,7 @@ import {
   Armchair,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton";
 import { getSummaryCardClass } from "@/lib/styleVariants";
 import type { SummaryItem } from "@/lib/type";
 
