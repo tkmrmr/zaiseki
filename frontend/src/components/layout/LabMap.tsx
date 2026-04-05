@@ -61,7 +61,7 @@ export default function LabMap({
   };
 
   return (
-    <div ref={scrollContainerRef} className="w-full overflow-x-auto pb-2 scroll-hint">
+    <div ref={scrollContainerRef} className="w-full overflow-x-auto pb-2">
       <section className="min-w-[950px] overflow-hidden rounded-xl border border-slate-300 bg-white">
         <div className="grid grid-cols-12">
           <div className="col-span-4 grid grid-cols-3">
