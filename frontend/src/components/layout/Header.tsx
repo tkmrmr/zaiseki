@@ -52,7 +52,7 @@ export default function Header({
           : "管理画面";
     const color =
       pageType === "view"
-        ? "border-sky-200/70 bg-sky-100/70 text-sky-700"
+        ? "border-sky-200/70 bg-sky-100/70 text-sky-700 invisible"
         : pageType === "kiosk"
           ? "border-emerald-200/70 bg-emerald-100/70 text-emerald-700"
           : "border-violet-200/70 bg-violet-100/70 text-violet-700";
