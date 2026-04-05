@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from "react";
-import ScrollHint from "scroll-hint";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import SeatDialog from "@/components/layout/SeatDialog";
 import { SeatTile } from "@/components/ui/SeatTile";
@@ -32,17 +31,6 @@ export default function LabMap({
 }) {
   const [isSeatDialogOpen, setIsSeatDialogOpen] = useState(false);
   const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = scrollContainerRef.current;
-    if (!el) return;
-    new ScrollHint(el, { remainingTime: "3000" });
-    return () => {
-      const icon = el.querySelector('[data-target="scrollable-icon"]');
-      if (icon) icon.remove();
-    };
-  }, []);
 
   const handleTileClick = (seat: Seat) => {
     if (pageType === "admin") {
@@ -61,7 +49,7 @@ export default function LabMap({
   };
 
   return (
-    <div ref={scrollContainerRef} className="w-full overflow-x-auto pb-2">
+    <div className="w-full overflow-x-auto pb-2">
       <section className="min-w-[950px] overflow-hidden rounded-xl border border-slate-300 bg-white">
         <div className="grid grid-cols-12">
           <div className="col-span-4 grid grid-cols-3">
