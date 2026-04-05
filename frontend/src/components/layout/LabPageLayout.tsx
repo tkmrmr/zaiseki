@@ -42,7 +42,7 @@ export default function LabPageLayout({ pageType }: { pageType: PageType }) {
   const totalSeats = seatList.length ? seatList.length : null;
   const updatedAt = getUpdatedAt();
 
-  return pageType === "view" || (!isCheckingAuth && errorType === null) ? (
+  return (pageType === "view" || !isCheckingAuth) && errorType === null ? (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(125,211,252,0.2),_transparent_28%),radial-gradient(circle_at_bottom_right,_rgba(253,224,71,0.18),_transparent_32%),linear-gradient(180deg,#f6f2e9_0%,#edf4f7_100%)] text-slate-800">
       <div className="mx-auto flex min-h-screen max-w-7xl flex-col p-4 lg:p-8">
         <Header
