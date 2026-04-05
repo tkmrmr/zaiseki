@@ -53,11 +53,11 @@ export function getSeatTileClass(
     : SEAT_TILE_STATUS_CLASS[status];
 
   return cn(
-    "h-full rounded-none border border-slate-700/20 p-3",
+    "h-full rounded-none border border-slate-700/20 p-3  shadow-md hover:shadow-sm active:translate-y-px",
     statusClass,
     (status === "vacant" || isViewOnly) && pageType !== "admin"
-      ? "cursor-default"
-      : "cursor-pointer shadow-md hover:shadow-sm active:translate-y-px",
+      ? "cursor-default shadow-none hover:shadow-none active:translate-y-0"
+      : "cursor-pointer",
   );
 }
 
