@@ -1,7 +1,7 @@
 import os
+import sys
 from pathlib import Path
 
-import requests
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parents[2]
@@ -9,12 +9,26 @@ ENV_PATH = BASE_DIR / ".env"
 
 load_dotenv(ENV_PATH)
 
+_TIMEOUT = (5, 10)
+
 
 def is_bocco_enabled():
     return os.getenv("ENABLE_BOCCO", "false").lower() == "true"
 
 
-def get_access_token(refresh_token: str) -> str:
+def _get_requests():
+    try:
+        import requests
+        return requests
+    except ImportError:
+        print("requests is not installed; BOCCO integration disabled", file=sys.stderr)
+        return None
+
+
+def get_access_token(refresh_token: str) -> str | None:
+    requests = _get_requests()
+    if requests is None:
+        return None
     headers = {
         "Content-Type": "application/json",
     }
@@ -25,8 +39,19 @@ def get_access_token(refresh_token: str) -> str:
         "https://platform-api.bocco.me/oauth/token/refresh",
         headers=headers,
         json=json_data,
+        timeout=_TIMEOUT,
     )
-    access_token = response.json()["access_token"]
+    if not response.ok:
+        print(
+            f"BOCCO token refresh failed: {response.status_code} {response.text}",
+            file=sys.stderr,
+        )
+        return None
+    data = response.json()
+    access_token = data.get("access_token")
+    if not access_token:
+        print("BOCCO token refresh response missing access_token", file=sys.stderr)
+        return None
     return access_token
 
 
@@ -36,8 +61,14 @@ def send_message(message: str) -> None:
     refresh_token = os.getenv("BOCCO_REFRESH_TOKEN")
     room_id = os.getenv("BOCCO_ROOM_ID")
     if not refresh_token or not room_id:
+        print("BOCCO_REFRESH_TOKEN or BOCCO_ROOM_ID not set; skipping", file=sys.stderr)
         return
     access_token = get_access_token(refresh_token)
+    if not access_token:
+        return
+    requests = _get_requests()
+    if requests is None:
+        return
     headers = {
         "Authorization": "Bearer " + access_token,
         "Content-Type": "application/json",
@@ -45,8 +76,14 @@ def send_message(message: str) -> None:
     json_data = {
         "text": message,
     }
-    requests.post(
+    response = requests.post(
         f"https://platform-api.bocco.me/v1/rooms/{room_id}/messages/text",
         headers=headers,
         json=json_data,
+        timeout=_TIMEOUT,
     )
+    if not response.ok:
+        print(
+            f"BOCCO send message failed: {response.status_code} {response.text}",
+            file=sys.stderr,
+        )

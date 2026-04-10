@@ -45,7 +45,10 @@ try:
             conn.commit()
 
     if new_status == "present":
-        send_message("おはよう")
+        try:
+            send_message("おはよう")
+        except Exception as e:
+            print(e, file=sys.stderr)
 
     print_json({"ok": True})
 
