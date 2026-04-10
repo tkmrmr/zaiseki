@@ -30,7 +30,7 @@ def get_access_token(refresh_token: str) -> str:
     return access_token
 
 
-def sent_message(message: str) -> None:
+def send_message(message: str) -> None:
     if not is_bocco_enabled():
         return
     refresh_token = os.getenv("BOCCO_REFRESH_TOKEN")
