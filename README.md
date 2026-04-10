@@ -49,7 +49,12 @@ MARIADB_PASSWORD=testpass
 MARIADB_HOST=db
 MARIADB_DATABASE=lab_db
 MARIADB_ROOT_PASSWORD=rootpass # Docker Composeを使用しない場合は不要
+ENABLE_BOCCO=true # true or false
+BOCCO_REFRESH_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # Boccoを使用しない場合は不要
+BOCCO_ROOM_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # Boccoを使用しない場合は不要
 ```
+
+> **Note:** `ENABLE_BOCCO=true` にする場合，Python の `requests` パッケージが必要です．Docker Compose を使わない環境では `pip install requests` でインストールしてください．
 
 ### 3. Node.jsパッケージのインストール
 

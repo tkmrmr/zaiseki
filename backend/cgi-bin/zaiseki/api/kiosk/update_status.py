@@ -7,7 +7,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import get_db_connection, print_json
+from common import get_db_connection, print_json, send_message
 
 print("Content-Type: application/json; charset=utf-8")
 print()
@@ -27,20 +27,33 @@ try:
         print_json({"ok": False, "error": "Invalid seat_id"})
         sys.exit(0)
 
-    status = (
-        data.get("status", "").strip() if isinstance(data.get("status"), str) else ""
+    new_status = (
+        data.get("new_status", "").strip()
+        if isinstance(data.get("new_status"), str)
+        else ""
     )
-    if not status or status not in ALLOWED_STATUS:
-        print_json({"ok": False, "error": "Invalid status"})
+    if not new_status or new_status not in ALLOWED_STATUS:
+        print_json({"ok": False, "error": "Invalid new_status"})
         sys.exit(0)
 
     with get_db_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 "UPDATE presence_status SET status = %s WHERE seat_id = %s",
-                (status, seat_id),
+                (new_status, seat_id),
             )
+            updated = cur.rowcount
             conn.commit()
+
+    if updated == 0:
+        print_json({"ok": False, "error": "seat_id not found"})
+        sys.exit(0)
+
+    if new_status == "present":
+        try:
+            send_message("おはよう")
+        except Exception as e:
+            print(e, file=sys.stderr)
 
     print_json({"ok": True})
 
