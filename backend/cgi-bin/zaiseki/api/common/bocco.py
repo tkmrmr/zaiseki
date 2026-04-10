@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parents[2]
 ENV_PATH = BASE_DIR / ".env"
 
-load_dotenv()
+load_dotenv(ENV_PATH)
 
 
 def is_bocco_enabled():
