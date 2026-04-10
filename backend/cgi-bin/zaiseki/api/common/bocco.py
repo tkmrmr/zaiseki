@@ -14,7 +14,7 @@ def is_bocco_enabled():
     return os.getenv("ENABLE_BOCCO", "false").lower() == "true"
 
 
-def get_access_token(refresh_token):
+def get_access_token(refresh_token: str) -> str:
     headers = {
         "Content-Type": "application/json",
     }
@@ -30,11 +30,13 @@ def get_access_token(refresh_token):
     return access_token
 
 
-def sent_message(message) -> None:
+def sent_message(message: str) -> None:
     if not is_bocco_enabled():
         return
     refresh_token = os.getenv("BOCCO_REFRESH_TOKEN")
     room_id = os.getenv("BOCCO_ROOM_ID")
+    if not refresh_token or not room_id:
+        return
     access_token = get_access_token(refresh_token)
     headers = {
         "Authorization": "Bearer " + access_token,
