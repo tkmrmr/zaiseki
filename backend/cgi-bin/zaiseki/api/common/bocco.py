@@ -16,11 +16,18 @@ def is_bocco_enabled():
     return os.getenv("ENABLE_BOCCO", "false").lower() == "true"
 
 
-def get_access_token(refresh_token: str) -> str | None:
+def _get_requests():
     try:
         import requests
+        return requests
     except ImportError:
         print("requests is not installed; BOCCO integration disabled", file=sys.stderr)
+        return None
+
+
+def get_access_token(refresh_token: str) -> str | None:
+    requests = _get_requests()
+    if requests is None:
         return None
     headers = {
         "Content-Type": "application/json",
@@ -59,9 +66,8 @@ def send_message(message: str) -> None:
     access_token = get_access_token(refresh_token)
     if not access_token:
         return
-    try:
-        import requests
-    except ImportError:
+    requests = _get_requests()
+    if requests is None:
         return
     headers = {
         "Authorization": "Bearer " + access_token,
