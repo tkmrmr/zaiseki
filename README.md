@@ -49,6 +49,9 @@ MARIADB_PASSWORD=testpass
 MARIADB_HOST=db
 MARIADB_DATABASE=lab_db
 MARIADB_ROOT_PASSWORD=rootpass # Docker Composeを使用しない場合は不要
+ENABLE_BOCCO=true # true or false
+BOCCO_REFRESH_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # Boccoを使用しない場合は不要
+BOCCO_ROOM_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # Boccoを使用しない場合は不要
 ```
 
 ### 3. Node.jsパッケージのインストール
