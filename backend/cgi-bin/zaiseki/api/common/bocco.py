@@ -35,19 +35,27 @@ def get_access_token(refresh_token: str) -> str | None:
     json_data = {
         "refresh_token": refresh_token,
     }
-    response = requests.post(
-        "https://platform-api.bocco.me/oauth/token/refresh",
-        headers=headers,
-        json=json_data,
-        timeout=_TIMEOUT,
-    )
+    try:
+        response = requests.post(
+            "https://platform-api.bocco.me/oauth/token/refresh",
+            headers=headers,
+            json=json_data,
+            timeout=_TIMEOUT,
+        )
+    except requests.exceptions.RequestException as e:
+        print(f"BOCCO token refresh request failed: {e}", file=sys.stderr)
+        return None
     if not response.ok:
         print(
             f"BOCCO token refresh failed: {response.status_code} {response.text}",
             file=sys.stderr,
         )
         return None
-    data = response.json()
+    try:
+        data = response.json()
+    except ValueError as e:
+        print(f"BOCCO token refresh response is not valid JSON: {e}", file=sys.stderr)
+        return None
     access_token = data.get("access_token")
     if not access_token:
         print("BOCCO token refresh response missing access_token", file=sys.stderr)
@@ -76,12 +84,16 @@ def send_message(message: str) -> None:
     json_data = {
         "text": message,
     }
-    response = requests.post(
-        f"https://platform-api.bocco.me/v1/rooms/{room_id}/messages/text",
-        headers=headers,
-        json=json_data,
-        timeout=_TIMEOUT,
-    )
+    try:
+        response = requests.post(
+            f"https://platform-api.bocco.me/v1/rooms/{room_id}/messages/text",
+            headers=headers,
+            json=json_data,
+            timeout=_TIMEOUT,
+        )
+    except requests.exceptions.RequestException as e:
+        print(f"BOCCO send message request failed: {e}", file=sys.stderr)
+        return
     if not response.ok:
         print(
             f"BOCCO send message failed: {response.status_code} {response.text}",
