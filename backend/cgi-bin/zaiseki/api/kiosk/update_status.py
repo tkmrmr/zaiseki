@@ -27,18 +27,20 @@ try:
         print_json({"ok": False, "error": "Invalid seat_id"})
         sys.exit(0)
 
-    status = (
-        data.get("status", "").strip() if isinstance(data.get("status"), str) else ""
+    new_status = (
+        data.get("new_status", "").strip()
+        if isinstance(data.get("new_status"), str)
+        else ""
     )
-    if not status or status not in ALLOWED_STATUS:
-        print_json({"ok": False, "error": "Invalid status"})
+    if not new_status or new_status not in ALLOWED_STATUS:
+        print_json({"ok": False, "error": "Invalid new_status"})
         sys.exit(0)
 
     with get_db_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
                 "UPDATE presence_status SET status = %s WHERE seat_id = %s",
-                (status, seat_id),
+                (new_status, seat_id),
             )
             conn.commit()
 

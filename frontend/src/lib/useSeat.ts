@@ -132,7 +132,7 @@ export function useSeat({ pageType }: { pageType: PageType }) {
       },
       body: JSON.stringify({
         seat_id: seat.id,
-        status: newStatus,
+        new_status: newStatus,
       }),
     });
 
