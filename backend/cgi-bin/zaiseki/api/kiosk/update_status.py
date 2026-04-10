@@ -42,7 +42,12 @@ try:
                 "UPDATE presence_status SET status = %s WHERE seat_id = %s",
                 (new_status, seat_id),
             )
+            updated = cur.rowcount
             conn.commit()
+
+    if updated == 0:
+        print_json({"ok": False, "error": "seat_id not found"})
+        sys.exit(0)
 
     if new_status == "present":
         try:
