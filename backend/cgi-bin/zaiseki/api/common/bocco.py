@@ -50,12 +50,3 @@ def sent_message(message: str) -> None:
         headers=headers,
         json=json_data,
     )
-
-
-def main():
-    message = input("Please input message:")
-    sent_message(message)
-
-
-if __name__ == "__main__":
-    main()
