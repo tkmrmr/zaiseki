@@ -10,6 +10,10 @@ ENV_PATH = BASE_DIR / ".env"
 load_dotenv()
 
 
+def is_bocco_enabled():
+    return os.getenv("ENABLE_BOCCO", "false").lower() == "true"
+
+
 def get_access_token(refresh_token):
     headers = {
         "Content-Type": "application/json",
@@ -26,9 +30,11 @@ def get_access_token(refresh_token):
     return access_token
 
 
-def sent_message(message):
-    refresh_token = os.get_env("BOCCO_REFRESH_TOKEN")
-    room_id = os.get_env("BOCCO_ROOM_ID")
+def sent_message(message) -> None:
+    if not is_bocco_enabled():
+        return
+    refresh_token = os.getenv("BOCCO_REFRESH_TOKEN")
+    room_id = os.getenv("BOCCO_ROOM_ID")
     access_token = get_access_token(refresh_token)
     headers = {
         "Authorization": "Bearer " + access_token,
@@ -37,7 +43,7 @@ def sent_message(message):
     json_data = {
         "text": message,
     }
-    response = requests.post(
+    requests.post(
         "https://platform-api.bocco.me/v1/rooms/" + room_id + "/messages/text",
         headers=headers,
         json=json_data,
