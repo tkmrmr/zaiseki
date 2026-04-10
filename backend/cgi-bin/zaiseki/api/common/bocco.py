@@ -44,7 +44,7 @@ def sent_message(message) -> None:
         "text": message,
     }
     requests.post(
-        "https://platform-api.bocco.me/v1/rooms/" + room_id + "/messages/text",
+        f"https://platform-api.bocco.me/v1/rooms/{room_id}/messages/text",
         headers=headers,
         json=json_data,
     )
