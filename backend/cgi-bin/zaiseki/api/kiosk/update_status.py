@@ -7,7 +7,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import get_db_connection, print_json
+from common import get_db_connection, print_json, sent_message
 
 print("Content-Type: application/json; charset=utf-8")
 print()
@@ -43,6 +43,9 @@ try:
                 (new_status, seat_id),
             )
             conn.commit()
+
+    if new_status == "present":
+        sent_message("おはよう")
 
     print_json({"ok": True})
 
