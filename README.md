@@ -146,3 +146,7 @@ BOCCO_ROOM_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 - `LabMap.tsx`は研究室の配置に合わせて適宜編集してください．
 
 - `frontend/public/.htaccess`はReact RouterをApache上で動かすための設定ファイルです．
+
+## ライセンス
+
+このプロジェクトはMIT Licenseのもとで公開されています．
