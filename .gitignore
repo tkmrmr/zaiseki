@@ -4,3 +4,4 @@
 .htaccess
 !frontend/public/.htaccess
 .htpasswd
+*.code-workspace
