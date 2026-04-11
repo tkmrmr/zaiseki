@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-`frontend/` holds the Vite + React + TypeScript app. Route pages live in `frontend/src/pages`, layout components in `frontend/src/components/layout`, reusable UI primitives in `frontend/src/components/ui`, and shared hooks, types, and helpers in `frontend/src/lib`. Routing is defined in `frontend/src/App.tsx`, and `frontend/public/.htaccess` contains the Apache rewrite rules for React Router.
+`frontend/` holds the Vite + React + TypeScript app. Route pages live in `frontend/src/pages`, layout components in `frontend/src/components/layout`, reusable UI primitives in `frontend/src/components/ui`, and shared hooks, types, and helpers in `frontend/src/lib`. Routing is defined in `frontend/src/App.tsx`, `frontend/public/.htaccess` contains the Apache rewrite rules for React Router, and frontend tool metadata is checked in via `frontend/components.json` and `frontend/biome.json`.
 
 `backend/cgi-bin/zaiseki/api/` contains the Python CGI endpoints, split into `admin`, `kiosk`, `public`, and shared helpers in `common`. Vendored third-party packages live in `backend/cgi-bin/zaiseki/api/dotenv` and `backend/cgi-bin/zaiseki/api/pymysql`; avoid editing them unless you are intentionally updating vendored code.
 
@@ -24,7 +24,7 @@ Repository-root commands:
 ## Coding Style & Naming Conventions
 Use 2-space indentation in TypeScript/TSX and 4 spaces in Python. Keep React components and page files in PascalCase, hooks in `useX` form, utility modules in camelCase, and Python modules in snake_case. Prefer the existing `@/` import alias for frontend source imports. TypeScript runs in `strict` mode, so keep types explicit when data crosses API boundaries.
 
-ESLint is configured in `frontend/eslint.config.js`; there is no Prettier config, so follow the surrounding file style. Avoid editing vendored code under `backend/cgi-bin/zaiseki/api/dotenv` and `backend/cgi-bin/zaiseki/api/pymysql` unless the task explicitly calls for a dependency update.
+ESLint is configured in `frontend/eslint.config.js`, and `frontend/biome.json` defines the checked-in formatting defaults and import organization for frontend files. `frontend/components.json` records the shadcn/ui alias setup used by the component generator. There is no Prettier config, so follow the surrounding file style and these checked-in tool configs. Avoid editing vendored code under `backend/cgi-bin/zaiseki/api/dotenv` and `backend/cgi-bin/zaiseki/api/pymysql` unless the task explicitly calls for a dependency update.
 
 ## Testing Guidelines
 There is currently no automated test suite checked in. At minimum, run `npm run build` for frontend changes, `npm run lint` for frontend changes, `python3 -m py_compile backend/cgi-bin/zaiseki/api/admin/*.py backend/cgi-bin/zaiseki/api/kiosk/*.py backend/cgi-bin/zaiseki/api/public/*.py backend/cgi-bin/zaiseki/api/common/*.py` for backend CGI changes, and manually verify the affected UI or API flow.
