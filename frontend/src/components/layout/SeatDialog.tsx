@@ -63,6 +63,9 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
   const isBusy = formState.isSubmitting || isUnassigning;
   const isAssignDisabled = isBusy || Boolean(studentLoadError);
   const submitLabel = hasAssignedStudent ? "変更を保存" : "登録する";
+  const studentsNotInSeat = students.filter(
+    (student) => student.name !== seat.familyName,
+  );
 
   const parseResponseBody = async (
     res: Response,
@@ -281,7 +284,7 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              {students.map((student) => (
+                              {studentsNotInSeat.map((student) => (
                                 <SelectItem
                                   key={student.id}
                                   value={String(student.id)}
