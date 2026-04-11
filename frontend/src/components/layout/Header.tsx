@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { RefreshCw } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
@@ -46,19 +46,21 @@ export default function Header({
       return `${Math.floor(diffInSeconds / 3600)}時間前`;
     }
     return date.toLocaleString("ja-JP", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZone: "Asia/Tokyo",
-        hour12: false,
-      });
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Asia/Tokyo",
+      hour12: false,
+    });
   };
 
-    const updatedAtText = updatedAt
-    ? formatRelativeTime(updatedAt)
-    : <Skeleton className="h-4 w-36" />;
+  const updatedAtText = updatedAt ? (
+    formatRelativeTime(updatedAt)
+  ) : (
+    <Skeleton className="h-4 w-36" />
+  );
 
   const PageBadge = (pageType: PageType) => {
     const text =

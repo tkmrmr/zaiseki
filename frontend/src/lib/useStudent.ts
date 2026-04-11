@@ -50,9 +50,7 @@ export function useStudent() {
         console.error(err);
         setStudents([]);
         setError(
-          err instanceof Error
-            ? err.message
-            : "学生一覧の取得に失敗しました。",
+          err instanceof Error ? err.message : "学生一覧の取得に失敗しました。",
         );
       }
     };

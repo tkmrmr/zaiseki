@@ -46,7 +46,11 @@ export function SummaryCard({ item }: { item: SummaryItem }) {
           <div
             className={`text-2xl font-semibold tracking-tight ${item.tone === "highlight" ? "text-emerald-800/80" : "text-slate-900"}`}
           >
-            {item.value === null ? <Skeleton className="h-6 w-6" /> : item.value}
+            {item.value === null ? (
+              <Skeleton className="h-6 w-6" />
+            ) : (
+              item.value
+            )}
           </div>
           {icon && <div className="flex-shrink-0">{icon}</div>}
         </div>
