@@ -49,12 +49,7 @@ MARIADB_PASSWORD=testpass
 MARIADB_HOST=db
 MARIADB_DATABASE=lab_db
 MARIADB_ROOT_PASSWORD=rootpass # Docker Composeを使用しない場合は不要
-ENABLE_BOCCO=true # true or false
-BOCCO_REFRESH_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # Boccoを使用しない場合は不要
-BOCCO_ROOM_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # Boccoを使用しない場合は不要
 ```
-
-> **Note:** `ENABLE_BOCCO=true` にする場合，Python の `requests` パッケージが必要です．Docker Compose を使わない環境では `pip install requests` でインストールしてください．
 
 ### 3. Node.jsパッケージのインストール
 
@@ -130,6 +125,21 @@ docker compose up --build -d
 - Apache: `http://localhost/zaiseki/`
 - Adminer: `http://localhost:8080/`
 - MariaDB: `localhost:3306`
+
+## BOCCO emo
+
+アプリはコミュニケーションロボット[BOCCO emo](https://www.bocco.me/)と連携させることができます．具体的には，BOCCO emo Platform APIと連携し，入室時にBOCCO emoに「おはよう」と言わせることができます．  
+BOCCO emoを使用する場合は，`.env`に以下の変数を追記してください．
+
+```.env
+ENABLE_BOCCO=true # true or false
+BOCCO_REFRESH_TOKEN=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # Boccoを使用しない場合は不要
+BOCCO_ROOM_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # Boccoを使用しない場合は不要
+```
+
+なお，リフレッシュトークンや部屋IDの取得については[ドキュメント](https://platform-api.bocco.me/)をご覧ください．
+
+また，BOCCO emoの使用にはrequestsライブラリが必要です．Docker Composeを使わない場合は`pip install requests`でインストールしてください．
 
 ## 補足
 
