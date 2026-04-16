@@ -15,7 +15,12 @@ print()
 try:
     length = int(os.environ.get("CONTENT_LENGTH", 0))
     body = sys.stdin.read(length) if length > 0 else ""
-    data = AssignStudentRequest(**json.loads(body))
+    payload = json.loads(body)
+    try:
+        data = AssignStudentRequest(**payload)
+    except TypeError:
+        print_json({"ok": False, "error": "Invalid request"})
+        sys.exit(0)
 
     try:
         seat_id = int(data.seat_id)
