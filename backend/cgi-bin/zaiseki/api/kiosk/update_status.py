@@ -9,7 +9,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import get_db_connection, print_json, send_message
+from common import NewStatusRequest, get_db_connection, print_json, send_message
 
 print("Content-Type: application/json; charset=utf-8")
 print()
@@ -32,21 +32,17 @@ else:
 try:
     length = int(os.environ.get("CONTENT_LENGTH", 0))
     body = sys.stdin.read(length) if length > 0 else ""
-    data = json.loads(body)
+    data = NewStatusRequest(**json.loads(body))
 
     try:
-        seat_id = int(data.get("seat_id"))
+        seat_id = int(data.seat_id)
         if seat_id <= 0:
             raise ValueError
     except (TypeError, ValueError):
         print_json({"ok": False, "error": "Invalid seat_id"})
         sys.exit(0)
 
-    new_status = (
-        data.get("new_status", "").strip()
-        if isinstance(data.get("new_status"), str)
-        else ""
-    )
+    new_status = data.new_status
     if not new_status or new_status not in ALLOWED_STATUS:
         print_json({"ok": False, "error": "Invalid new_status"})
         sys.exit(0)
