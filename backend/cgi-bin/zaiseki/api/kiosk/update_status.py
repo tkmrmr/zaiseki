@@ -32,7 +32,12 @@ else:
 try:
     length = int(os.environ.get("CONTENT_LENGTH", 0))
     body = sys.stdin.read(length) if length > 0 else ""
-    data = NewStatusRequest(**json.loads(body))
+    payload = json.loads(body)
+    try:
+        data = NewStatusRequest(**payload)
+    except TypeError:
+        print_json({"ok": False, "error": "Invalid request payload"})
+        sys.exit(0)
 
     try:
         seat_id = int(data.seat_id)
