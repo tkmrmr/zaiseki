@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 
 
-def convert_to_utc_iso(dt: datetime, source_tz: timezone = timezone.utc) -> str | None:
+def convert_to_utc_iso(dt: datetime | None, source_tz: timezone = timezone.utc) -> str | None:
     # dtがawareであればUTCに変換，naiveであればsource_tzで解釈してからUTCに変換
     if dt is None:
         return None
