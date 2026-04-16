@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import datetime
 import json
 import os
 import sys
@@ -13,6 +14,15 @@ print("Content-Type: application/json; charset=utf-8")
 print()
 
 ALLOWED_STATUS = {"present", "absent"}
+GREETINGS = ["おはよう", "こんにちは", "こんばんは"]
+
+dt_now = datetime.datetime.now()
+if dt_now.hour < 12:
+    greeting = GREETINGS[0]
+elif dt_now.hour < 18:
+    greeting = GREETINGS[1]
+else:
+    greeting = GREETINGS[2]
 
 try:
     length = int(os.environ.get("CONTENT_LENGTH", 0))
@@ -51,7 +61,7 @@ try:
 
     if new_status == "present":
         try:
-            send_message("おはよう")
+            send_message(greeting)
         except Exception as e:
             print(e, file=sys.stderr)
 
