@@ -3,6 +3,7 @@
 
 import os
 import sys
+from dataclasses import asdict
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
@@ -38,17 +39,17 @@ try:
                 if status is None:
                     status = "vacant"
                 seats.append(
-                    {
-                        "id": seat_id,
-                        "code": seat_number,
-                        "family_name": name,
-                        "grade": grade,
-                        "status": status,
-                        "updated_at": convert_to_utc_iso(updated_at),
-                    }
+                    Seat(
+                        id=seat_id,
+                        code=seat_number,
+                        family_name=name,
+                        grade=grade,
+                        status=status,
+                        updated_at=convert_to_utc_iso(updated_at),
+                    )
                 )
 
-    print_json({"ok": True, "seats": seats})
+    print_json({"ok": True, "seats": [asdict(s) for s in seats]})
 
 except pymysql.Error as e:
     print(e, file=sys.stderr)
