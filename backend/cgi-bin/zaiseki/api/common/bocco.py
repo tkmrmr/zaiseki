@@ -1,6 +1,8 @@
 import os
 import sys
 from pathlib import Path
+from types import ModuleType
+from typing import TypedDict
 
 from dotenv import load_dotenv
 
@@ -12,23 +14,16 @@ load_dotenv(ENV_PATH)
 _TIMEOUT = (5, 10)
 
 
-def is_bocco_enabled():
+class BoccoRefreshResponse(TypedDict):
+    access_token: str
+    refresh_token: str
+
+
+def _is_bocco_enabled() -> bool:
     return os.getenv("ENABLE_BOCCO", "false").lower() == "true"
 
 
-def _get_requests():
-    try:
-        import requests
-        return requests
-    except ImportError:
-        print("requests is not installed; BOCCO integration disabled", file=sys.stderr)
-        return None
-
-
-def get_access_token(refresh_token: str) -> str | None:
-    requests = _get_requests()
-    if requests is None:
-        return None
+def _get_access_token(requests: ModuleType, refresh_token: str) -> str | None:
     headers = {
         "Content-Type": "application/json",
     }
@@ -52,7 +47,7 @@ def get_access_token(refresh_token: str) -> str | None:
         )
         return None
     try:
-        data = response.json()
+        data: BoccoRefreshResponse = response.json()
     except ValueError as e:
         print(f"BOCCO token refresh response is not valid JSON: {e}", file=sys.stderr)
         return None
@@ -64,18 +59,20 @@ def get_access_token(refresh_token: str) -> str | None:
 
 
 def send_message(message: str) -> None:
-    if not is_bocco_enabled():
+    if not _is_bocco_enabled():
         return
     refresh_token = os.getenv("BOCCO_REFRESH_TOKEN")
     room_id = os.getenv("BOCCO_ROOM_ID")
     if not refresh_token or not room_id:
         print("BOCCO_REFRESH_TOKEN or BOCCO_ROOM_ID not set; skipping", file=sys.stderr)
         return
-    access_token = get_access_token(refresh_token)
-    if not access_token:
+    try:
+        import requests
+    except ImportError:
+        print("requests is not installed; BOCCO integration disabled", file=sys.stderr)
         return
-    requests = _get_requests()
-    if requests is None:
+    access_token = _get_access_token(requests, refresh_token)
+    if not access_token:
         return
     headers = {
         "Authorization": "Bearer " + access_token,

@@ -6,7 +6,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import convert_to_utc_iso, get_db_connection, print_json
+from common import Seat, convert_to_utc_iso, get_db_connection, print_json
 
 print("Content-Type: application/json; charset=utf-8")
 print()
@@ -29,20 +29,33 @@ try:
         with conn.cursor() as cur:
             cur.execute(QUERY)
 
-            seats = []
+            seats: list[Seat] = []
             for seat_id, seat_number, status, updated_at in cur:
                 if status is None:
                     status = "vacant"
                 seats.append(
-                    {
-                        "id": seat_id,
-                        "code": seat_number,
-                        "status": status,
-                        "updated_at": convert_to_utc_iso(updated_at),
-                    }
+                    Seat(
+                        id=seat_id,
+                        code=seat_number,
+                        status=status,
+                        updated_at=convert_to_utc_iso(updated_at),
+                    )
                 )
 
-    print_json({"ok": True, "seats": seats})
+    print_json(
+        {
+            "ok": True,
+            "seats": [
+                {
+                    "id": s.id,
+                    "code": s.code,
+                    "status": s.status,
+                    "updated_at": s.updated_at,
+                }
+                for s in seats
+            ],
+        }
+    )
 
 except pymysql.Error as e:
     print(e, file=sys.stderr)
