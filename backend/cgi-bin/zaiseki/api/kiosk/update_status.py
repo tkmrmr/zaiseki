@@ -16,14 +16,14 @@ print()
 
 ALLOWED_STATUS = {"present", "absent"}
 GREETINGS = {
-    "morinig": ["おはよう", "おはよ", "やあ"],
+    "morning": ["おはよう", "おはよ", "やあ"],
     "afternoon": ["こんにちは", "やあ", "どうも"],
     "evening": ["こんばんは", "おつかれ", "どうも"],
 }
 
 dt_now = datetime.datetime.now()
-if dt_now.hour < 12:
-    greeting = random.choice(GREETINGS["morinig"])
+if dt_now.hour > 4 and dt_now.hour < 12:
+    greeting = random.choice(GREETINGS["morning"])
 elif dt_now.hour < 18:
     greeting = random.choice(GREETINGS["afternoon"])
 else:
