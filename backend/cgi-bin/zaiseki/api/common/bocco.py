@@ -33,10 +33,7 @@ def _get_requests() -> ModuleType | None:
         return None
 
 
-def _get_access_token(refresh_token: str) -> str | None:
-    requests: ModuleType | None = _get_requests()
-    if requests is None:
-        return None
+def _get_access_token(requests: ModuleType, refresh_token: str) -> str | None:
     headers = {
         "Content-Type": "application/json",
     }
@@ -79,11 +76,11 @@ def send_message(message: str) -> None:
     if not refresh_token or not room_id:
         print("BOCCO_REFRESH_TOKEN or BOCCO_ROOM_ID not set; skipping", file=sys.stderr)
         return
-    access_token = _get_access_token(refresh_token)
-    if not access_token:
-        return
     requests: ModuleType | None = _get_requests()
     if requests is None:
+        return
+    access_token = _get_access_token(requests, refresh_token)
+    if not access_token:
         return
     headers = {
         "Authorization": "Bearer " + access_token,
