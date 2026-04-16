@@ -22,9 +22,9 @@ GREETINGS = {
 }
 
 dt_now = datetime.datetime.now()
-if dt_now.hour > 4 and dt_now.hour < 12:
+if 5 <= dt_now.hour < 12:
     greeting = random.choice(GREETINGS["morning"])
-elif dt_now.hour < 18:
+elif 12 <= dt_now.hour < 18:
     greeting = random.choice(GREETINGS["afternoon"])
 else:
     greeting = random.choice(GREETINGS["evening"])
