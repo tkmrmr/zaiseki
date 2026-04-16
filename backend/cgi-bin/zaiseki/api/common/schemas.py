@@ -1,13 +1,15 @@
-from typing import Literal, NotRequired, TypedDict
+from dataclasses import dataclass
+from typing import Literal
 
 SeatStatus = Literal["present", "absent", "vacant"]
 Grade = Literal["B4", "M1", "M2", "D1", "D2", "D3"]
 
 
-class Seat(TypedDict):
+@dataclass
+class Seat:
     id: int
     code: str
-    family_name: NotRequired[str]
-    grade: NotRequired[Grade]
     status: SeatStatus
-    updated_at: NotRequired[str]
+    family_name: str | None = None
+    grade: Grade | None = None
+    updated_at: str | None = None
