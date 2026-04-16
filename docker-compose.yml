@@ -20,6 +20,8 @@ services:
     restart: always
     ports:
       - "80:80"
+    environment:
+      TZ: Asia/Tokyo
     volumes:
       - ./backend/cgi-bin:/usr/local/apache2/cgi-bin
       - ./httpd.conf:/usr/local/apache2/conf/httpd.conf
