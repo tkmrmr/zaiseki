@@ -3,10 +3,11 @@
 
 import os
 import sys
+from dataclasses import asdict
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import get_db_connection, print_json
+from common import Student, get_db_connection, print_json
 
 print("Content-Type: application/json; charset=utf-8")
 print()
@@ -26,17 +27,11 @@ try:
         with conn.cursor() as cur:
             cur.execute(QUERY)
 
-            students = []
+            students: list[Student] = []
             for student_id, name, grade in cur:
-                students.append(
-                    {
-                        "id": student_id,
-                        "student_name": name,
-                        "grade": grade,
-                    }
-                )
+                students.append(Student(id=student_id, student_name=name, grade=grade))
 
-    print_json({"ok": True, "students": students})
+    print_json({"ok": True, "students": [asdict(s) for s in students]})
 
 except pymysql.Error as e:
     print(e, file=sys.stderr)
