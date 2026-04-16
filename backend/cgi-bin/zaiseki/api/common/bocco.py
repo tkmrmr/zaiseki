@@ -1,6 +1,7 @@
 import os
 import sys
 from pathlib import Path
+from types import ModuleType
 
 from dotenv import load_dotenv
 
@@ -12,13 +13,14 @@ load_dotenv(ENV_PATH)
 _TIMEOUT = (5, 10)
 
 
-def is_bocco_enabled():
+def is_bocco_enabled() -> bool:
     return os.getenv("ENABLE_BOCCO", "false").lower() == "true"
 
 
-def _get_requests():
+def _get_requests() -> ModuleType | None:
     try:
         import requests
+
         return requests
     except ImportError:
         print("requests is not installed; BOCCO integration disabled", file=sys.stderr)
