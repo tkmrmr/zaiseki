@@ -47,7 +47,12 @@ try:
         print_json({"ok": False, "error": "Invalid seat_id"})
         sys.exit(0)
 
-    new_status = data.new_status
+    raw_new_status = data.new_status
+    if not isinstance(raw_new_status, str):
+        print_json({"ok": False, "error": "Invalid new_status"})
+        sys.exit(0)
+
+    new_status = raw_new_status.strip()
     if not new_status or new_status not in ALLOWED_STATUS:
         print_json({"ok": False, "error": "Invalid new_status"})
         sys.exit(0)
