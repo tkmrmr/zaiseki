@@ -6,7 +6,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import convert_to_utc_iso, get_db_connection, print_json
+from common import Seat, convert_to_utc_iso, get_db_connection, print_json
 
 print("Content-Type: application/json; charset=utf-8")
 print()
@@ -33,7 +33,7 @@ try:
         with conn.cursor() as cur:
             cur.execute(QUERY)
 
-            seats = []
+            seats: list[Seat] = []
             for seat_id, seat_number, name, grade, status, updated_at in cur:
                 if status is None:
                     status = "vacant"
