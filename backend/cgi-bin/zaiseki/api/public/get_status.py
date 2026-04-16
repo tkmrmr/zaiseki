@@ -3,7 +3,6 @@
 
 import os
 import sys
-from dataclasses import asdict
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
@@ -43,7 +42,20 @@ try:
                     )
                 )
 
-    print_json({"ok": True, "seats": [asdict(s) for s in seats]})
+    print_json(
+        {
+            "ok": True,
+            "seats": [
+                {
+                    "id": s.id,
+                    "code": s.code,
+                    "status": s.status,
+                    "updated_at": s.updated_at,
+                }
+                for s in seats
+            ],
+        }
+    )
 
 except pymysql.Error as e:
     print(e, file=sys.stderr)
