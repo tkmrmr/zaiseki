@@ -23,16 +23,6 @@ def _is_bocco_enabled() -> bool:
     return os.getenv("ENABLE_BOCCO", "false").lower() == "true"
 
 
-def _get_requests() -> ModuleType | None:
-    try:
-        import requests
-
-        return requests
-    except ImportError:
-        print("requests is not installed; BOCCO integration disabled", file=sys.stderr)
-        return None
-
-
 def _get_access_token(requests: ModuleType, refresh_token: str) -> str | None:
     headers = {
         "Content-Type": "application/json",
@@ -76,8 +66,10 @@ def send_message(message: str) -> None:
     if not refresh_token or not room_id:
         print("BOCCO_REFRESH_TOKEN or BOCCO_ROOM_ID not set; skipping", file=sys.stderr)
         return
-    requests: ModuleType | None = _get_requests()
-    if requests is None:
+    try:
+        import requests
+    except ImportError:
+        print("requests is not installed; BOCCO integration disabled", file=sys.stderr)
         return
     access_token = _get_access_token(requests, refresh_token)
     if not access_token:
