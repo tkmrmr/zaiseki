@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import datetime
 import json
 import os
+import random
 import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
@@ -13,6 +15,19 @@ print("Content-Type: application/json; charset=utf-8")
 print()
 
 ALLOWED_STATUS = {"present", "absent"}
+GREETINGS = {
+    "morinig": ["おはよう", "おはよ", "やあ"],
+    "afternoon": ["こんにちは", "やあ", "どうも"],
+    "evening": ["こんばんは", "おつかれ", "どうも"],
+}
+
+dt_now = datetime.datetime.now()
+if dt_now.hour < 12:
+    greeting = random.choice(GREETINGS["morinig"])
+elif dt_now.hour < 18:
+    greeting = random.choice(GREETINGS["afternoon"])
+else:
+    greeting = random.choice(GREETINGS["evening"])
 
 try:
     length = int(os.environ.get("CONTENT_LENGTH", 0))
@@ -51,7 +66,7 @@ try:
 
     if new_status == "present":
         try:
-            send_message("おはよう")
+            send_message(greeting)
         except Exception as e:
             print(e, file=sys.stderr)
 
