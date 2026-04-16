@@ -13,3 +13,10 @@ class Seat:
     family_name: str | None = None
     grade: Grade | None = None
     updated_at: str | None = None
+
+
+@dataclass
+class Student:
+    id: int
+    student_name: str
+    grade: Grade
