@@ -23,8 +23,8 @@ COPY --from=builder /tmp/Python-3.10.12.tar.xz /tmp/
 
 RUN cd /tmp && tar xJf Python-3.10.12.tar.xz \
     && cd Python-3.10.12 \
-    && ./configure --enable-optimizations \
-    && make \
+    && ./configure \
+    && make -j"$(nproc)" \
     && make install \
     && cd .. && rm -rf Python-3.10.12*
 
