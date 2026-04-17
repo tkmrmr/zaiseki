@@ -1,5 +1,7 @@
 FROM debian:bookworm-slim AS builder
 
+ARG PYTHON_VERSION=3.10.12
+
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     ca-certificates wget build-essential libbz2-dev libdb-dev \
     libreadline-dev libffi-dev libgdbm-dev liblzma-dev \
@@ -10,15 +12,17 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
 
 WORKDIR /tmp
 
-RUN wget https://www.python.org/ftp/python/3.10.12/Python-3.10.12.tar.xz \
-    && tar xJf Python-3.10.12.tar.xz \
-    && cd Python-3.10.12 \
+RUN wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz \
+    && tar xJf Python-${PYTHON_VERSION}.tar.xz \
+    && cd Python-${PYTHON_VERSION} \
     && ./configure \
     && make -j"$(nproc)" \
     && make install \
-    && cd .. && rm -rf Python-3.10.12*
+    && cd .. && rm -rf Python-${PYTHON_VERSION}*
 
 FROM httpd:2.4-bookworm
+
+ARG PYTHON_VERSION=3.10
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     ca-certificates libbz2-1.0 libdb5.3 \
