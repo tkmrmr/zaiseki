@@ -6,6 +6,7 @@ from .schemas import (
     AssignStudentRequest,
     NewStatusRequest,
     Seat,
+    SeatStatusWithoutVacant,
     Student,
     UnassignStudentRequest,
 )
@@ -24,4 +25,5 @@ __all__ = [
     "UnassignStudentRequest",
     "read_json_body",
     "parse_positive_int",
+    "SeatStatusWithoutVacant",
 ]

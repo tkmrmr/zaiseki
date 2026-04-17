@@ -7,45 +7,11 @@ from dataclasses import asdict
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import Seat, convert_to_utc_iso, get_db_connection, send_json
-
-QUERY = """
-    SELECT
-        seats.seat_id, 
-        seats.seat_number, 
-        students.name, 
-        students.grade, 
-        presence_status.status, 
-        presence_status.updated_at
-    FROM seats
-    LEFT JOIN presence_status
-        ON presence_status.seat_id = seats.seat_id
-    LEFT JOIN students
-        ON students.student_id = presence_status.student_id
-    ORDER BY seats.seat_id
-    ;
-"""
+from common import send_json
+from services import list_full_status
 
 try:
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(QUERY)
-
-            seats: list[Seat] = []
-            for seat_id, seat_number, name, grade, status, updated_at in cur:
-                if status is None:
-                    status = "vacant"
-                seats.append(
-                    Seat(
-                        id=seat_id,
-                        code=seat_number,
-                        family_name=name,
-                        grade=grade,
-                        status=status,
-                        updated_at=convert_to_utc_iso(updated_at),
-                    )
-                )
-
+    seats = list_full_status()
     send_json({"ok": True, "seats": [asdict(s) for s in seats]})
 
 except pymysql.Error as e:
