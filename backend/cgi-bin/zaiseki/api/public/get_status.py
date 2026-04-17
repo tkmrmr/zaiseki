@@ -6,10 +6,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import Seat, convert_to_utc_iso, get_db_connection, print_json
-
-print("Content-Type: application/json; charset=utf-8")
-print()
+from common import Seat, convert_to_utc_iso, get_db_connection, send_json
 
 QUERY = """
     SELECT
@@ -42,7 +39,7 @@ try:
                     )
                 )
 
-    print_json(
+    send_json(
         {
             "ok": True,
             "seats": [
@@ -59,8 +56,8 @@ try:
 
 except pymysql.Error as e:
     print(e, file=sys.stderr)
-    print_json({"ok": False, "error": "Database error"})
+    send_json({"ok": False, "error": "Database error"})
 
 except Exception as e:
     print(e, file=sys.stderr)
-    print_json({"ok": False, "error": "Internal error"})
+    send_json({"ok": False, "error": "Internal error"})

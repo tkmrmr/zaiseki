@@ -7,10 +7,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import get_db_connection, print_json, AssignStudentRequest
-
-print("Content-Type: application/json; charset=utf-8")
-print()
+from common import AssignStudentRequest, get_db_connection, send_json
 
 try:
     length = int(os.environ.get("CONTENT_LENGTH", 0))
@@ -19,7 +16,7 @@ try:
     try:
         data = AssignStudentRequest(**payload)
     except TypeError:
-        print_json({"ok": False, "error": "Invalid request"})
+        send_json({"ok": False, "error": "Invalid request"})
         sys.exit(0)
 
     try:
@@ -27,7 +24,7 @@ try:
         if seat_id <= 0:
             raise ValueError
     except (TypeError, ValueError):
-        print_json({"ok": False, "error": "Invalid seat_id"})
+        send_json({"ok": False, "error": "Invalid seat_id"})
         sys.exit(0)
 
     try:
@@ -35,7 +32,7 @@ try:
         if student_id <= 0:
             raise ValueError
     except (TypeError, ValueError):
-        print_json({"ok": False, "error": "Invalid student_id"})
+        send_json({"ok": False, "error": "Invalid student_id"})
         sys.exit(0)
 
     with get_db_connection() as conn:
@@ -45,7 +42,7 @@ try:
             )
             result = cur.fetchone()
             if not result:
-                print_json({"ok": False, "error": "Student not found"})
+                send_json({"ok": False, "error": "Student not found"})
                 sys.exit(0)
 
             cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
@@ -58,15 +55,15 @@ try:
             )
             conn.commit()
 
-    print_json({"ok": True})
+    send_json({"ok": True})
 
 except json.JSONDecodeError:
-    print_json({"ok": False, "error": "Invalid JSON"})
+    send_json({"ok": False, "error": "Invalid JSON"})
 
 except pymysql.Error as e:
     print(e, file=sys.stderr)
-    print_json({"ok": False, "error": "Database error"})
+    send_json({"ok": False, "error": "Database error"})
 
 except Exception as e:
     print(e, file=sys.stderr)
-    print_json({"ok": False, "error": "Internal error"})
+    send_json({"ok": False, "error": "Internal error"})
