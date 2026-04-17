@@ -32,6 +32,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/local/ /usr/local/
+COPY --from=builder /usr/local/bin/python3 /usr/local/bin/
+COPY --from=builder /usr/local/bin/python${PYTHON_VERSION} /usr/local/bin/
+COPY --from=builder /usr/local/lib/python${PYTHON_VERSION} /usr/local/lib/python${PYTHON_VERSION}
+COPY --from=builder /usr/local/bin/pip3 /usr/local/bin/
+COPY --from=builder /usr/local/bin/pip${PYTHON_VERSION} /usr/local/bin/
 
 RUN python3 -m pip install --no-cache-dir --break-system-packages requests
