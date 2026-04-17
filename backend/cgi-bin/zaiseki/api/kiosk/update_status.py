@@ -42,7 +42,11 @@ try:
         send_json({"ok": False, "error": "Invalid request payload"})
         sys.exit(0)
 
-    seat_id = parse_positive_int(data.seat_id, "seat_id")
+    try:
+        seat_id = parse_positive_int(data.seat_id, "seat_id")
+    except (TypeError, ValueError) as e:
+        send_json({"ok": False, "error": str(e)})
+        sys.exit(0)
 
     raw_new_status = data.new_status
     if not isinstance(raw_new_status, str):

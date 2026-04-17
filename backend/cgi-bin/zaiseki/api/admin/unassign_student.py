@@ -21,8 +21,11 @@ try:
     except TypeError:
         send_json({"ok": False, "error": "Invalid request"})
         sys.exit(0)
-
-    seat_id = parse_positive_int(data.seat_id, "seat_id")
+    try:
+        seat_id = parse_positive_int(data.seat_id, "seat_id")
+    except (TypeError, ValueError) as e:
+        send_json({"ok": False, "error": str(e)})
+        sys.exit(0)
 
     unassign_student_from_seat(seat_id)
 

@@ -22,8 +22,17 @@ try:
         send_json({"ok": False, "error": "Invalid request"})
         sys.exit(0)
 
-    seat_id = parse_positive_int(data.seat_id, "seat_id")
-    student_id = parse_positive_int(data.student_id, "student_id")
+    try:
+        seat_id = parse_positive_int(data.seat_id, "seat_id")
+    except (TypeError, ValueError) as e:
+        send_json({"ok": False, "error": str(e)})
+        sys.exit(0)
+
+    try:
+        student_id = parse_positive_int(data.student_id, "student_id")
+    except (TypeError, ValueError) as e:
+        send_json({"ok": False, "error": str(e)})
+        sys.exit(0)
 
     is_assigned = assign_student_to_seat(student_id, seat_id)
 
