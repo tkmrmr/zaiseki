@@ -34,9 +34,8 @@ else:
     greeting = random.choice(GREETINGS["evening"])
 
 try:
-    payload = read_json_body()
     try:
-        data = NewStatusRequest(**payload)
+        data = read_json_body(NewStatusRequest)
     except TypeError:
         send_json({"ok": False, "error": "Invalid request payload"})
         sys.exit(0)

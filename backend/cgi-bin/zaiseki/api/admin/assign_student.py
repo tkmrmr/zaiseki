@@ -16,9 +16,8 @@ from common import (
 )
 
 try:
-    payload = read_json_body()
     try:
-        data = AssignStudentRequest(**payload)
+        data = read_json_body(AssignStudentRequest)
     except TypeError:
         send_json({"ok": False, "error": "Invalid request"})
         sys.exit(0)
