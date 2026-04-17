@@ -7,12 +7,10 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import AssignStudentRequest, get_db_connection, send_json
+from common import AssignStudentRequest, get_db_connection, read_json_body, send_json
 
 try:
-    length = int(os.environ.get("CONTENT_LENGTH", 0))
-    body = sys.stdin.read(length) if length > 0 else ""
-    payload = json.loads(body)
+    payload = read_json_body()
     try:
         data = AssignStudentRequest(**payload)
     except TypeError:

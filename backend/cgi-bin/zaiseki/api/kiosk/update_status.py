@@ -9,7 +9,13 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import NewStatusRequest, get_db_connection, send_json, send_message
+from common import (
+    NewStatusRequest,
+    get_db_connection,
+    read_json_body,
+    send_json,
+    send_message,
+)
 
 ALLOWED_STATUS = {"present", "absent"}
 GREETINGS = {
@@ -27,9 +33,7 @@ else:
     greeting = random.choice(GREETINGS["evening"])
 
 try:
-    length = int(os.environ.get("CONTENT_LENGTH", 0))
-    body = sys.stdin.read(length) if length > 0 else ""
-    payload = json.loads(body)
+    payload = read_json_body()
     try:
         data = NewStatusRequest(**payload)
     except TypeError:

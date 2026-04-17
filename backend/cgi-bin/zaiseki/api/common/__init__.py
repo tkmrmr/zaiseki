@@ -1,6 +1,7 @@
 from .bocco import send_message
 from .convert_to_utc_iso import convert_to_utc_iso
 from .get_db_connection import get_db_connection
+from .request import read_json_body
 from .schemas import (
     AssignStudentRequest,
     NewStatusRequest,
@@ -20,4 +21,5 @@ __all__ = [
     "NewStatusRequest",
     "AssignStudentRequest",
     "UnassignStudentRequest",
+    "read_json_body",
 ]
