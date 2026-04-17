@@ -25,7 +25,11 @@ try:
     seat_id = parse_positive_int(data.seat_id, "seat_id")
     student_id = parse_positive_int(data.student_id, "student_id")
 
-    assign_student_to_seat(student_id, seat_id)
+    is_assigned = assign_student_to_seat(student_id, seat_id)
+
+    if not is_assigned:
+        send_json({"ok": False, "error": "Student not found"})
+        sys.exit(0)
 
     send_json({"ok": True})
 

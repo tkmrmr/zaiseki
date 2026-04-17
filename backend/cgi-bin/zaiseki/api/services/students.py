@@ -1,9 +1,6 @@
-import sys
-
 from common import (
     Student,
     get_db_connection,
-    send_json,
 )
 
 
@@ -27,7 +24,7 @@ def list_students() -> list[Student]:
     return students
 
 
-def assign_student_to_seat(student_id: int, seat_id: int) -> None:
+def assign_student_to_seat(student_id: int, seat_id: int) -> bool:
     with get_db_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
@@ -35,8 +32,7 @@ def assign_student_to_seat(student_id: int, seat_id: int) -> None:
             )
             result = cur.fetchone()
             if not result:
-                send_json({"ok": False, "error": "Student not found"})
-                sys.exit(0)
+                return False
 
             cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
             cur.execute(
@@ -47,6 +43,7 @@ def assign_student_to_seat(student_id: int, seat_id: int) -> None:
                 (student_id, seat_id),
             )
             conn.commit()
+    return True
 
 
 def unassign_student_from_seat(seat_id: int) -> None:

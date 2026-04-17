@@ -54,7 +54,11 @@ try:
         send_json({"ok": False, "error": "Invalid new_status"})
         sys.exit(0)
 
-    update_status(seat_id, cast(SeatStatusWithoutVacant, new_status))
+    is_updated = update_status(seat_id, cast(SeatStatusWithoutVacant, new_status))
+
+    if not is_updated:
+        send_json({"ok": False, "error": "seat_id not found"})
+        sys.exit(0)
 
     if new_status == "present":
         try:

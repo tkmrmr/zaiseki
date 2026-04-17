@@ -1,11 +1,8 @@
-import sys
-
 from common import (
     Seat,
     SeatStatusWithoutVacant,
     convert_to_utc_iso,
     get_db_connection,
-    send_json,
 )
 
 
@@ -79,7 +76,7 @@ def list_full_status() -> list[Seat]:
     return seats
 
 
-def update_status(seat_id: int, new_status: SeatStatusWithoutVacant) -> None:
+def update_status(seat_id: int, new_status: SeatStatusWithoutVacant) -> bool:
     with get_db_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(
@@ -88,6 +85,4 @@ def update_status(seat_id: int, new_status: SeatStatusWithoutVacant) -> None:
             )
             updated = cur.rowcount
             conn.commit()
-    if updated == 0:
-        send_json({"ok": False, "error": "seat_id not found"})
-        sys.exit(0)
+    return updated > 0
