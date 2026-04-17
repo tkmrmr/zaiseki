@@ -13,7 +13,7 @@ services:
       - db-data:/var/lib/mysql
       - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
-  apache:
+  web:
     build:
       context: .
       dockerfile: Dockerfile
