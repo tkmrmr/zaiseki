@@ -1,0 +1,16 @@
+[tool.ruff]
+extend-exclude = [
+    "cgi-bin/zaiseki/api/dotenv",
+    "cgi-bin/zaiseki/api/pymysql",
+]
+
+[tool.ty.src]
+include = ["cgi-bin/zaiseki/api"]
+exclude = [
+    "cgi-bin/zaiseki/api/dotenv",
+    "cgi-bin/zaiseki/api/pymysql",
+]
+
+[tool.ty.environment]
+root = ["cgi-bin/zaiseki/api"]
+python-version = "3.10"
