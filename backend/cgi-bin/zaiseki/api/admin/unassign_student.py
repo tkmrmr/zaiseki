@@ -7,43 +7,37 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import get_db_connection, print_json, UnassignStudentRequest
-
-print("Content-Type: application/json; charset=utf-8")
-print()
+from common import (
+    UnassignStudentRequest,
+    parse_positive_int,
+    read_json_body,
+    send_json,
+)
+from services import unassign_student_from_seat
 
 try:
-    length = int(os.environ.get("CONTENT_LENGTH", 0))
-    body = sys.stdin.read(length) if length > 0 else ""
-    payload = json.loads(body)
     try:
-        data = UnassignStudentRequest(**payload)
+        data = read_json_body(UnassignStudentRequest)
     except TypeError:
-        print_json({"ok": False, "error": "Invalid request"})
+        send_json({"ok": False, "error": "Invalid request"})
         sys.exit(0)
-
     try:
-        seat_id = int(data.seat_id)
-        if seat_id <= 0:
-            raise ValueError
-    except (TypeError, ValueError):
-        print_json({"ok": False, "error": "Invalid seat_id"})
+        seat_id = parse_positive_int(data.seat_id, "seat_id")
+    except (TypeError, ValueError) as e:
+        send_json({"ok": False, "error": str(e)})
         sys.exit(0)
 
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
-            conn.commit()
+    unassign_student_from_seat(seat_id)
 
-    print_json({"ok": True})
+    send_json({"ok": True})
 
 except json.JSONDecodeError:
-    print_json({"ok": False, "error": "Invalid JSON"})
+    send_json({"ok": False, "error": "Invalid JSON"})
 
 except pymysql.Error as e:
     print(e, file=sys.stderr)
-    print_json({"ok": False, "error": "Database error"})
+    send_json({"ok": False, "error": "Database error"})
 
 except Exception as e:
     print(e, file=sys.stderr)
-    print_json({"ok": False, "error": "Internal error"})
+    send_json({"ok": False, "error": "Internal error"})

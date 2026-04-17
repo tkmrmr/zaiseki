@@ -6,13 +6,19 @@ import json
 import os
 import random
 import sys
+from typing import cast
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import NewStatusRequest, get_db_connection, print_json, send_message
-
-print("Content-Type: application/json; charset=utf-8")
-print()
+from common import (
+    NewStatusRequest,
+    SeatStatusWithoutVacant,
+    parse_positive_int,
+    read_json_body,
+    send_json,
+    send_message,
+)
+from services import update_status
 
 ALLOWED_STATUS = {"present", "absent"}
 GREETINGS = {
@@ -30,44 +36,32 @@ else:
     greeting = random.choice(GREETINGS["evening"])
 
 try:
-    length = int(os.environ.get("CONTENT_LENGTH", 0))
-    body = sys.stdin.read(length) if length > 0 else ""
-    payload = json.loads(body)
     try:
-        data = NewStatusRequest(**payload)
+        data = read_json_body(NewStatusRequest)
     except TypeError:
-        print_json({"ok": False, "error": "Invalid request payload"})
+        send_json({"ok": False, "error": "Invalid request payload"})
         sys.exit(0)
 
     try:
-        seat_id = int(data.seat_id)
-        if seat_id <= 0:
-            raise ValueError
-    except (TypeError, ValueError):
-        print_json({"ok": False, "error": "Invalid seat_id"})
+        seat_id = parse_positive_int(data.seat_id, "seat_id")
+    except (TypeError, ValueError) as e:
+        send_json({"ok": False, "error": str(e)})
         sys.exit(0)
 
     raw_new_status = data.new_status
     if not isinstance(raw_new_status, str):
-        print_json({"ok": False, "error": "Invalid new_status"})
+        send_json({"ok": False, "error": "Invalid new_status"})
         sys.exit(0)
 
     new_status = raw_new_status.strip()
     if not new_status or new_status not in ALLOWED_STATUS:
-        print_json({"ok": False, "error": "Invalid new_status"})
+        send_json({"ok": False, "error": "Invalid new_status"})
         sys.exit(0)
 
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                "UPDATE presence_status SET status = %s WHERE seat_id = %s",
-                (new_status, seat_id),
-            )
-            updated = cur.rowcount
-            conn.commit()
+    is_updated = update_status(seat_id, cast(SeatStatusWithoutVacant, new_status))
 
-    if updated == 0:
-        print_json({"ok": False, "error": "seat_id not found"})
+    if not is_updated:
+        send_json({"ok": False, "error": "seat_id not found"})
         sys.exit(0)
 
     if new_status == "present":
@@ -76,15 +70,15 @@ try:
         except Exception as e:
             print(e, file=sys.stderr)
 
-    print_json({"ok": True})
+    send_json({"ok": True})
 
 except json.JSONDecodeError:
-    print_json({"ok": False, "error": "Invalid JSON"})
+    send_json({"ok": False, "error": "Invalid JSON"})
 
 except pymysql.Error as e:
     print(e, file=sys.stderr)
-    print_json({"ok": False, "error": "Database error"})
+    send_json({"ok": False, "error": "Database error"})
 
 except Exception as e:
     print(e, file=sys.stderr)
-    print_json({"ok": False, "error": "Internal error"})
+    send_json({"ok": False, "error": "Internal error"})

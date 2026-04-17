@@ -7,66 +7,48 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
-from common import get_db_connection, print_json, AssignStudentRequest
-
-print("Content-Type: application/json; charset=utf-8")
-print()
+from common import (
+    AssignStudentRequest,
+    parse_positive_int,
+    read_json_body,
+    send_json,
+)
+from services import assign_student_to_seat
 
 try:
-    length = int(os.environ.get("CONTENT_LENGTH", 0))
-    body = sys.stdin.read(length) if length > 0 else ""
-    payload = json.loads(body)
     try:
-        data = AssignStudentRequest(**payload)
+        data = read_json_body(AssignStudentRequest)
     except TypeError:
-        print_json({"ok": False, "error": "Invalid request"})
+        send_json({"ok": False, "error": "Invalid request"})
         sys.exit(0)
 
     try:
-        seat_id = int(data.seat_id)
-        if seat_id <= 0:
-            raise ValueError
-    except (TypeError, ValueError):
-        print_json({"ok": False, "error": "Invalid seat_id"})
+        seat_id = parse_positive_int(data.seat_id, "seat_id")
+    except (TypeError, ValueError) as e:
+        send_json({"ok": False, "error": str(e)})
         sys.exit(0)
 
     try:
-        student_id = int(data.student_id)
-        if student_id <= 0:
-            raise ValueError
-    except (TypeError, ValueError):
-        print_json({"ok": False, "error": "Invalid student_id"})
+        student_id = parse_positive_int(data.student_id, "student_id")
+    except (TypeError, ValueError) as e:
+        send_json({"ok": False, "error": str(e)})
         sys.exit(0)
 
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                "SELECT student_id FROM students WHERE student_id = %s", (student_id,)
-            )
-            result = cur.fetchone()
-            if not result:
-                print_json({"ok": False, "error": "Student not found"})
-                sys.exit(0)
+    is_assigned = assign_student_to_seat(student_id, seat_id)
 
-            cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
-            cur.execute(
-                "DELETE FROM presence_status WHERE student_id = %s", (student_id,)
-            )
-            cur.execute(
-                "INSERT INTO presence_status (student_id, seat_id, status) VALUES (%s, %s, 'absent')",
-                (student_id, seat_id),
-            )
-            conn.commit()
+    if not is_assigned:
+        send_json({"ok": False, "error": "Student not found"})
+        sys.exit(0)
 
-    print_json({"ok": True})
+    send_json({"ok": True})
 
 except json.JSONDecodeError:
-    print_json({"ok": False, "error": "Invalid JSON"})
+    send_json({"ok": False, "error": "Invalid JSON"})
 
 except pymysql.Error as e:
     print(e, file=sys.stderr)
-    print_json({"ok": False, "error": "Database error"})
+    send_json({"ok": False, "error": "Database error"})
 
 except Exception as e:
     print(e, file=sys.stderr)
-    print_json({"ok": False, "error": "Internal error"})
+    send_json({"ok": False, "error": "Internal error"})
