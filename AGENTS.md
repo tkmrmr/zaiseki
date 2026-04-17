@@ -3,7 +3,7 @@
 ## Project Structure & Module Organization
 `frontend/` holds the Vite + React + TypeScript app. Route pages for `/`, `/kiosk`, `/admin`, and the fallback screen live in `frontend/src/pages`, layout and screen-composition components live in `frontend/src/components/layout`, reusable UI primitives live in `frontend/src/components/ui`, and shared hooks, types, and helpers live in `frontend/src/lib`. Routing is defined in `frontend/src/App.tsx`, global frontend styling and theme tokens live in `frontend/src/index.css`, `frontend/public/.htaccess` contains the Apache rewrite rules for React Router, and frontend tool metadata is checked in via `frontend/components.json`, `frontend/biome.json`, and `frontend/eslint.config.js`.
 
-`backend/cgi-bin/zaiseki/api/` contains the Python CGI endpoints, split into `admin`, `kiosk`, `public`, and shared helpers in `common`. The `common` package centralizes DB access, JSON output, UTC conversion, shared request/response dataclasses in `schemas.py`, and the optional BOCCO helper in `bocco.py`. Vendored third-party packages live in `backend/cgi-bin/zaiseki/api/dotenv` and `backend/cgi-bin/zaiseki/api/pymysql`; avoid editing them unless you are intentionally updating vendored code.
+`backend/cgi-bin/zaiseki/api/` contains the Python CGI endpoints, split into `admin`, `kiosk`, `public`, and shared helpers in `common`. The `common` package centralizes DB access, JSON output, UTC conversion, shared request/response dataclasses in `schemas.py`, and the optional BOCCO helper in `bocco.py`. Backend static-analysis settings live in `backend/pyproject.toml`. Vendored third-party packages live in `backend/cgi-bin/zaiseki/api/dotenv` and `backend/cgi-bin/zaiseki/api/pymysql`; avoid editing them unless you are intentionally updating vendored code.
 
 Repository-level setup and operational notes live in `README.md`. Database DDL lives in `database/schema.sql`, and the current schema diagram is checked in as `images/schema.svg`. Container and Apache runtime files are at the repo root: `Dockerfile`, `docker-compose.yml`, and `httpd.conf`.
 
@@ -24,12 +24,12 @@ Repository-root commands:
 ## Coding Style & Naming Conventions
 Use 2-space indentation in TypeScript/TSX and 4 spaces in Python. Keep React components and page files in PascalCase, hooks in `useX` form, utility modules in camelCase, and Python modules in snake_case. Prefer the existing `@/` import alias for frontend source imports. TypeScript runs in `strict` mode, so keep types explicit when data crosses API boundaries. For frontend styling changes, prefer updating shared tokens and base rules in `frontend/src/index.css` before scattering one-off global styles.
 
-ESLint is configured in `frontend/eslint.config.js`, and `frontend/biome.json` defines the checked-in formatting defaults and import organization for frontend files. `frontend/components.json` records the shadcn/ui alias setup used by the component generator. There is no Prettier config, so follow the surrounding file style and these checked-in tool configs. Avoid editing vendored code under `backend/cgi-bin/zaiseki/api/dotenv` and `backend/cgi-bin/zaiseki/api/pymysql` unless the task explicitly calls for a dependency update.
+ESLint is configured in `frontend/eslint.config.js`, `frontend/biome.json` defines the checked-in formatting defaults and import organization for frontend files, and `backend/pyproject.toml` holds the backend Ruff and ty settings. `frontend/components.json` records the shadcn/ui alias setup used by the component generator. There is no Prettier config, so follow the surrounding file style and these checked-in tool configs. Avoid editing vendored code under `backend/cgi-bin/zaiseki/api/dotenv` and `backend/cgi-bin/zaiseki/api/pymysql` unless the task explicitly calls for a dependency update.
 
 ## Testing Guidelines
 There is currently no automated test suite checked in. At minimum, run `npm run build` for frontend changes, `npm run lint` for frontend changes, `python3 -m py_compile backend/cgi-bin/zaiseki/api/admin/*.py backend/cgi-bin/zaiseki/api/kiosk/*.py backend/cgi-bin/zaiseki/api/public/*.py backend/cgi-bin/zaiseki/api/common/*.py` for backend CGI changes, and manually verify the affected UI or API flow.
 
-If you add tests, place frontend tests alongside the feature or under `frontend/src/__tests__/` and use `*.test.ts` or `*.test.tsx` naming.
+If you add tests, place frontend tests alongside the feature they cover and use `*.test.ts` or `*.test.tsx` naming.
 
 ## Commit & Pull Request Guidelines
 Recent history mixes short Japanese commit subjects, simple `Update ...` messages, and occasional `feat:`, `fix:`, or `chore:` prefixes. Prefer concise, imperative subjects and add a conventional prefix when it helps clarify intent.
