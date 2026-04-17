@@ -10,6 +10,7 @@ from .schemas import (
     UnassignStudentRequest,
 )
 from .send_json import send_json
+from .validation import parse_positive_int
 
 __all__ = [
     "get_db_connection",
@@ -22,4 +23,5 @@ __all__ = [
     "AssignStudentRequest",
     "UnassignStudentRequest",
     "read_json_body",
+    "parse_positive_int",
 ]

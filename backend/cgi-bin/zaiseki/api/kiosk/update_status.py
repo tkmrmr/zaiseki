@@ -12,6 +12,7 @@ import pymysql
 from common import (
     NewStatusRequest,
     get_db_connection,
+    parse_positive_int,
     read_json_body,
     send_json,
     send_message,
@@ -40,13 +41,7 @@ try:
         send_json({"ok": False, "error": "Invalid request payload"})
         sys.exit(0)
 
-    try:
-        seat_id = int(data.seat_id)
-        if seat_id <= 0:
-            raise ValueError
-    except (TypeError, ValueError):
-        send_json({"ok": False, "error": "Invalid seat_id"})
-        sys.exit(0)
+    seat_id = parse_positive_int(data.seat_id, "seat_id")
 
     raw_new_status = data.new_status
     if not isinstance(raw_new_status, str):
