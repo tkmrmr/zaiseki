@@ -9,11 +9,11 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pa
 import pymysql
 from common import (
     AssignStudentRequest,
-    get_db_connection,
     parse_positive_int,
     read_json_body,
     send_json,
 )
+from services import assign_student_to_seat
 
 try:
     try:
@@ -25,25 +25,7 @@ try:
     seat_id = parse_positive_int(data.seat_id, "seat_id")
     student_id = parse_positive_int(data.student_id, "student_id")
 
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                "SELECT student_id FROM students WHERE student_id = %s", (student_id,)
-            )
-            result = cur.fetchone()
-            if not result:
-                send_json({"ok": False, "error": "Student not found"})
-                sys.exit(0)
-
-            cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
-            cur.execute(
-                "DELETE FROM presence_status WHERE student_id = %s", (student_id,)
-            )
-            cur.execute(
-                "INSERT INTO presence_status (student_id, seat_id, status) VALUES (%s, %s, 'absent')",
-                (student_id, seat_id),
-            )
-            conn.commit()
+    assign_student_to_seat(student_id, seat_id)
 
     send_json({"ok": True})
 

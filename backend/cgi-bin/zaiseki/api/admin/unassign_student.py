@@ -9,11 +9,11 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pa
 import pymysql
 from common import (
     UnassignStudentRequest,
-    get_db_connection,
     parse_positive_int,
     read_json_body,
     send_json,
 )
+from services import unassign_student_from_seat
 
 try:
     try:
@@ -24,10 +24,7 @@ try:
 
     seat_id = parse_positive_int(data.seat_id, "seat_id")
 
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
-            conn.commit()
+    unassign_student_from_seat(seat_id)
 
     send_json({"ok": True})
 
