@@ -24,6 +24,7 @@
 - `frontend/`: フロントエンド（React + Vite）
 - `backend/cgi-bin/zaiseki/api/`: Python CGIエンドポイント
 - `backend/cgi-bin/zaiseki/api/common/`: バックエンド共通処理
+- `backend/cgi-bin/zaiseki/api/services/`: 座席・学生情報を扱う共通ロジック
 - `database/schema.sql`: データベーススキーマ
 - `docker-compose.yml`: MariaDB, Apache, Adminerの起動設定
 - `httpd.conf`: Apache設定
