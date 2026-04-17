@@ -24,6 +24,7 @@ services:
       TZ: Asia/Tokyo
     volumes:
       - ./backend/cgi-bin:/usr/local/apache2/cgi-bin
+      - ./backend/pyproject.toml:/usr/local/apache2/pyproject.toml
       - ./httpd.conf:/usr/local/apache2/conf/httpd.conf
       - ./.env:/usr/local/apache2/cgi-bin/zaiseki/.env
       - ./frontend/dist/:/usr/local/apache2/htdocs/zaiseki
