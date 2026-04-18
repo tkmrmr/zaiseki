@@ -9,7 +9,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pa
 import pymysql
 from common import (
     AssignStudentRequest,
-    UnassignStudentRequest,
     is_valid_positive_int,
     parse_request,
 )
@@ -60,18 +59,8 @@ def assign_student() -> dict | tuple[dict, int]:
     return {"ok": True}
 
 
-@bp.post("/unassign_student")
-def unassign_student() -> dict | tuple[dict, int]:
-    try:
-        raw_data = request.get_json()
-    except BadRequest:
-        return {"ok": False, "error": "Invalid JSON"}, 400
-
-    data = parse_request(raw_data, UnassignStudentRequest)
-    if data is None:
-        return {"ok": False, "error": "Invalid request payload"}, 400
-
-    seat_id = data.seat_id
+@bp.delete("/unassign_student/<int:seat_id>")
+def unassign_student(seat_id: int) -> dict | tuple[dict, int]:
     if not is_valid_positive_int(seat_id):
         return {"ok": False, "error": "Invalid seat_id"}, 400
 

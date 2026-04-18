@@ -86,15 +86,12 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
     setIsUnassigning(true);
 
     try {
-      const res = await fetch("/cgi-bin/zaiseki/api/admin/unassign_student", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `/cgi-bin/zaiseki/api/admin/unassign_student/${seat.id}`,
+        {
+          method: "DELETE",
         },
-        body: JSON.stringify({
-          seat_id: seat.id,
-        }),
-      });
+      );
 
       const body = await parseResponseBody(res);
       if (!res.ok) {
