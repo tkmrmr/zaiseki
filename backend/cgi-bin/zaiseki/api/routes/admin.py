@@ -1,7 +1,5 @@
-import sys
 from dataclasses import asdict
 
-import pymysql
 from common import (
     AssignStudentRequest,
     is_valid_positive_int,
@@ -14,8 +12,7 @@ from services import (
     list_students,
     unassign_student_from_seat,
 )
-from werkzeug.exceptions import BadRequest, HTTPException
-from werkzeug.sansio.response import Response
+from werkzeug.exceptions import BadRequest
 
 bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -65,17 +62,3 @@ def unassign_student(seat_id: int) -> dict | tuple[dict, int]:
     unassign_student_from_seat(seat_id)
 
     return {"ok": True}
-
-
-@bp.errorhandler(pymysql.Error)
-def handle_db_error(error: Exception) -> tuple[dict, int]:
-    print(error, file=sys.stderr)
-    return {"ok": False, "error": "Database error"}, 500
-
-
-@bp.errorhandler(Exception)
-def handle_internal_error(error: Exception) -> Response | tuple[dict, int]:
-    if isinstance(error, HTTPException):
-        return error.get_response()
-    print(error, file=sys.stderr)
-    return {"ok": False, "error": "Internal error"}, 500

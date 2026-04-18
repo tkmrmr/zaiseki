@@ -1,9 +1,7 @@
 import datetime
 import random
-import sys
 from dataclasses import asdict
 
-import pymysql
 from common import (
     NewStatusRequest,
     is_valid_positive_int,
@@ -12,8 +10,7 @@ from common import (
 )
 from flask import Blueprint, request
 from services import list_full_status, update_seat_status
-from werkzeug.exceptions import BadRequest, HTTPException
-from werkzeug.sansio.response import Response
+from werkzeug.exceptions import BadRequest
 
 ALLOWED_STATUS = {"present", "absent"}
 GREETINGS = {
@@ -69,17 +66,3 @@ def update_status(seat_id: int) -> dict | tuple[dict, int]:
         send_message(greeting)
 
     return {"ok": True}
-
-
-@bp.errorhandler(pymysql.Error)
-def handle_db_error(error: Exception) -> tuple[dict, int]:
-    print(error, file=sys.stderr)
-    return {"ok": False, "error": "Database error"}, 500
-
-
-@bp.errorhandler(Exception)
-def handle_internal_error(error: Exception) -> Response | tuple[dict, int]:
-    if isinstance(error, HTTPException):
-        return error.get_response()
-    print(error, file=sys.stderr)
-    return {"ok": False, "error": "Internal error"}, 500
