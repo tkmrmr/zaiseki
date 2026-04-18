@@ -5,7 +5,7 @@ import sys
 from dataclasses import asdict
 
 from flask import Blueprint, request
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, HTTPException
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
@@ -81,5 +81,7 @@ def handle_db_error(error: Exception) -> tuple[dict, int]:
 
 @bp.errorhandler(Exception)
 def handle_internal_error(error: Exception) -> tuple[dict, int]:
+    if isinstance(error, HTTPException):
+        return error
     print(error, file=sys.stderr)
     return {"ok": False, "error": "Internal error"}, 500
