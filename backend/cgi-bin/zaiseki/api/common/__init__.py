@@ -11,7 +11,7 @@ from .schemas import (
     UnassignStudentRequest,
 )
 from .send_json import send_json
-from .validation import parse_positive_int
+from .validation import is_valid_positive_int
 
 __all__ = [
     "get_db_connection",
@@ -24,6 +24,6 @@ __all__ = [
     "AssignStudentRequest",
     "UnassignStudentRequest",
     "parse_request",
-    "parse_positive_int",
+    "is_valid_positive_int",
     "SeatStatusWithoutVacant",
 ]
