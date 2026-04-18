@@ -9,21 +9,17 @@ from .schemas import (
     Seat,
     SeatStatusWithoutVacant,
     Student,
-    UnassignStudentRequest,
 )
-from .send_json import send_json
 from .validation import is_valid_positive_int
 
 __all__ = [
     "get_db_connection",
-    "send_json",
     "convert_to_utc_iso",
     "send_message",
     "Seat",
     "Student",
     "NewStatusRequest",
     "AssignStudentRequest",
-    "UnassignStudentRequest",
     "parse_request",
     "is_valid_positive_int",
     "SeatStatusWithoutVacant",
