@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState, useRef } from "react";
-import type { Seat, Status, PageType, ErrorType } from "@/lib/type";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   REFRESH_REQUESTED_EVENT,
   SEAT_STATUS_UPDATED_EVENT,
 } from "@/lib/events";
+import type { ErrorType, PageType, Seat, Status } from "@/lib/type";
 
 const AUTO_REFRESH_INTERVAL_MS = 30_000;
 
@@ -41,7 +41,7 @@ export function useSeat({ pageType }: { pageType: PageType }) {
         ? `${apiBase}/admin/get_full_status.py`
         : pageType === "kiosk"
           ? `${apiBase}/kiosk/get_full_status.py`
-          : `${apiBase}/public/get_status.py`;
+          : `${apiBase}/public/get_status`;
 
     if (pageType === "view") {
       setIsCheckingAuth(false);
