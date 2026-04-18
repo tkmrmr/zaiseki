@@ -44,7 +44,7 @@ cd zaiseki
 
 Docker Composeを使う場合はリポジトリ直下に，使わない場合は`backend/cgi-bin/zaiseki`に`.env`ファイルを作成してください．
 
-例：
+例:
 
 ```.env
 MARIADB_USER=testuser
@@ -108,20 +108,20 @@ npm run preview
 
 ## 検証
 
-フロントエンドの静的解析:
+フロントエンドの静的解析
 
 ```bash
 cd frontend
 npm run lint
 ```
 
-バックエンドの lint:
+バックエンドのlint
 
 ```bash
 docker compose exec web ruff check /usr/local/apache2/cgi-bin/zaiseki/api
 ```
 
-バックエンドの型チェック:
+バックエンドの型チェック
 
 ```bash
 docker compose exec web ty check /usr/local/apache2/cgi-bin/zaiseki/api
@@ -152,7 +152,7 @@ docker compose up --build -d
 
 ## Basic認証
 
-任意のページをBasic認証で保護したい場合は，`.htpasswd`ファイルを任意のディレクトリに配置し，対象ページに対応するディレクトリ(例：`backend/cgi-bin/zaiseki/api/admin`)に，以下のような`.htaccess`ファイルを置いてください．
+任意のページをBasic認証で保護したい場合は，`.htpasswd`ファイルを任意のディレクトリに配置し，対象ページに対応するディレクトリ(例: `backend/cgi-bin/zaiseki/api/admin`)に，以下のような`.htaccess`ファイルを置いてください．
 
 ```.htaccess
 AuthUserFile <.htpasswdファイルの絶対パス>
