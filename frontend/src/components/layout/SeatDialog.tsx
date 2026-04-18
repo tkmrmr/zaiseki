@@ -1,5 +1,5 @@
-import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,6 +18,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
+  Field,
+  FieldContent,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -25,13 +32,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
 import { REFRESH_REQUESTED_EVENT } from "@/lib/events";
 import type { Seat } from "@/lib/type";
 import { useStudent } from "@/lib/useStudent";
@@ -86,18 +86,15 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
     setIsUnassigning(true);
 
     try {
-      const res = await fetch(
-        "/cgi-bin/zaiseki/api/admin/unassign_student.py",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            seat_id: seat.id,
-          }),
+      const res = await fetch("/cgi-bin/zaiseki/api/admin/unassign_student", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          seat_id: seat.id,
+        }),
+      });
 
       const body = await parseResponseBody(res);
       if (!res.ok) {
@@ -129,7 +126,7 @@ export default function SeatDialog({ open, onOpenChange, seat }: Props) {
     }
 
     try {
-      const res = await fetch("/cgi-bin/zaiseki/api/admin/assign_student.py", {
+      const res = await fetch("/cgi-bin/zaiseki/api/admin/assign_student", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

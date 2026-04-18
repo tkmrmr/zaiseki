@@ -38,7 +38,7 @@ export function useSeat({ pageType }: { pageType: PageType }) {
     const apiBase = "/cgi-bin/zaiseki/api";
     const statusEndpoint =
       pageType === "admin"
-        ? `${apiBase}/admin/get_full_status.py`
+        ? `${apiBase}/admin/get_status`
         : pageType === "kiosk"
           ? `${apiBase}/kiosk/get_status`
           : `${apiBase}/public/get_status`;
