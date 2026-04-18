@@ -1,24 +1,21 @@
-import os
 import sys
 from dataclasses import asdict
 
-from flask import Blueprint, request
-from werkzeug.exceptions import BadRequest, HTTPException
-from werkzeug.sansio.response import Response
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
 from common import (
     AssignStudentRequest,
     is_valid_positive_int,
     parse_request,
 )
+from flask import Blueprint, request
 from services import (
     assign_student_to_seat,
     list_full_status,
     list_students,
     unassign_student_from_seat,
 )
+from werkzeug.exceptions import BadRequest, HTTPException
+from werkzeug.sansio.response import Response
 
 bp = Blueprint("admin", __name__, url_prefix="/admin")
 

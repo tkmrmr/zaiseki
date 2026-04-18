@@ -1,14 +1,8 @@
 import datetime
-import os
 import random
 import sys
 from dataclasses import asdict
 
-from flask import Blueprint, request
-from werkzeug.exceptions import BadRequest, HTTPException
-from werkzeug.sansio.response import Response
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
 from common import (
     NewStatusRequest,
@@ -16,7 +10,10 @@ from common import (
     parse_request,
     send_message,
 )
+from flask import Blueprint, request
 from services import list_full_status, update_seat_status
+from werkzeug.exceptions import BadRequest, HTTPException
+from werkzeug.sansio.response import Response
 
 ALLOWED_STATUS = {"present", "absent"}
 GREETINGS = {
