@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pa
 import pymysql
 from common import (
     NewStatusRequest,
+    is_valid_positive_int,
     parse_request,
     send_message,
 )
@@ -32,8 +33,11 @@ def get_status() -> dict:
     return {"ok": True, "seats": [asdict(s) for s in seats]}
 
 
-@bp.patch("/update_status")
-def update_status() -> dict | tuple[dict, int]:
+@bp.patch("/update_status/<int:seat_id>")
+def update_status(seat_id: int) -> dict | tuple[dict, int]:
+    if not is_valid_positive_int(seat_id):
+        return {"ok": False, "error": "Invalid seat_id"}, 400
+
     try:
         raw_data = request.get_json()
     except BadRequest:
@@ -43,10 +47,7 @@ def update_status() -> dict | tuple[dict, int]:
     if data is None:
         return {"ok": False, "error": "Invalid request payload"}, 400
 
-    seat_id = data.seat_id
     new_status = data.new_status
-    if not isinstance(seat_id, int) or seat_id <= 0:
-        return {"ok": False, "error": "Invalid seat_id"}, 400
     if new_status not in ALLOWED_STATUS:
         return {"ok": False, "error": "Invalid status"}, 400
 

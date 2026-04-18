@@ -125,16 +125,18 @@ export function useSeat({ pageType }: { pageType: PageType }) {
   }, [pageType]);
 
   const updateStatus = async (seat: Seat, newStatus: Status): Promise<void> => {
-    const res = await fetch("/cgi-bin/zaiseki/api/kiosk/update_status", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
+    const res = await fetch(
+      `/cgi-bin/zaiseki/api/kiosk/update_status/${seat.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          new_status: newStatus,
+        }),
       },
-      body: JSON.stringify({
-        seat_id: seat.id,
-        new_status: newStatus,
-      }),
-    });
+    );
 
     if (!res.ok) {
       let message = `Server error: ${res.status}`;
