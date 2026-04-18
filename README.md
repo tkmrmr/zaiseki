@@ -172,7 +172,7 @@ AuthType Basic
 
 ## BOCCO emo
 
-アプリはコミュニケーションロボット[BOCCO emo](https://www.bocco.me/)と連携させることができます．具体的には，BOCCO emo Platform APIと連携し，入室時にBOCCO emoに「おはよう」と言わせることができます．  
+コミュニケーションロボット[BOCCO emo](https://www.bocco.me/)と連携し，入室時にBOCCO emoに挨拶させることができます．  
 BOCCO emoを使用する場合は，`.env`に以下の変数を追記してください．
 
 ```.env
