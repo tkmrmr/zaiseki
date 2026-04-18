@@ -25,13 +25,14 @@ class Student:
 
 @dataclass
 class NewStatusRequest:
-    seat_id: int
     new_status: SeatStatusWithoutVacant
+
 
 @dataclass
 class AssignStudentRequest:
     seat_id: int
     student_id: int
+
 
 @dataclass
 class UnassignStudentRequest:

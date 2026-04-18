@@ -76,7 +76,7 @@ def list_full_status() -> list[Seat]:
     return seats
 
 
-def update_status(seat_id: int, new_status: SeatStatusWithoutVacant) -> bool:
+def update_seat_status(seat_id: int, new_status: SeatStatusWithoutVacant) -> bool:
     with get_db_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(

@@ -1,4 +1,4 @@
-def parse_positive_int(value: int, name: str = "Value") -> int:
-    if not isinstance(value, int) or value <= 0:
-        raise ValueError(f"Invalid {name}")
-    return value
+def is_valid_positive_int(value: int) -> bool:
+    if isinstance(value, int) and value > 0:
+        return True
+    return False

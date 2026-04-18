@@ -23,7 +23,7 @@ export function useStudent() {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const res = await fetch("/cgi-bin/zaiseki/api/admin/get_students.py");
+        const res = await fetch("/cgi-bin/zaiseki/api/admin/get_students");
         if (!res.ok) {
           if (res.status === 401) {
             throw new Error("学生一覧の取得に認証が必要です。");

@@ -39,6 +39,6 @@ COPY --from=builder /usr/local/bin/pip3 /usr/local/bin/
 COPY --from=builder /usr/local/bin/pip${PYTHON_MAJOR_MINOR} /usr/local/bin/
 
 # Install Python packages
-RUN python3 -m pip install --no-cache-dir --break-system-packages requests==2.31.0
+RUN python3 -m pip install --no-cache-dir --break-system-packages requests==2.31.0 flask==2.0.1 werkzeug==2.0.3
 # Install development tools
 RUN python3 -m pip install --no-cache-dir --break-system-packages ruff ty

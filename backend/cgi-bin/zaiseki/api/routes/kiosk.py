@@ -1,0 +1,68 @@
+import datetime
+import random
+from dataclasses import asdict
+
+from common import (
+    NewStatusRequest,
+    is_valid_positive_int,
+    parse_request,
+    send_message,
+)
+from flask import Blueprint, request
+from services import list_full_status, update_seat_status
+from werkzeug.exceptions import BadRequest
+
+ALLOWED_STATUS = {"present", "absent"}
+GREETINGS = {
+    "morning": ["おはよう", "おはよ", "やあ"],
+    "afternoon": ["こんにちは", "やあ", "どうも"],
+    "evening": ["こんばんは", "おつかれ", "どうも"],
+}
+
+bp = Blueprint("kiosk", __name__, url_prefix="/kiosk")
+
+
+@bp.get("/get_status")
+def get_status() -> dict:
+    seats = list_full_status()
+    return {"ok": True, "seats": [asdict(s) for s in seats]}
+
+
+@bp.patch("/update_status/<int:seat_id>")
+def update_status(seat_id: int) -> dict | tuple[dict, int]:
+    if not is_valid_positive_int(seat_id):
+        return {"ok": False, "error": "Invalid seat_id"}, 400
+
+    try:
+        raw_data = request.get_json()
+    except BadRequest:
+        return {"ok": False, "error": "Invalid JSON"}, 400
+
+    data = parse_request(raw_data, NewStatusRequest)
+    if data is None:
+        return {"ok": False, "error": "Invalid request payload"}, 400
+
+    new_status = data.new_status
+    if new_status not in ALLOWED_STATUS:
+        return {"ok": False, "error": "Invalid status"}, 400
+
+    is_updated = update_seat_status(seat_id, new_status)
+    if not is_updated:
+        return {
+            "ok": False,
+            "error": "Seat not found or not assigned",
+        }, 404
+
+    dt_now = datetime.datetime.now()
+    if 5 <= dt_now.hour < 12:
+        greeting = random.choice(GREETINGS["morning"])
+    elif 12 <= dt_now.hour < 18:
+        greeting = random.choice(GREETINGS["afternoon"])
+    else:
+        greeting = random.choice(GREETINGS["evening"])
+
+    # BOCCOに挨拶を送る
+    if new_status == "present":
+        send_message(greeting)
+
+    return {"ok": True}

@@ -3,5 +3,6 @@
 .env.uec
 .htaccess
 !frontend/public/.htaccess
+!backend/cgi-bin/zaiseki/api/.htaccess
 .htpasswd
 *.code-workspace

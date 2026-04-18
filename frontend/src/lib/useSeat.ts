@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState, useRef } from "react";
-import type { Seat, Status, PageType, ErrorType } from "@/lib/type";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   REFRESH_REQUESTED_EVENT,
   SEAT_STATUS_UPDATED_EVENT,
 } from "@/lib/events";
+import type { ErrorType, PageType, Seat, Status } from "@/lib/type";
 
 const AUTO_REFRESH_INTERVAL_MS = 30_000;
 
@@ -38,10 +38,10 @@ export function useSeat({ pageType }: { pageType: PageType }) {
     const apiBase = "/cgi-bin/zaiseki/api";
     const statusEndpoint =
       pageType === "admin"
-        ? `${apiBase}/admin/get_full_status.py`
+        ? `${apiBase}/admin/get_status`
         : pageType === "kiosk"
-          ? `${apiBase}/kiosk/get_full_status.py`
-          : `${apiBase}/public/get_status.py`;
+          ? `${apiBase}/kiosk/get_status`
+          : `${apiBase}/get_status`;
 
     if (pageType === "view") {
       setIsCheckingAuth(false);
@@ -125,16 +125,18 @@ export function useSeat({ pageType }: { pageType: PageType }) {
   }, [pageType]);
 
   const updateStatus = async (seat: Seat, newStatus: Status): Promise<void> => {
-    const res = await fetch("/cgi-bin/zaiseki/api/kiosk/update_status.py", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const res = await fetch(
+      `/cgi-bin/zaiseki/api/kiosk/update_status/${seat.id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          new_status: newStatus,
+        }),
       },
-      body: JSON.stringify({
-        seat_id: seat.id,
-        new_status: newStatus,
-      }),
-    });
+    );
 
     if (!res.ok) {
       let message = `Server error: ${res.status}`;
