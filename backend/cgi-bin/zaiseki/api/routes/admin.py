@@ -1,0 +1,92 @@
+import os
+import sys
+from dataclasses import asdict
+
+from flask import Blueprint, request
+from werkzeug.exceptions import BadRequest
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
+import pymysql
+from common import (
+    AssignStudentRequest,
+    UnassignStudentRequest,
+    is_valid_positive_int,
+    parse_request,
+)
+from services import (
+    assign_student_to_seat,
+    list_full_status,
+    list_students,
+    unassign_student_from_seat,
+)
+
+bp = Blueprint("admin", __name__, url_prefix="/admin")
+
+
+@bp.get("/get_status")
+def get_status() -> dict:
+    seats = list_full_status()
+    return {"ok": True, "seats": [asdict(s) for s in seats]}
+
+
+@bp.get("/get_students")
+def get_students() -> dict:
+    students = list_students()
+    return {"ok": True, "students": [asdict(s) for s in students]}
+
+
+@bp.post("/assign_student")
+def assign_student() -> dict | tuple[dict, int]:
+    try:
+        raw_data = request.get_json()
+    except BadRequest:
+        return {"ok": False, "error": "Invalid JSON"}, 400
+
+    data = parse_request(raw_data, AssignStudentRequest)
+    if data is None:
+        return {"ok": False, "error": "Invalid request payload"}, 400
+
+    seat_id = data.seat_id
+    student_id = data.student_id
+    if not is_valid_positive_int(seat_id):
+        return {"ok": False, "error": "Invalid seat_id"}, 400
+    if not is_valid_positive_int(student_id):
+        return {"ok": False, "error": "Invalid student_id"}, 400
+
+    is_assigned = assign_student_to_seat(student_id, seat_id)
+    if not is_assigned:
+        return {"ok": False, "error": "Student not found"}, 404
+
+    return {"ok": True}
+
+
+@bp.post("/unassign_student")
+def unassign_student() -> dict | tuple[dict, int]:
+    try:
+        raw_data = request.get_json()
+    except BadRequest:
+        return {"ok": False, "error": "Invalid JSON"}, 400
+
+    data = parse_request(raw_data, UnassignStudentRequest)
+    if data is None:
+        return {"ok": False, "error": "Invalid request payload"}, 400
+
+    seat_id = data.seat_id
+    if not is_valid_positive_int(seat_id):
+        return {"ok": False, "error": "Invalid seat_id"}, 400
+
+    unassign_student_from_seat(seat_id)
+
+    return {"ok": True}
+
+
+@bp.errorhandler(pymysql.Error)
+def handle_db_error(error: Exception) -> tuple[dict, int]:
+    print(error, file=sys.stderr)
+    return {"ok": False, "error": "Database error"}, 500
+
+
+@bp.errorhandler(Exception)
+def handle_internal_error(error: Exception) -> tuple[dict, int]:
+    print(error, file=sys.stderr)
+    return {"ok": False, "error": "Internal error"}, 500
