@@ -6,7 +6,7 @@
 
 - Frontend: React, TypeScript, Tailwind CSS, shadcn/ui
 
-- Backend: Python CGI
+- Backend: Flask, CGI
 
 - Database: MariaDB
 
@@ -22,7 +22,9 @@
 ## ディレクトリ構成
 
 - `frontend/`: フロントエンド（React + Vite）
-- `backend/cgi-bin/zaiseki/api/`: Python CGIエンドポイント
+- `backend/cgi-bin/zaiseki/api/index.cgi`: CGIエントリポイント
+- `backend/cgi-bin/zaiseki/api/app.py`: Flaskアプリ本体
+- `backend/cgi-bin/zaiseki/api/routes/`: ページごとのAPI定義
 - `backend/cgi-bin/zaiseki/api/common/`: バックエンド共通処理
 - `backend/cgi-bin/zaiseki/api/services/`: 座席・学生情報を扱う共通ロジック
 - `database/schema.sql`: データベーススキーマ
@@ -147,6 +149,8 @@ BOCCO_ROOM_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 - `LabMap.tsx`は研究室の配置に合わせて適宜編集してください．
 
 - `frontend/public/.htaccess`はReact RouterをApache上で動かすための設定ファイルです．
+
+- `backend/cgi-bin/zaiseki/api/.htaccess`はAPIリクエストを`index.cgi`に転送しFlaskアプリを動かすための設定ファイルです．
 
 ## ライセンス
 
