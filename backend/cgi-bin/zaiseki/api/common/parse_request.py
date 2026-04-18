@@ -1,9 +1,9 @@
-from typing import TypeVar
+from typing import Any, TypeVar
 
 T = TypeVar("T")
 
 
-def parse_request(raw_data: dict, cls: type[T]) -> T | None:
+def parse_request(raw_data: Any, cls: type[T]) -> T | None:
     if not isinstance(raw_data, dict):
         return None
     try:
