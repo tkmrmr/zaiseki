@@ -1,7 +1,7 @@
 from .bocco import send_message
 from .convert_to_utc_iso import convert_to_utc_iso
+from .db import get_db_connection
 from .error_handler import register_error_handlers
-from .get_db_connection import get_db_connection
 from .parse_request import parse_request
 from .schemas import (
     AssignStudentRequest,
