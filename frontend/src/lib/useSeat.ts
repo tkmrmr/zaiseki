@@ -40,7 +40,7 @@ export function useSeat({ pageType }: { pageType: PageType }) {
       pageType === "admin"
         ? `${apiBase}/admin/get_full_status.py`
         : pageType === "kiosk"
-          ? `${apiBase}/kiosk/get_full_status.py`
+          ? `${apiBase}/kiosk/get_status`
           : `${apiBase}/public/get_status`;
 
     if (pageType === "view") {
@@ -125,8 +125,8 @@ export function useSeat({ pageType }: { pageType: PageType }) {
   }, [pageType]);
 
   const updateStatus = async (seat: Seat, newStatus: Status): Promise<void> => {
-    const res = await fetch("/cgi-bin/zaiseki/api/kiosk/update_status.py", {
-      method: "POST",
+    const res = await fetch("/cgi-bin/zaiseki/api/kiosk/update_status", {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
