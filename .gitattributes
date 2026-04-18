@@ -1,0 +1,2 @@
+backend/cgi-bin/zaiseki/api/pymysql/** linguist-vendored
+backend/cgi-bin/zaiseki/api/dotenv/** linguist-vendored
