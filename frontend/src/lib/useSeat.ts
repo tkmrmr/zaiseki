@@ -126,7 +126,7 @@ export function useSeat({ pageType }: { pageType: PageType }) {
 
   const updateStatus = async (seat: Seat, newStatus: Status): Promise<void> => {
     const res = await fetch("/cgi-bin/zaiseki/api/kiosk/update_status", {
-      method: "PUT",
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },

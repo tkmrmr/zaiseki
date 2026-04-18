@@ -32,7 +32,7 @@ def get_status() -> dict:
     return {"ok": True, "seats": [asdict(s) for s in seats]}
 
 
-@bp.put("/update_status")
+@bp.patch("/update_status")
 def update_status() -> dict | tuple[dict, int]:
     try:
         raw_data = request.get_json()
