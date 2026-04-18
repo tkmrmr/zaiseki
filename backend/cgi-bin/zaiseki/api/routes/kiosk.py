@@ -53,7 +53,10 @@ def update_status(seat_id: int) -> dict | tuple[dict, int]:
 
     is_updated = update_seat_status(seat_id, new_status)
     if not is_updated:
-        return {"ok": False, "error": "Failed to update status"}, 500
+        return {
+            "ok": False,
+            "error": "Seat not found or not assigned",
+        }, 404
 
     dt_now = datetime.datetime.now()
     if 5 <= dt_now.hour < 12:
