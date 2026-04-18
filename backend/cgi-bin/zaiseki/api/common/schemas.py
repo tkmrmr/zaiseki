@@ -32,8 +32,3 @@ class NewStatusRequest:
 class AssignStudentRequest:
     seat_id: int
     student_id: int
-
-
-@dataclass
-class UnassignStudentRequest:
-    seat_id: int
