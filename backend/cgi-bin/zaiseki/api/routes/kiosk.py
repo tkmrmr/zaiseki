@@ -4,8 +4,9 @@ import random
 import sys
 from dataclasses import asdict
 
-from flask import Blueprint, Response, request
+from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest, HTTPException
+from werkzeug.sansio.response import Response
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql

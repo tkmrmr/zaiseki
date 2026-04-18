@@ -1,8 +1,9 @@
 import os
 import sys
 
-from flask import Blueprint, Response
+from flask import Blueprint
 from werkzeug.exceptions import HTTPException
+from werkzeug.sansio.response import Response
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir)))
 import pymysql
