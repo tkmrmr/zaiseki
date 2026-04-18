@@ -16,17 +16,17 @@
 
 - Python (推奨バージョン: 3.10, 3.11)
 - Node.js (推奨バージョン: 25.x)
-- MariaDB（推奨バージョン: 10.x）
+- MariaDB (推奨バージョン: 10.x)
 - Docker / Docker Compose
 
 ## ディレクトリ構成
 
-- `frontend/`: フロントエンド（React + Vite）
+- `frontend/`: フロントエンド(React + Vite)
 - `backend/cgi-bin/zaiseki/api/index.cgi`: CGIエントリポイント
-- `backend/cgi-bin/zaiseki/api/app.py`: Flaskアプリ本体
 - `backend/cgi-bin/zaiseki/api/routes/`: ページごとのAPI定義
 - `backend/cgi-bin/zaiseki/api/common/`: バックエンド共通処理
 - `backend/cgi-bin/zaiseki/api/services/`: 座席・学生情報を扱う共通ロジック
+- `backend/pyproject.toml`: RuffとTyの設定
 - `database/schema.sql`: データベーススキーマ
 - `docker-compose.yml`: MariaDB, Apache, Adminerの起動設定
 - `httpd.conf`: Apache設定
@@ -106,6 +106,27 @@ npm run preview
 
 なお，Docker Composeを使用する場合は`http://localhost/zaiseki/`からより本番環境に近い環境でビルド結果を確認することができます．
 
+## 検証
+
+フロントエンドの静的解析:
+
+```bash
+cd frontend
+npm run lint
+```
+
+バックエンドの lint:
+
+```bash
+docker compose exec web ruff check /usr/local/apache2/cgi-bin/zaiseki/api
+```
+
+バックエンドの型チェック:
+
+```bash
+docker compose exec web ty check /usr/local/apache2/cgi-bin/zaiseki/api
+```
+
 ## バックエンド起動
 
 ```bash
@@ -128,6 +149,26 @@ docker compose up --build -d
 - Apache: `http://localhost/zaiseki/`
 - Adminer: `http://localhost:8080/`
 - MariaDB: `localhost:3306`
+
+## Basic認証
+
+任意のページをBasic認証で保護したい場合は，`.htpasswd`ファイルを任意のディレクトリに配置し，対象ページに対応するディレクトリ(例：`backend/cgi-bin/zaiseki/api/admin`)に，以下のような`.htaccess`ファイルを置いてください．
+
+```.htaccess
+AuthUserFile <.htpasswdファイルの絶対パス>
+AuthGroupFile /dev/null
+AuthName "Please enter your ID and password"
+AuthType Basic
+
+<RequireAll>
+    Require valid-user
+    <RequireAny>
+        Require ip xxx.xxx.xxx.xxx
+        Require ip yyy.yyy.yyy.yyy
+    </RequireAny>
+</RequireAll>
+
+```
 
 ## BOCCO emo
 
