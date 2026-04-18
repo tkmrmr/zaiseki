@@ -41,7 +41,7 @@ export function useSeat({ pageType }: { pageType: PageType }) {
         ? `${apiBase}/admin/get_status`
         : pageType === "kiosk"
           ? `${apiBase}/kiosk/get_status`
-          : `${apiBase}/public/get_status`;
+          : `${apiBase}/get_status`;
 
     if (pageType === "view") {
       setIsCheckingAuth(false);

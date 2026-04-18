@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), os.pa
 import pymysql
 from services import list_public_status
 
-bp = Blueprint("public", __name__, url_prefix="/public")
+bp = Blueprint("public", __name__)
 
 
 @bp.get("/get_status")
