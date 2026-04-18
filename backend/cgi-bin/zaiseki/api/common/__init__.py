@@ -1,5 +1,6 @@
 from .bocco import send_message
 from .convert_to_utc_iso import convert_to_utc_iso
+from .error_handler import register_error_handlers
 from .get_db_connection import get_db_connection
 from .parse_request import parse_request
 from .schemas import (
@@ -26,4 +27,5 @@ __all__ = [
     "parse_request",
     "is_valid_positive_int",
     "SeatStatusWithoutVacant",
+    "register_error_handlers",
 ]
