@@ -21,6 +21,15 @@
 
 ## ディレクトリ構成
 
+- `backend/`
+  - `cgi-bin/zaiseki/api/`
+    - `index.cgi`: CGIエントリポイント
+    - `app/`: Flaskアプリ本体
+      - `routes/`: ページごとのAPI定義
+      - `common/`: バックエンド共通処理
+      - `services/`: 座席・学生情報を扱う共通ロジック
+    - `vendor`: vendorパッケージ置場(PyMySQL, python-dotenv)
+  - `pyproject.toml`: RuffとTyの設定
 - `fronend/`
   - `src/`
     - `main.tsx`: フロントエンドのエントリポイント
@@ -30,14 +39,6 @@
       - `layout/`: レイアウトコンポーネント
       - `ui/`: 共通コンポーネント
     - `lib/`: hooksや型定義
-- `backend/`
-  - `cgi-bin/zaiseki/api/`
-    - `index.cgi`: CGIエントリポイント
-    - `app/`: Flaskアプリ本体
-      - `routes/`: ページごとのAPI定義
-      - `common/`: バックエンド共通処理
-      - `services/`: 座席・学生情報を扱う共通ロジック
-  - `pyproject.toml`: RuffとTyの設定
 - `database/`
   - `schema.sql`: データベーススキーマ
 - `docker-compose.yml`: MariaDB, Apache, Adminerの起動設定
