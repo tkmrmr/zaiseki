@@ -30,7 +30,7 @@
       - `services/`: 座席・学生情報を扱う共通ロジック
     - `vendor`: vendorパッケージ置場(PyMySQL, python-dotenv)
   - `pyproject.toml`: RuffとTyの設定
-- `fronend/`
+- `frontend/`
   - `src/`
     - `main.tsx`: フロントエンドのエントリポイント
     - `App.tsx`: ルーティング定義
