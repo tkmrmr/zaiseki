@@ -1,14 +1,14 @@
 [tool.ruff]
 extend-exclude = [
-    "cgi-bin/zaiseki/api/dotenv",
-    "cgi-bin/zaiseki/api/pymysql",
+    "cgi-bin/zaiseki/api/app/dotenv",
+    "cgi-bin/zaiseki/api/app/pymysql",
 ]
 
 [tool.ty.src]
 include = ["cgi-bin/zaiseki/api"]
 exclude = [
-    "cgi-bin/zaiseki/api/dotenv",
-    "cgi-bin/zaiseki/api/pymysql",
+    "cgi-bin/zaiseki/api/app/dotenv",
+    "cgi-bin/zaiseki/api/app/pymysql",
 ]
 
 [tool.ty.environment]

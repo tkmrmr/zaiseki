@@ -2,11 +2,12 @@ import json
 import sys
 from typing import cast
 
-import pymysql
 from flask import Flask
 from flask.typing import ResponseReturnValue
 from werkzeug.exceptions import HTTPException
 from werkzeug.wrappers.response import Response
+
+from . import pymysql
 
 
 def register_error_handlers(app: Flask) -> None:

@@ -2,15 +2,16 @@ import datetime
 import random
 from dataclasses import asdict
 
-from common import (
+from flask import Blueprint, request
+from werkzeug.exceptions import BadRequest
+
+from ..common import (
     NewStatusRequest,
     is_valid_positive_int,
     parse_request,
     send_message,
 )
-from flask import Blueprint, request
-from services import list_full_status, update_seat_status
-from werkzeug.exceptions import BadRequest
+from ..services import list_full_status, update_seat_status
 
 ALLOWED_STATUS = {"present", "absent"}
 GREETINGS = {

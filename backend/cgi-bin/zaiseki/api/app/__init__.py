@@ -1,10 +1,10 @@
 from flask import Flask
-from routes.admin import bp as admin_bp
-from routes.kiosk import bp as kiosk_bp
-from routes.public import bp as public_bp
 
 from .config import Config
 from .error_handler import register_error_handlers
+from .routes.admin import bp as admin_bp
+from .routes.kiosk import bp as kiosk_bp
+from .routes.public import bp as public_bp
 
 
 def create_app() -> Flask:
