@@ -12,4 +12,3 @@ exclude = [
 [tool.ty.environment]
 root = ["cgi-bin/zaiseki/api"]
 python-version = "3.10"
-python = "./.env"
