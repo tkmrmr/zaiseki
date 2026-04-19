@@ -1,8 +1,8 @@
+from ..db.connection import (
+    get_db_connection,
+)
 from ..schemas import (
     Student,
-)
-from ..utils import (
-    get_db_connection,
 )
 
 

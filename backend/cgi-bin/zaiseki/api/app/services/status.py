@@ -1,10 +1,10 @@
+from ..db.connection import get_db_connection
 from ..schemas import (
     Seat,
     SeatStatusWithoutVacant,
 )
 from ..utils import (
     convert_to_utc_iso,
-    get_db_connection,
 )
 
 

@@ -1,4 +1,4 @@
-from ..utils import (
+from ..db.connection import (
     get_db_connection,
 )
 
