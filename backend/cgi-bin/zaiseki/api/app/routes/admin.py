@@ -4,10 +4,10 @@ from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
 from ..common import (
-    AssignStudentRequest,
     is_valid_positive_int,
     parse_request,
 )
+from ..schemas import AssignStudentRequest
 from ..services import (
     assign_student_to_seat,
     list_full_status,

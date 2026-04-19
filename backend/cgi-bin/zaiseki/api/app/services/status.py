@@ -1,8 +1,10 @@
 from ..common import (
-    Seat,
-    SeatStatusWithoutVacant,
     convert_to_utc_iso,
     get_db_connection,
+)
+from ..schemas import (
+    Seat,
+    SeatStatusWithoutVacant,
 )
 
 

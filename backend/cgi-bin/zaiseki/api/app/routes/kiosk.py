@@ -6,11 +6,11 @@ from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
 from ..common import (
-    NewStatusRequest,
     is_valid_positive_int,
     parse_request,
     send_message,
 )
+from ..schemas import NewStatusRequest
 from ..services import list_full_status, update_seat_status
 
 ALLOWED_STATUS = {"present", "absent"}
