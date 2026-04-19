@@ -12,10 +12,6 @@ class BoccoRefreshResponse(TypedDict):
     refresh_token: str
 
 
-def _is_bocco_enabled() -> bool:
-    return current_app.config["ENABLE_BOCCO"]
-
-
 def _get_access_token(requests: ModuleType, refresh_token: str) -> str | None:
     headers = {
         "Content-Type": "application/json",
