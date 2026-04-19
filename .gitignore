@@ -6,3 +6,4 @@
 !backend/cgi-bin/zaiseki/api/.htaccess
 .htpasswd
 *.code-workspace
+*.patch
