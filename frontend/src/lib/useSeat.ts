@@ -35,13 +35,8 @@ export function useSeat({ pageType }: { pageType: PageType }) {
   const pendingRefreshRef = useRef(false);
 
   const refreshSeats = useCallback(async () => {
-    const apiBase = "/cgi-bin/zaiseki/api";
-    const statusEndpoint =
-      pageType === "admin"
-        ? `${apiBase}/admin/get_status`
-        : pageType === "kiosk"
-          ? `${apiBase}/kiosk/get_status`
-          : `${apiBase}/get_status`;
+    const endpointPrefix = pageType === "view" ? "" : `${pageType as string}/`;
+    const statusEndpoint = `/cgi-bin/zaiseki/api/${endpointPrefix}get_status`;
 
     if (pageType === "view") {
       setIsCheckingAuth(false);

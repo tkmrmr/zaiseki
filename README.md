@@ -25,10 +25,13 @@
   - `cgi-bin/zaiseki/api/`
     - `index.cgi`: CGIエントリポイント
     - `app/`: Flaskアプリ本体
+      - `config.py`: 環境変数の読み込みとアプリ設定
+      - `schemas.py`: リクエスト・レスポンスで使うデータ定義
+      - `error_handler.py`: 共通エラーハンドリング
       - `routes/`: ページごとのAPI定義
-      - `common/`: バックエンド共通処理
-      - `services/`: 座席・学生情報を扱う共通ロジック
-    - `vendor`: vendorパッケージ置場(PyMySQL, python-dotenv)
+      - `utils/`: バックエンド共通処理
+      - `services/`: 座席・学生情報を扱う業務ロジック
+    - `vendor/`: vendorパッケージ置場(PyMySQL, python-dotenv)
   - `pyproject.toml`: RuffとTyの設定
 - `frontend/`
   - `src/`
@@ -121,6 +124,13 @@ npm run preview
 
 ## 検証
 
+フロントエンドのビルド
+
+```bash
+cd frontend
+npm run build
+```
+
 フロントエンドの静的解析
 
 ```bash
@@ -165,7 +175,7 @@ docker compose up --build -d
 
 ## Basic認証
 
-任意のページをBasic認証で保護したい場合は，`.htpasswd`ファイルを任意のディレクトリに配置し，対象ページに対応するディレクトリ(例: `backend/cgi-bin/zaiseki/api/admin`)に，以下のような`.htaccess`ファイルを置いてください．
+任意のページをBasic認証で保護したい場合は，`.htpasswd`ファイルを任意のディレクトリに配置し，保護したいURLに対応する配信ディレクトリまたはCGIディレクトリ配下に`.htaccess`ファイルを置いてください．リポジトリ内では`frontend/public/.htaccess`と`backend/cgi-bin/zaiseki/api/.htaccess`が設定例になります．
 
 ```.htaccess
 AuthUserFile <.htpasswdファイルの絶対パス>

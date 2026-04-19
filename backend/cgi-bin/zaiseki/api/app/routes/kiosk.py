@@ -5,13 +5,13 @@ from dataclasses import asdict
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
-from ..common import (
-    NewStatusRequest,
+from ..schemas import NewStatusRequest
+from ..services import list_full_status, update_seat_status
+from ..utils import (
     is_valid_positive_int,
     parse_request,
     send_message,
 )
-from ..services import list_full_status, update_seat_status
 
 ALLOWED_STATUS = {"present", "absent"}
 GREETINGS = {
