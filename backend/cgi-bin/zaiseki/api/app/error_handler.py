@@ -2,9 +2,9 @@ import json
 import sys
 from typing import cast
 
-import pymysql
 from flask import Flask
 from flask.typing import ResponseReturnValue
+from vendor import pymysql
 from werkzeug.exceptions import HTTPException
 from werkzeug.wrappers.response import Response
 

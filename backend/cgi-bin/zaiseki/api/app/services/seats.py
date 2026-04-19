@@ -1,4 +1,4 @@
-from common import (
+from ..common import (
     Seat,
     SeatStatusWithoutVacant,
     convert_to_utc_iso,

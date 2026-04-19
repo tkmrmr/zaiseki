@@ -1,18 +1,19 @@
 from dataclasses import asdict
 
-from common import (
+from flask import Blueprint, request
+from werkzeug.exceptions import BadRequest
+
+from ..common import (
     AssignStudentRequest,
     is_valid_positive_int,
     parse_request,
 )
-from flask import Blueprint, request
-from services import (
+from ..services import (
     assign_student_to_seat,
     list_full_status,
     list_students,
     unassign_student_from_seat,
 )
-from werkzeug.exceptions import BadRequest
 
 bp = Blueprint("admin", __name__, url_prefix="/admin")
 
