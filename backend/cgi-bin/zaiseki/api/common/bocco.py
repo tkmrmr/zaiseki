@@ -1,15 +1,8 @@
-import os
 import sys
-from pathlib import Path
 from types import ModuleType
 from typing import TypedDict
 
-from dotenv import load_dotenv
-
-BASE_DIR = Path(__file__).resolve().parents[2]
-ENV_PATH = BASE_DIR / ".env"
-
-load_dotenv(ENV_PATH)
+from flask import current_app
 
 _TIMEOUT = (5, 10)
 
@@ -20,7 +13,7 @@ class BoccoRefreshResponse(TypedDict):
 
 
 def _is_bocco_enabled() -> bool:
-    return os.getenv("ENABLE_BOCCO", "false").lower() == "true"
+    return current_app.config["ENABLE_BOCCO"]
 
 
 def _get_access_token(requests: ModuleType, refresh_token: str) -> str | None:
@@ -59,10 +52,10 @@ def _get_access_token(requests: ModuleType, refresh_token: str) -> str | None:
 
 
 def send_message(message: str) -> None:
-    if not _is_bocco_enabled():
+    if not current_app.config["ENABLE_BOCCO"]:
         return
-    refresh_token = os.getenv("BOCCO_REFRESH_TOKEN")
-    room_id = os.getenv("BOCCO_ROOM_ID")
+    refresh_token = current_app.config["BOCCO_REFRESH_TOKEN"]
+    room_id = current_app.config["BOCCO_ROOM_ID"]
     if not refresh_token or not room_id:
         print("BOCCO_REFRESH_TOKEN or BOCCO_ROOM_ID not set; skipping", file=sys.stderr)
         return
