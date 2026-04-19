@@ -1,6 +1,5 @@
 from flask import current_app
-
-from .. import pymysql
+from vendor import pymysql
 
 
 def get_db_connection() -> pymysql.connections.Connection:

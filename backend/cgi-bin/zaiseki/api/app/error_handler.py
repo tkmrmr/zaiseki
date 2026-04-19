@@ -4,10 +4,9 @@ from typing import cast
 
 from flask import Flask
 from flask.typing import ResponseReturnValue
+from vendor import pymysql
 from werkzeug.exceptions import HTTPException
 from werkzeug.wrappers.response import Response
-
-from . import pymysql
 
 
 def register_error_handlers(app: Flask) -> None:
