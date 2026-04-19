@@ -3,16 +3,16 @@ from dataclasses import asdict
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
-from ..common import (
-    is_valid_positive_int,
-    parse_request,
-)
 from ..schemas import AssignStudentRequest
 from ..services import (
     assign_student_to_seat,
     list_full_status,
     list_students,
     unassign_student_from_seat,
+)
+from ..utils import (
+    is_valid_positive_int,
+    parse_request,
 )
 
 bp = Blueprint("admin", __name__, url_prefix="/admin")
