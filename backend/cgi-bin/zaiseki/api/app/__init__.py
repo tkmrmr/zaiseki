@@ -1,14 +1,15 @@
 import os
 from pathlib import Path
 
-from common import register_error_handlers
 from dotenv import load_dotenv
 from flask import Flask
 from routes.admin import bp as admin_bp
 from routes.kiosk import bp as kiosk_bp
 from routes.public import bp as public_bp
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+from .error_handler import register_error_handlers
+
+BASE_DIR = Path(__file__).resolve().parents[2]
 ENV_PATH = BASE_DIR / ".env"
 
 load_dotenv(ENV_PATH)
