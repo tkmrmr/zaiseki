@@ -21,13 +21,22 @@
 
 ## ディレクトリ構成
 
-- `frontend/`: フロントエンド(React + Vite)
-- `backend/cgi-bin/zaiseki/api/index.cgi`: CGIエントリポイント
-- `backend/cgi-bin/zaiseki/api/routes/`: ページごとのAPI定義
-- `backend/cgi-bin/zaiseki/api/common/`: バックエンド共通処理
-- `backend/cgi-bin/zaiseki/api/services/`: 座席・学生情報を扱う共通ロジック
-- `backend/pyproject.toml`: RuffとTyの設定
-- `database/schema.sql`: データベーススキーマ
+- `fronend`
+  - `src/main.tsx`: フロントエンドのエントリポイント
+  - `src/App.tsx`: ルーティング定義
+  - `src/pages/`: 画面ごとのページコンポーネント
+  - `src/components/layout/`: レイアウトコンポーネント
+  - `src/components/ui/`: 共通コンポーネント
+  - `src/lib/`: hooksや型定義
+- `backend`
+  - `cgi-bin/zaiseki/api/index.cgi`: CGIエントリポイント
+  - `cgi-bin/zaiseki/api/app/`: Flaskアプリ本体
+  - `cgi-bin/zaiseki/api/app/routes/`: ページごとのAPI定義
+  - `cgi-bin/zaiseki/api/app/common/`: バックエンド共通処理
+  - `cgi-bin/zaiseki/api/app/services/`: 座席・学生情報を扱う共通ロジック
+  - `pyproject.toml`: RuffとTyの設定
+- `database`
+  - `schema.sql`: データベーススキーマ
 - `docker-compose.yml`: MariaDB, Apache, Adminerの起動設定
 - `httpd.conf`: Apache設定
 
