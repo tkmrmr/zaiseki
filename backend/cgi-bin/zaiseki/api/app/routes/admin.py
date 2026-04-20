@@ -1,3 +1,5 @@
+from dataclasses import asdict
+
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
@@ -19,13 +21,13 @@ bp = Blueprint("admin", __name__, url_prefix="/admin")
 @bp.get("/get_status")
 def get_status() -> dict:
     seats = list_full_status()
-    return {"ok": True, "seats": seats}
+    return {"ok": True, "seats": [asdict(s) for s in seats]}
 
 
 @bp.get("/get_students")
 def get_students() -> dict:
     students = list_students()
-    return {"ok": True, "students": students}
+    return {"ok": True, "students": [asdict(s) for s in students]}
 
 
 @bp.post("/assign_student")

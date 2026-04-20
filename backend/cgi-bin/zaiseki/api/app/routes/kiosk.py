@@ -1,3 +1,5 @@
+from dataclasses import asdict
+
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
@@ -17,7 +19,7 @@ bp = Blueprint("kiosk", __name__, url_prefix="/kiosk")
 @bp.get("/get_status")
 def get_status() -> dict:
     seats = list_full_status()
-    return {"ok": True, "seats": seats}
+    return {"ok": True, "seats": [asdict(s) for s in seats]}
 
 
 @bp.patch("/update_status/<int:seat_id>")
