@@ -1,6 +1,6 @@
 from dataclasses import asdict
 
-from app.db.queries import student_queries
+from ..db.queries import student_queries
 
 
 def list_students() -> list[dict]:
