@@ -29,8 +29,10 @@
       - `schemas.py`: リクエスト・レスポンスで使うデータ定義
       - `error_handler.py`: 共通エラーハンドリング
       - `routes/`: ページごとのAPI定義
-      - `utils/`: バックエンド共通処理
       - `services/`: 座席・学生情報を扱う業務ロジック
+      - `db/`: DB接続とSQLアクセス層
+        - `queries/`: SQL定義
+      - `utils/`: 共通処理
     - `vendor/`: vendorパッケージ置場(PyMySQL, python-dotenv)
   - `pyproject.toml`: RuffとTyの設定
 - `frontend/`
