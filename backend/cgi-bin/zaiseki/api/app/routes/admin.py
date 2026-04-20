@@ -1,7 +1,7 @@
 from dataclasses import asdict
 
 from flask import Blueprint, request
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
 from ..schemas import AssignStudentRequest
 from ..services import (
@@ -51,8 +51,8 @@ def assign_student() -> dict | tuple[dict, int]:
     try:
         assign_student_to_seat(student_id, seat_id)
         return {"ok": True}
-    except ValueError as e:
-        return {"ok": False, "error": str(e)}, 400
+    except NotFound as e:
+        return {"ok": False, "error": str(e)}, 404
     except Exception:
         return {"ok": False, "error": "Internal server error"}, 500
 
