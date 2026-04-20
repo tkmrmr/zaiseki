@@ -34,7 +34,7 @@
         - `queries/`: SQL定義
       - `utils/`: 共通処理
     - `vendor/`: vendorパッケージ置場(PyMySQL, python-dotenv)
-  - `pyproject.toml`: RuffとTyの設定
+  - `pyproject.toml`: Ruffとtyの設定
 - `frontend/`
   - `src/`
     - `main.tsx`: フロントエンドのエントリポイント
@@ -125,13 +125,6 @@ npm run preview
 なお，Docker Composeを使用する場合は`http://localhost/zaiseki/`からより本番環境に近い環境でビルド結果を確認することができます．
 
 ## 検証
-
-フロントエンドのビルド
-
-```bash
-cd frontend
-npm run build
-```
 
 フロントエンドの静的解析
 
