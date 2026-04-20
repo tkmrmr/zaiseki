@@ -1,9 +1,10 @@
-from app.db import get_db_connection
+from vendor import pymysql
+
 from app.schemas import Seat
 from app.utils.convert_to_utc_iso import convert_to_utc_iso
 
 
-def read_seats_with_public_status() -> list[Seat]:
+def read_seats_with_public_status(conn: pymysql.Connection) -> list[Seat]:
     QUERY = """
         SELECT
             seats.seat_id, 
@@ -16,26 +17,25 @@ def read_seats_with_public_status() -> list[Seat]:
         ORDER BY seats.seat_id
         ;
     """
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(QUERY)
+    with conn.cursor() as cur:
+        cur.execute(QUERY)
 
-            seats: list[Seat] = []
-            for seat_id, seat_number, status, updated_at in cur:
-                if status is None:
-                    status = "vacant"
-                seats.append(
-                    Seat(
-                        id=seat_id,
-                        code=seat_number,
-                        status=status,
-                        updated_at=convert_to_utc_iso(updated_at),
-                    )
+        seats: list[Seat] = []
+        for seat_id, seat_number, status, updated_at in cur:
+            if status is None:
+                status = "vacant"
+            seats.append(
+                Seat(
+                    id=seat_id,
+                    code=seat_number,
+                    status=status,
+                    updated_at=convert_to_utc_iso(updated_at),
                 )
+            )
     return seats
 
 
-def read_seats_with_full_status() -> list[Seat]:
+def read_seats_with_full_status(conn: pymysql.Connection) -> list[Seat]:
     QUERY = """
         SELECT
             seats.seat_id, 
@@ -52,22 +52,31 @@ def read_seats_with_full_status() -> list[Seat]:
         ORDER BY seats.seat_id
         ;
     """
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(QUERY)
+    with conn.cursor() as cur:
+        cur.execute(QUERY)
 
-            seats: list[Seat] = []
-            for seat_id, seat_number, name, grade, status, updated_at in cur:
-                if status is None:
-                    status = "vacant"
-                seats.append(
-                    Seat(
-                        id=seat_id,
-                        code=seat_number,
-                        family_name=name,
-                        grade=grade,
-                        status=status,
-                        updated_at=convert_to_utc_iso(updated_at),
-                    )
+        seats: list[Seat] = []
+        for seat_id, seat_number, name, grade, status, updated_at in cur:
+            if status is None:
+                status = "vacant"
+            seats.append(
+                Seat(
+                    id=seat_id,
+                    code=seat_number,
+                    family_name=name,
+                    grade=grade,
+                    status=status,
+                    updated_at=convert_to_utc_iso(updated_at),
                 )
+            )
     return seats
+
+
+def exists_seat(conn: pymysql.Connection, seat_id: int) -> bool:
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT EXISTS(SELECT 1 FROM seats WHERE seat_id = %s)",
+            (seat_id,),
+        )
+        row = cur.fetchone()
+        return bool(row and row[0])

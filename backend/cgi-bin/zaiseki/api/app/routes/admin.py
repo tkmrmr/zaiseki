@@ -1,7 +1,7 @@
 from dataclasses import asdict
 
 from flask import Blueprint, request
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, NotFound
 
 from ..schemas import AssignStudentRequest
 from ..services import (
@@ -48,18 +48,17 @@ def assign_student() -> dict | tuple[dict, int]:
     if not is_valid_positive_int(student_id):
         return {"ok": False, "error": "Invalid student_id"}, 400
 
-    result = assign_student_to_seat(student_id, seat_id)
-    if not result.ok:
-        return {"ok": False, "error": result.error}, 404
-
-    return {"ok": True}
+    try:
+        assign_student_to_seat(student_id, seat_id)
+        return {"ok": True}
+    except NotFound as e:
+        return {"ok": False, "error": str(e)}, 404
 
 
 @bp.delete("/unassign_student/<int:seat_id>")
 def unassign_student(seat_id: int) -> dict | tuple[dict, int]:
     if not is_valid_positive_int(seat_id):
         return {"ok": False, "error": "Invalid seat_id"}, 400
-
     unassign_student_from_seat(seat_id)
 
     return {"ok": True}

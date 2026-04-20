@@ -1,8 +1,9 @@
-from app.db import get_db_connection
+from vendor import pymysql
+
 from app.schemas import Student
 
 
-def read_students() -> list[Student]:
+def read_students(conn: pymysql.Connection) -> list[Student]:
     QUERY = """
         SELECT
             students.student_id,
@@ -12,11 +13,20 @@ def read_students() -> list[Student]:
         ORDER BY students.student_id
         ;
     """
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(QUERY)
+    with conn.cursor() as cur:
+        cur.execute(QUERY)
 
-            students: list[Student] = []
-            for student_id, name, grade in cur:
-                students.append(Student(id=student_id, student_name=name, grade=grade))
+        students: list[Student] = []
+        for student_id, name, grade in cur:
+            students.append(Student(id=student_id, student_name=name, grade=grade))
     return students
+
+
+def exists_student(conn: pymysql.Connection, student_id: int) -> bool:
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT EXISTS(SELECT 1 FROM students WHERE student_id = %s)",
+            (student_id,),
+        )
+        row = cur.fetchone()
+        return bool(row and row[0] == 1)
