@@ -21,7 +21,7 @@ bp = Blueprint("admin", __name__, url_prefix="/admin")
 @bp.get("/get_status")
 def get_status() -> dict:
     seats = list_full_status()
-    return {"ok": True, "seats": [asdict(s) for s in seats]}
+    return {"ok": True, "seats": seats}
 
 
 @bp.get("/get_students")
