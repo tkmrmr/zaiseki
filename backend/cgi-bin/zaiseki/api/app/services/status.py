@@ -2,6 +2,7 @@ import datetime
 import random
 from dataclasses import dataclass
 
+from ..db import get_db_connection
 from ..db.queries import presence_queries, seat_queries
 from ..schemas import (
     Seat,
@@ -36,19 +37,23 @@ def _select_greeting() -> str:
 
 
 def list_public_status() -> list[Seat]:
-    return seat_queries.read_seats_with_public_status()
+    conn = get_db_connection()
+    return seat_queries.read_seats_with_public_status(conn)
 
 
 def list_full_status() -> list[Seat]:
-    return seat_queries.read_seats_with_full_status()
+    conn = get_db_connection()
+    return seat_queries.read_seats_with_full_status(conn)
 
 
 def update_seat_status(
     seat_id: int, new_status: SeatStatusWithoutVacant
 ) -> UpdateStatusResult:
-    is_updated = presence_queries.update_presence_status(seat_id, new_status)
+    conn = get_db_connection()
+    is_updated = presence_queries.update_presence_status(conn, seat_id, new_status)
     if not is_updated:
         return UpdateStatusResult(ok=False, error="Seat not found or not assigned")
+    conn.commit()
 
     # BOCCOに挨拶を送る
     if new_status == "present":

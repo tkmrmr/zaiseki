@@ -1,8 +1,9 @@
-from app.db import get_db_connection
+from vendor import pymysql
+
 from app.schemas import Student
 
 
-def read_students() -> list[Student]:
+def read_students(conn: pymysql.Connection) -> list[Student]:
     QUERY = """
         SELECT
             students.student_id,
@@ -12,7 +13,6 @@ def read_students() -> list[Student]:
         ORDER BY students.student_id
         ;
     """
-    conn = get_db_connection()
     with conn.cursor() as cur:
         cur.execute(QUERY)
 

@@ -1,9 +1,10 @@
-from app.db import get_db_connection
+from vendor import pymysql
+
 from app.schemas import Seat
 from app.utils.convert_to_utc_iso import convert_to_utc_iso
 
 
-def read_seats_with_public_status() -> list[Seat]:
+def read_seats_with_public_status(conn: pymysql.Connection) -> list[Seat]:
     QUERY = """
         SELECT
             seats.seat_id, 
@@ -16,7 +17,6 @@ def read_seats_with_public_status() -> list[Seat]:
         ORDER BY seats.seat_id
         ;
     """
-    conn = get_db_connection()
     with conn.cursor() as cur:
         cur.execute(QUERY)
 
@@ -35,7 +35,7 @@ def read_seats_with_public_status() -> list[Seat]:
     return seats
 
 
-def read_seats_with_full_status() -> list[Seat]:
+def read_seats_with_full_status(conn: pymysql.Connection) -> list[Seat]:
     QUERY = """
         SELECT
             seats.seat_id, 
@@ -52,7 +52,6 @@ def read_seats_with_full_status() -> list[Seat]:
         ORDER BY seats.seat_id
         ;
     """
-    conn = get_db_connection()
     with conn.cursor() as cur:
         cur.execute(QUERY)
 
