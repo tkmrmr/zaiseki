@@ -2,7 +2,7 @@ import datetime
 import random
 from dataclasses import dataclass
 
-from ..db import get_db_connection
+from ..db import get_db
 from ..db.queries import presence_queries, seat_queries
 from ..schemas import (
     Seat,
@@ -37,19 +37,19 @@ def _select_greeting() -> str:
 
 
 def list_public_status() -> list[Seat]:
-    conn = get_db_connection()
+    conn = get_db()
     return seat_queries.read_seats_with_public_status(conn)
 
 
 def list_full_status() -> list[Seat]:
-    conn = get_db_connection()
+    conn = get_db()
     return seat_queries.read_seats_with_full_status(conn)
 
 
 def update_seat_status(
     seat_id: int, new_status: SeatStatusWithoutVacant
 ) -> UpdateStatusResult:
-    conn = get_db_connection()
+    conn = get_db()
     is_updated = presence_queries.update_presence_status(conn, seat_id, new_status)
     if not is_updated:
         return UpdateStatusResult(ok=False, error="Seat not found or not assigned")
