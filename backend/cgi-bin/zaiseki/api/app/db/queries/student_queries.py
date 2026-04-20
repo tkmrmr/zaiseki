@@ -25,7 +25,7 @@ def read_students(conn: pymysql.Connection) -> list[Student]:
 def exists_student(conn: pymysql.Connection, student_id: int) -> bool:
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT student_id FROM students WHERE student_id = %s",
+            "SELECT EXISTS(SELECT 1 FROM students WHERE student_id = %s)",
             (student_id,),
         )
         is_exist = cur.fetchone()

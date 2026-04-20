@@ -75,7 +75,7 @@ def read_seats_with_full_status(conn: pymysql.Connection) -> list[Seat]:
 def exists_seat(conn: pymysql.Connection, seat_id: int) -> bool:
     with conn.cursor() as cur:
         cur.execute(
-            "SELECT seat_id FROM seats WHERE seat_id = %s",
+            "SELECT EXISTS(SELECT 1 FROM seats WHERE seat_id = %s)",
             (seat_id,),
         )
         is_exist = cur.fetchone()
