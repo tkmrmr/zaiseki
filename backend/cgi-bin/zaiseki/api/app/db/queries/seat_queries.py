@@ -16,22 +16,22 @@ def read_seats_with_public_status() -> list[Seat]:
         ORDER BY seats.seat_id
         ;
     """
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(QUERY)
+    conn = get_db_connection()
+    with conn.cursor() as cur:
+        cur.execute(QUERY)
 
-            seats: list[Seat] = []
-            for seat_id, seat_number, status, updated_at in cur:
-                if status is None:
-                    status = "vacant"
-                seats.append(
-                    Seat(
-                        id=seat_id,
-                        code=seat_number,
-                        status=status,
-                        updated_at=convert_to_utc_iso(updated_at),
-                    )
+        seats: list[Seat] = []
+        for seat_id, seat_number, status, updated_at in cur:
+            if status is None:
+                status = "vacant"
+            seats.append(
+                Seat(
+                    id=seat_id,
+                    code=seat_number,
+                    status=status,
+                    updated_at=convert_to_utc_iso(updated_at),
                 )
+            )
     return seats
 
 
@@ -52,22 +52,22 @@ def read_seats_with_full_status() -> list[Seat]:
         ORDER BY seats.seat_id
         ;
     """
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(QUERY)
+    conn = get_db_connection()
+    with conn.cursor() as cur:
+        cur.execute(QUERY)
 
-            seats: list[Seat] = []
-            for seat_id, seat_number, name, grade, status, updated_at in cur:
-                if status is None:
-                    status = "vacant"
-                seats.append(
-                    Seat(
-                        id=seat_id,
-                        code=seat_number,
-                        family_name=name,
-                        grade=grade,
-                        status=status,
-                        updated_at=convert_to_utc_iso(updated_at),
-                    )
+        seats: list[Seat] = []
+        for seat_id, seat_number, name, grade, status, updated_at in cur:
+            if status is None:
+                status = "vacant"
+            seats.append(
+                Seat(
+                    id=seat_id,
+                    code=seat_number,
+                    family_name=name,
+                    grade=grade,
+                    status=status,
+                    updated_at=convert_to_utc_iso(updated_at),
                 )
+            )
     return seats
