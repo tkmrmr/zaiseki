@@ -53,8 +53,6 @@ def assign_student() -> dict | tuple[dict, int]:
         return {"ok": True}
     except NotFound as e:
         return {"ok": False, "error": str(e)}, 404
-    except Exception:
-        return {"ok": False, "error": "Internal server error"}, 500
 
 
 @bp.delete("/unassign_student/<int:seat_id>")
