@@ -2,7 +2,7 @@ import datetime
 import random
 from dataclasses import asdict, dataclass
 
-from app.db.queries import presence_queries, seat_queries
+from ..db.queries import presence_queries, seat_queries
 
 from ..schemas import (
     Seat,
