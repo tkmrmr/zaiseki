@@ -4,7 +4,7 @@ from flask import current_app, g
 from vendor import pymysql
 
 
-def get_db_connection() -> pymysql.connections.Connection:
+def get_db_connection() -> pymysql.Connection:
     if "db" not in g:
         g.db = pymysql.connect(
             init_command="SET time_zone = '+00:00'",  # セッションのタイムゾーンをUTCに設定
