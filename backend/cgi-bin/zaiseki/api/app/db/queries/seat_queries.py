@@ -78,7 +78,5 @@ def exists_seat(conn: pymysql.Connection, seat_id: int) -> bool:
             "SELECT EXISTS(SELECT 1 FROM seats WHERE seat_id = %s)",
             (seat_id,),
         )
-        is_exist = cur.fetchone()
-        if not is_exist:
-            return False
-    return True
+        row = cur.fetchone()
+        return bool(row and row[0])
