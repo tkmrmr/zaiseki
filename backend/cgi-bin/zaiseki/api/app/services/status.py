@@ -1,90 +1,59 @@
+import datetime
+import random
+from dataclasses import dataclass
+
+from ..db.queries import presence_queries, seat_queries
 from ..schemas import (
     Seat,
     SeatStatusWithoutVacant,
 )
 from ..utils import (
-    convert_to_utc_iso,
-    get_db_connection,
+    send_message,
 )
+
+GREETINGS = {
+    "morning": ["おはよう", "おはよ", "やあ"],
+    "afternoon": ["こんにちは", "やあ", "どうも"],
+    "evening": ["こんばんは", "おつかれ", "どうも"],
+}
+
+
+@dataclass
+class UpdateStatusResult:
+    ok: bool
+    error: str | None = None
+
+
+def _select_greeting() -> str:
+    dt_now = datetime.datetime.now()
+    if 5 <= dt_now.hour < 12:
+        greeting = random.choice(GREETINGS["morning"])
+    elif 12 <= dt_now.hour < 18:
+        greeting = random.choice(GREETINGS["afternoon"])
+    else:
+        greeting = random.choice(GREETINGS["evening"])
+    return greeting
 
 
 def list_public_status() -> list[Seat]:
-    QUERY = """
-        SELECT
-            seats.seat_id, 
-            seats.seat_number, 
-            presence_status.status, 
-            presence_status.updated_at
-        FROM seats
-        LEFT JOIN presence_status
-            ON presence_status.seat_id = seats.seat_id
-        ORDER BY seats.seat_id
-        ;
-    """
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(QUERY)
-
-            seats: list[Seat] = []
-            for seat_id, seat_number, status, updated_at in cur:
-                if status is None:
-                    status = "vacant"
-                seats.append(
-                    Seat(
-                        id=seat_id,
-                        code=seat_number,
-                        status=status,
-                        updated_at=convert_to_utc_iso(updated_at),
-                    )
-                )
+    seats = seat_queries.read_seats_with_public_status()
     return seats
 
 
 def list_full_status() -> list[Seat]:
-    QUERY = """
-        SELECT
-            seats.seat_id, 
-            seats.seat_number, 
-            students.name, 
-            students.grade, 
-            presence_status.status, 
-            presence_status.updated_at
-        FROM seats
-        LEFT JOIN presence_status
-            ON presence_status.seat_id = seats.seat_id
-        LEFT JOIN students
-            ON students.student_id = presence_status.student_id
-        ORDER BY seats.seat_id
-        ;
-    """
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(QUERY)
-
-            seats: list[Seat] = []
-            for seat_id, seat_number, name, grade, status, updated_at in cur:
-                if status is None:
-                    status = "vacant"
-                seats.append(
-                    Seat(
-                        id=seat_id,
-                        code=seat_number,
-                        family_name=name,
-                        grade=grade,
-                        status=status,
-                        updated_at=convert_to_utc_iso(updated_at),
-                    )
-                )
+    seats = seat_queries.read_seats_with_full_status()
     return seats
 
 
-def update_seat_status(seat_id: int, new_status: SeatStatusWithoutVacant) -> bool:
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                "UPDATE presence_status SET status = %s WHERE seat_id = %s",
-                (new_status, seat_id),
-            )
-            updated = cur.rowcount
-            conn.commit()
-    return updated > 0
+def update_seat_status(
+    seat_id: int, new_status: SeatStatusWithoutVacant
+) -> UpdateStatusResult:
+    is_updated = presence_queries.update_presence_status(seat_id, new_status)
+    if not is_updated:
+        return UpdateStatusResult(ok=False, error="Seat not found or not assigned")
+
+    # BOCCOに挨拶を送る
+    if new_status == "present":
+        send_message(_select_greeting())
+
+    return UpdateStatusResult(ok=True)

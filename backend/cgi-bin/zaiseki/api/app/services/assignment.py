@@ -1,32 +1,20 @@
-from ..utils import (
-    get_db_connection,
-)
+from dataclasses import dataclass
+
+from ..db.queries import assignment_queries, presence_queries
 
 
-def assign_student_to_seat(student_id: int, seat_id: int) -> bool:
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                "SELECT student_id FROM students WHERE student_id = %s", (student_id,)
-            )
-            result = cur.fetchone()
-            if not result:
-                return False
+@dataclass
+class AssignmentResult:
+    ok: bool
+    error: str | None = None
 
-            cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
-            cur.execute(
-                "DELETE FROM presence_status WHERE student_id = %s", (student_id,)
-            )
-            cur.execute(
-                "INSERT INTO presence_status (student_id, seat_id, status) VALUES (%s, %s, 'absent')",
-                (student_id, seat_id),
-            )
-            conn.commit()
-    return True
+
+def assign_student_to_seat(student_id: int, seat_id: int) -> AssignmentResult:
+    error = assignment_queries.assign_student_to_seat(student_id, seat_id)
+    if error is not None:
+        return AssignmentResult(ok=False, error=error)
+    return AssignmentResult(ok=True)
 
 
 def unassign_student_from_seat(seat_id: int) -> None:
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
-            conn.commit()
+    presence_queries.delete_by_seat_id(seat_id)
