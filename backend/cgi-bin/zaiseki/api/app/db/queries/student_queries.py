@@ -20,15 +20,3 @@ def read_students() -> list[Student]:
             for student_id, name, grade in cur:
                 students.append(Student(id=student_id, student_name=name, grade=grade))
     return students
-
-
-def exists_student(student_id: int) -> bool:
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                "SELECT student_id FROM students WHERE student_id = %s", (student_id,)
-            )
-            student_row = cur.fetchone()
-            if not student_row:
-                return False
-    return True
