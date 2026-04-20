@@ -1,32 +1,15 @@
-from ..db.connection import (
-    get_db_connection,
-)
+from app.db.queries import presence_queries, student_queries
 
 
 def assign_student_to_seat(student_id: int, seat_id: int) -> bool:
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                "SELECT student_id FROM students WHERE student_id = %s", (student_id,)
-            )
-            result = cur.fetchone()
-            if not result:
-                return False
-
-            cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
-            cur.execute(
-                "DELETE FROM presence_status WHERE student_id = %s", (student_id,)
-            )
-            cur.execute(
-                "INSERT INTO presence_status (student_id, seat_id, status) VALUES (%s, %s, 'absent')",
-                (student_id, seat_id),
-            )
-            conn.commit()
+    exists_student = student_queries.exists_student(student_id)
+    if not exists_student:
+        return False
+    presence_queries.delete_by_seat_id(seat_id)
+    presence_queries.delete_by_student_id(student_id)
+    presence_queries.create_presence_status(student_id, seat_id)
     return True
 
 
 def unassign_student_from_seat(seat_id: int) -> None:
-    with get_db_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute("DELETE FROM presence_status WHERE seat_id = %s", (seat_id,))
-            conn.commit()
+    presence_queries.delete_by_seat_id(seat_id)
