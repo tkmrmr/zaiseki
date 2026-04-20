@@ -4,12 +4,15 @@ from app.schemas import SeatStatusWithoutVacant
 
 
 def create_presence_status(
-    conn: pymysql.Connection, student_id: int, seat_id: int
+    conn: pymysql.Connection,
+    student_id: int,
+    seat_id: int,
+    status: SeatStatusWithoutVacant,
 ) -> None:
     with conn.cursor() as cur:
         cur.execute(
-            "INSERT INTO presence_status (student_id, seat_id, status) VALUES (%s, %s, 'absent')",
-            (student_id, seat_id),
+            "INSERT INTO presence_status (student_id, seat_id, status) VALUES (%s, %s, %s)",
+            (student_id, seat_id, status),
         )
 
 
