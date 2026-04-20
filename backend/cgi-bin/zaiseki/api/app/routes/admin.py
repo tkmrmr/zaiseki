@@ -48,18 +48,19 @@ def assign_student() -> dict | tuple[dict, int]:
     if not is_valid_positive_int(student_id):
         return {"ok": False, "error": "Invalid student_id"}, 400
 
-    result = assign_student_to_seat(student_id, seat_id)
-    if not result.ok:
-        return {"ok": False, "error": result.error}, 404
-
-    return {"ok": True}
+    try:
+        assign_student_to_seat(student_id, seat_id)
+        return {"ok": True}
+    except ValueError as e:
+        return {"ok": False, "error": str(e)}, 400
+    except Exception:
+        return {"ok": False, "error": "Internal server error"}, 500
 
 
 @bp.delete("/unassign_student/<int:seat_id>")
 def unassign_student(seat_id: int) -> dict | tuple[dict, int]:
     if not is_valid_positive_int(seat_id):
         return {"ok": False, "error": "Invalid seat_id"}, 400
-
     unassign_student_from_seat(seat_id)
 
     return {"ok": True}
