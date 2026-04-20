@@ -37,11 +37,13 @@ def _select_greeting() -> str:
 
 
 def list_public_status() -> list[Seat]:
-    return seat_queries.read_seats_with_public_status()
+    seats = seat_queries.read_seats_with_public_status()
+    return seats
 
 
 def list_full_status() -> list[dict]:
-    return [asdict(seat) for seat in seat_queries.read_seats_with_full_status()]
+    seats = seat_queries.read_seats_with_full_status()
+    return [asdict(seat) for seat in seats]
 
 
 def update_seat_status(
