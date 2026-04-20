@@ -1,9 +1,5 @@
-from app.db.connection import (
-    get_db_connection,
-)
-from app.schemas import (
-    SeatStatusWithoutVacant,
-)
+from app.db import get_db_connection
+from app.schemas import SeatStatusWithoutVacant
 
 
 def create_presence_status(

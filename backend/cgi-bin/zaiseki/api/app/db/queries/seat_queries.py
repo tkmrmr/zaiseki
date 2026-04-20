@@ -1,10 +1,6 @@
-from app.db.connection import get_db_connection
-from app.schemas import (
-    Seat,
-)
-from app.utils import (
-    convert_to_utc_iso,
-)
+from app.db import get_db_connection
+from app.schemas import Seat
+from app.utils import convert_to_utc_iso
 
 
 def read_seats_with_public_status() -> list[Seat]:

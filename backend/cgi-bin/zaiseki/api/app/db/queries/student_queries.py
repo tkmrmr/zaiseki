@@ -1,9 +1,5 @@
-from app.db.connection import (
-    get_db_connection,
-)
-from app.schemas import (
-    Student,
-)
+from app.db import get_db_connection
+from app.schemas import Student
 
 
 def read_students() -> list[Student]:
