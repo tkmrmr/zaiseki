@@ -46,9 +46,9 @@ def assign_student() -> dict | tuple[dict, int]:
     if not is_valid_positive_int(student_id):
         return {"ok": False, "error": "Invalid student_id"}, 400
 
-    is_assigned = assign_student_to_seat(student_id, seat_id)
-    if not is_assigned:
-        return {"ok": False, "error": "Student not found"}, 404
+    result = assign_student_to_seat(student_id, seat_id)
+    if not result.ok:
+        return {"ok": False, "error": result.error}, 404
 
     return {"ok": True}
 

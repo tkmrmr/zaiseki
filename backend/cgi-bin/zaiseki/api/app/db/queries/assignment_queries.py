@@ -1,7 +1,7 @@
 from app.db import get_db_connection
 
 
-def assign_student_to_seat(student_id: int, seat_id: int) -> bool:
+def assign_student_to_seat(student_id: int, seat_id: int) -> str | None:
     with get_db_connection() as conn:
         try:
             with conn.cursor() as cur:
@@ -11,7 +11,15 @@ def assign_student_to_seat(student_id: int, seat_id: int) -> bool:
                 )
                 result = cur.fetchone()
                 if not result:
-                    return False
+                    return "Student not found"
+
+                cur.execute(
+                    "SELECT seat_id FROM seats WHERE seat_id = %s",
+                    (seat_id,),
+                )
+                result = cur.fetchone()
+                if not result:
+                    return "Seat not found"
 
                 cur.execute(
                     "DELETE FROM presence_status WHERE seat_id = %s", (seat_id,)
@@ -27,4 +35,4 @@ def assign_student_to_seat(student_id: int, seat_id: int) -> bool:
         except Exception:
             conn.rollback()
             raise
-    return True
+    return None
