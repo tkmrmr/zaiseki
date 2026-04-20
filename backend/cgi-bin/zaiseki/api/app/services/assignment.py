@@ -1,4 +1,4 @@
-from app.db.queries import assignment_queries, presence_queries
+from ..db.queries import assignment_queries, presence_queries
 
 
 def assign_student_to_seat(student_id: int, seat_id: int) -> bool:
