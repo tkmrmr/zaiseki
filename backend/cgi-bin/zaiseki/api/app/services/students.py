@@ -1,8 +1,6 @@
-from dataclasses import asdict
-
 from ..db.queries import student_queries
+from ..schemas import Student
 
 
-def list_students() -> list[dict]:
-    students = student_queries.read_students()
-    return [asdict(student) for student in students]
+def list_students() -> list[Student]:
+    return student_queries.read_students()

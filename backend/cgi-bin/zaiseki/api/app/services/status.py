@@ -1,9 +1,8 @@
 import datetime
 import random
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 
 from ..db.queries import presence_queries, seat_queries
-
 from ..schemas import (
     Seat,
     SeatStatusWithoutVacant,
@@ -41,9 +40,9 @@ def list_public_status() -> list[Seat]:
     return seats
 
 
-def list_full_status() -> list[dict]:
+def list_full_status() -> list[Seat]:
     seats = seat_queries.read_seats_with_full_status()
-    return [asdict(seat) for seat in seats]
+    return seats
 
 
 def update_seat_status(
