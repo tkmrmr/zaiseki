@@ -28,7 +28,5 @@ def exists_student(conn: pymysql.Connection, student_id: int) -> bool:
             "SELECT EXISTS(SELECT 1 FROM students WHERE student_id = %s)",
             (student_id,),
         )
-        is_exist = cur.fetchone()
-        if not is_exist:
-            return False
-    return True
+        row = cur.fetchone()
+        return bool(row and row[0] == 1)
