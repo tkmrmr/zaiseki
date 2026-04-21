@@ -3,9 +3,9 @@ from dataclasses import asdict
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
-from ..schemas import NewStatusRequest
-from ..services import list_full_status, update_seat_status
-from ..utils import (
+from app.schemas import NewStatusRequest
+from app.services import status_service
+from app.utils import (
     is_valid_positive_int,
     parse_request,
 )
@@ -18,7 +18,7 @@ bp = Blueprint("kiosk", __name__, url_prefix="/kiosk")
 
 @bp.get("/get_status")
 def get_status() -> dict:
-    seats = list_full_status()
+    seats = status_service.list_full_status()
     return {"ok": True, "seats": [asdict(s) for s in seats]}
 
 
@@ -40,7 +40,7 @@ def update_status(seat_id: int) -> dict | tuple[dict, int]:
     if new_status not in ALLOWED_STATUS:
         return {"ok": False, "error": "Invalid status"}, 400
 
-    result = update_seat_status(seat_id, new_status)
+    result = status_service.update_seat_status(seat_id, new_status)
     if not result.ok:
         return {
             "ok": False,

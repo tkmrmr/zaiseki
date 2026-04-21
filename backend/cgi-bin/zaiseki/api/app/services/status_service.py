@@ -2,15 +2,13 @@ import datetime
 import random
 from dataclasses import dataclass
 
-from ..db import get_db
-from ..db.queries import presence_queries, seat_queries
-from ..schemas import (
+from app.db import get_db
+from app.db.queries import presence_queries, seat_queries
+from app.schemas import (
     Seat,
     SeatStatusWithoutVacant,
 )
-from ..utils import (
-    send_message,
-)
+from app.utils import bocco
 
 GREETINGS = {
     "morning": ["おはよう", "おはよ", "やあ"],
@@ -57,6 +55,6 @@ def update_seat_status(
 
     # BOCCOに挨拶を送る
     if new_status == "present":
-        send_message(_select_greeting())
+        bocco.send_message(_select_greeting())
 
     return UpdateStatusResult(ok=True)
