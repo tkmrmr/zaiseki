@@ -1,6 +1,6 @@
-from ..db import get_db
-from ..db.queries import student_queries
-from ..schemas import Student
+from app.db import get_db
+from app.db.queries import student_queries
+from app.schemas import Student
 
 
 def list_students() -> list[Student]:

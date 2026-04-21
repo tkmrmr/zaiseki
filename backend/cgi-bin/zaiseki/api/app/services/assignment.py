@@ -1,7 +1,7 @@
 from werkzeug.exceptions import NotFound
 
-from ..db import get_db
-from ..db.queries import presence_queries, seat_queries, student_queries
+from app.db import get_db
+from app.db.queries import presence_queries, seat_queries, student_queries
 
 
 def assign_student_to_seat(student_id: int, seat_id: int) -> None:

@@ -2,13 +2,13 @@ import datetime
 import random
 from dataclasses import dataclass
 
-from ..db import get_db
-from ..db.queries import presence_queries, seat_queries
-from ..schemas import (
+from app.db import get_db
+from app.db.queries import presence_queries, seat_queries
+from app.schemas import (
     Seat,
     SeatStatusWithoutVacant,
 )
-from ..utils import (
+from app.utils import (
     send_message,
 )
 

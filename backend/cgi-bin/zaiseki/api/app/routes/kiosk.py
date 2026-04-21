@@ -3,9 +3,9 @@ from dataclasses import asdict
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
-from ..schemas import NewStatusRequest
-from ..services import list_full_status, update_seat_status
-from ..utils import (
+from app.schemas import NewStatusRequest
+from app.services import list_full_status, update_seat_status
+from app.utils import (
     is_valid_positive_int,
     parse_request,
 )

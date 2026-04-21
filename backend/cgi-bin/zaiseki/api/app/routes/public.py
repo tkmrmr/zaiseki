@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from ..services import list_public_status
+from app.services import list_public_status
 
 bp = Blueprint("public", __name__)
 

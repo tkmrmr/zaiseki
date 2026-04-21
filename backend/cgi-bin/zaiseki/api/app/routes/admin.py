@@ -3,14 +3,14 @@ from dataclasses import asdict
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest, NotFound
 
-from ..schemas import AssignStudentRequest
-from ..services import (
+from app.schemas import AssignStudentRequest
+from app.services import (
     assign_student_to_seat,
     list_full_status,
     list_students,
     unassign_student_from_seat,
 )
-from ..utils import (
+from app.utils import (
     is_valid_positive_int,
     parse_request,
 )
