@@ -8,9 +8,7 @@ from app.schemas import (
     Seat,
     SeatStatusWithoutVacant,
 )
-from app.utils import (
-    send_message,
-)
+from app.utils import bocco
 
 GREETINGS = {
     "morning": ["おはよう", "おはよ", "やあ"],
@@ -57,6 +55,6 @@ def update_seat_status(
 
     # BOCCOに挨拶を送る
     if new_status == "present":
-        send_message(_select_greeting())
+        bocco.send_message(_select_greeting())
 
     return UpdateStatusResult(ok=True)
