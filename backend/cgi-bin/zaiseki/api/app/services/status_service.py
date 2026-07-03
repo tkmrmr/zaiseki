@@ -9,12 +9,7 @@ from app.schemas import (
     SeatStatusWithoutVacant,
 )
 from app.utils import bocco
-
-GREETINGS = {
-    "morning": ["おはよう", "おはよ", "やあ"],
-    "afternoon": ["こんにちは", "やあ", "どうも"],
-    "evening": ["こんばんは", "おつかれ", "どうも"],
-}
+from app.utils.greetings import GREETINGS
 
 
 @dataclass
